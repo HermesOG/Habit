@@ -1,0 +1,4 @@
+# Keep the deploy lean — these stay in git but aren't served
+reference/
+LOGIC.md
+.claude/

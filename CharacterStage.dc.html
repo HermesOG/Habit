@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@keyframes gsHalo{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.08);opacity:.9}}
+@keyframes gsFlick{0%{transform:scale(1) translateY(0);opacity:.5}50%{transform:scale(1.06,.94) translateY(-2%);opacity:.8}100%{transform:scale(.96,1.06) translateY(1%);opacity:.55}}
+@keyframes gsCandle{0%,100%{transform:scale(1)}50%{transform:scale(1.025,1.03)}}
+@keyframes gsEyePulse{0%,100%{opacity:.18}50%{opacity:.55}}
+@keyframes gsSpark{0%{transform:translate(0,0) scale(.5);opacity:0}10%{opacity:.95}45%{transform:translate(var(--sx),var(--y1)) scale(1);opacity:.8}100%{transform:translate(calc(var(--sx)*-0.6),var(--y2)) scale(.4);opacity:0}}
+@keyframes gsCrown{0%,100%{transform:translateY(0)}50%{transform:translateY(-7%)}}
+@keyframes gsSmoke{0%{transform:translateY(0) scaleY(.7);opacity:0}25%{opacity:.32}100%{transform:translateY(-170%) scaleY(1.2) skewX(7deg);opacity:0}}
+@keyframes gsCrack{0%,100%{opacity:.3}50%{opacity:.95}}
+@keyframes gsLining{0%,100%{opacity:var(--lo,.3)}50%{opacity:calc(var(--lo,.3)*1.5)}}
+@keyframes gsBurst{0%{transform:scale(.3);opacity:0}30%{opacity:.9}100%{transform:scale(1.2);opacity:0}}
+@keyframes gsMote{0%{transform:translate(0,0) scale(.3);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:0}}
+@keyframes gsFlare{0%{opacity:0;transform:scale(.6)}30%{opacity:.95;transform:scale(1.3)}100%{opacity:0;transform:scale(1)}}
+@keyframes gsImgIn{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+<div style="position:relative;width: {{ sizePx }};height: {{ sizePx }};flex:none;pointer-events:none">
+<sc-if value="{{ hasHalo }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:-4%;border-radius:50%;background:radial-gradient(circle at 50% 52%,var(--accent-a45,rgba(217,144,88,.45)) 0%,transparent 62%);animation:gsHalo 4.2s ease-in-out infinite"></div>
+</sc-if>
+<sc-if value="{{ hasPrev }}" hint-placeholder-val="{{ false }}">
+<img src="{{ prevPng }}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none"/>
+</sc-if>
+<img src="{{ png }}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none; {{ pngAnim }}"/>
+<sc-if value="{{ hasLining }}" hint-placeholder-val="{{ false }}">
+<div style="{{ liningStyle }}"></div>
+</sc-if>
+<sc-for list="{{ smokes }}" as="sm" hint-placeholder-count="0"><div style="{{ sm.style }}"></div></sc-for>
+<sc-for list="{{ flames }}" as="fl" hint-placeholder-count="0"><div style="{{ fl.style }}"></div></sc-for>
+<sc-for list="{{ candles }}" as="cd" hint-placeholder-count="0">
+<div style="{{ cd.style }}"><div style="{{ cd.bodyStyle }}"></div><div style="{{ cd.coreStyle }}"></div></div>
+</sc-for>
+<sc-for list="{{ eyeDims }}" as="ed" hint-placeholder-count="0"><div style="{{ ed.style }}"></div></sc-for>
+<sc-for list="{{ eyePulses }}" as="ep" hint-placeholder-count="0"><div style="{{ ep.style }}"></div></sc-for>
+<sc-for list="{{ slivers }}" as="sl" hint-placeholder-count="0"><div style="{{ sl.style }}"></div></sc-for>
+<sc-for list="{{ blinkRects }}" as="bl" hint-placeholder-count="0"><div style="{{ bl.style }}"></div></sc-for>
+<sc-if value="{{ hasCrack }}" hint-placeholder-val="{{ false }}"><div style="{{ crackStyle }}"></div></sc-if>
+<sc-for list="{{ sparks }}" as="sp" hint-placeholder-count="0"><span style="{{ sp.style }}"></span></sc-for>
+<sc-for list="{{ crowns }}" as="cr" hint-placeholder-count="0">
+<div style="{{ cr.style }}"><div style="{{ cr.bodyStyle }}"></div><div style="{{ cr.coreStyle }}"></div></div>
+</sc-for>
+<sc-if value="{{ burstOn }}" hint-placeholder-val="{{ false }}">
+<sc-for list="{{ burstMotes }}" as="bm" hint-placeholder-count="0"><span style="{{ bm.style }}"></span></sc-for>
+<sc-for list="{{ flareGlows }}" as="fg" hint-placeholder-count="0"><div style="{{ fg.style }}"></div></sc-for>
+</sc-if>
+<sc-if value="{{ ceremonyOn }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:2%;border-radius:50%;background:radial-gradient(circle,var(--accent-a45,rgba(217,144,88,.45)) 0%,var(--accent-a20,rgba(217,144,88,.2)) 42%,transparent 66%);animation:gsBurst .9s ease-out both"></div>
+<sc-if value="{{ ceremonyForm }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:9%;border-radius:50%;border:2px solid var(--accent-soft,#ECBD84);box-shadow:0 0 34px var(--accent-a45,rgba(217,144,88,.45));animation:gsBurst 1.15s ease-out both"></div>
+<sc-for list="{{ ceremonyMotes }}" as="cm" hint-placeholder-count="0"><span style="{{ cm.style }}"></span></sc-for>
+</sc-if>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:340,&quot;height&quot;:340},&quot;level&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:12,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:1,&quot;max&quot;:60,&quot;section&quot;:&quot;Персонаж&quot;},&quot;size&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:300,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:48,&quot;max&quot;:340,&quot;unit&quot;:&quot;px&quot;,&quot;section&quot;:&quot;Персонаж&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;amber&quot;,&quot;options&quot;:[&quot;amber&quot;,&quot;azure&quot;,&quot;spark&quot;],&quot;tsType&quot;:&quot;'amber'|'azure'|'spark'&quot;,&quot;section&quot;:&quot;Персонаж&quot;},&quot;still&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Персонаж&quot;},&quot;burst&quot;:{&quot;editor&quot;:null,&quot;default&quot;:0,&quot;tsType&quot;:&quot;number&quot;},&quot;playCeremony&quot;:{&quot;editor&quot;:null,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;'form'|'title'|''&quot;},&quot;anchorsOverride&quot;:{&quot;editor&quot;:null,&quot;default&quot;:null,&quot;tsType&quot;:&quot;object|null&quot;}}">
+class Component extends DCLogic {
+  state = { blink:false, burstOn:false, burstSeed:0, ceremonyOn:false, cfgReady:false, png:null, prevPng:null };
+
+  componentDidMount(){
+    this._live = true;
+    this._prevBurst = +(this.props.burst||0);
+    this._waitCfg();
+    this._syncPng();
+    /* моргание глаз отключено по запросу */
+    var k = this.props.playCeremony;
+    if(k==='form'||k==='title'){ var self=this; setTimeout(function(){ self._ceremony(k); }, 180); }
+  }
+  componentWillUnmount(){ this._live=false; clearTimeout(this._bt); clearTimeout(this._bt2); clearTimeout(this._bo); clearTimeout(this._ct); clearTimeout(this._wt); clearTimeout(this._fadeT); }
+  componentDidUpdate(){
+    var b = +(this.props.burst||0);
+    if(b !== this._prevBurst){ var was=this._prevBurst; this._prevBurst=b; if(b>was && !this.props.still) this._burst(); }
+    this._syncPng();
+  }
+  /* Смена темы/формы: предзагрузка нового PNG + кроссфейд ~250мс, без белой вспышки */
+  _syncPng(){
+    var CC=(typeof window!=='undefined')?window.GuardianCharConfig:null; if(!CC) return;
+    var level=+(this.props.level!=null?this.props.level:1);
+    var theme=this.props.theme||'amber';
+    var target=CC.assetFor(theme, CC.formFor(level));
+    if(!target || target===this._png) return;
+    if(!this._png){ this._png=target; if(this.state.png!==target) this.setState({png:target}); return; }
+    if(this._loading===target) return;
+    this._loading=target;
+    var self=this, im=new Image();
+    im.onload=function(){
+      if(!self._live || self._loading!==target) return;
+      var old=self._png; self._png=target; self._loading=null;
+      self.setState({png:target, prevPng:old});
+      clearTimeout(self._fadeT);
+      self._fadeT=setTimeout(function(){ if(self._live) self.setState({prevPng:null}); }, 320);
+    };
+    im.onerror=function(){ if(self._loading===target) self._loading=null; };
+    im.src=target;
+  }
+  _waitCfg(){
+    if(typeof window!=='undefined' && window.GuardianCharConfig){ if(!this.state.cfgReady) this.setState({cfgReady:true}); return; }
+    var self=this; this._wt=setTimeout(function(){ if(self._live) self._waitCfg(); }, 120);
+  }
+  _scheduleBlink(){
+    var self=this;
+    this._bt=setTimeout(function(){
+      if(!self._live) return;
+      self.setState({blink:true});
+      self._bt2=setTimeout(function(){ if(self._live) self.setState({blink:false}); },120);
+      self._scheduleBlink();
+    }, 4000+Math.random()*3000);
+  }
+  _burst(){ this.setState({burstOn:true, burstSeed:Math.random()}); clearTimeout(this._bo); var self=this; this._bo=setTimeout(function(){ if(self._live) self.setState({burstOn:false}); },650); }
+  _ceremony(kind){ this.setState({ceremonyOn:kind}); var self=this; this._ct=setTimeout(function(){ if(self._live) self.setState({ceremonyOn:false}); },1500); }
+  _rnd(i,s){ var v=Math.sin(i*127.1+s*311.7)*43758.5453; return v-Math.floor(v); }
+
+  renderVals(){
+    var P=this.props||{};
+    var size=+(P.size!=null?P.size:64);
+    var level=+(P.level!=null?P.level:1);
+    var theme=P.theme||'amber';
+    var still=!!P.still;
+    var S=this.state;
+    var CC=(typeof window!=='undefined')?window.GuardianCharConfig:null;
+    var R={ sizePx:size+'px', png:'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+      hasHalo:false, hasLining:false, liningStyle:'',
+      flames:[], candles:[], blinkRects:[], eyeDims:[], eyePulses:[], slivers:[],
+      sparks:[], hasCrack:false, crackStyle:'', crowns:[], smokes:[],
+      burstOn:false, burstMotes:[], flareGlows:[],
+      ceremonyOn:false, ceremonyForm:false, ceremonyMotes:[] };
+    if(!CC) return R;
+    var V=CC.visuals(level);
+    var form=V.form;
+    var ov=P.anchorsOverride;
+    var A=(ov && ov['form'+form]) || CC.anchorsFor(theme,form);
+    var M=CC.metricsFor(form);
+    var targetPng=CC.assetFor(theme,form);
+    R.png=S.png||targetPng;
+    R.prevPng=S.prevPng||'';
+    R.hasPrev=!!S.prevPng;
+    R.pngAnim=S.prevPng?';animation:gsImgIn .25s ease both':'';
+    if(still || !A) return R;
+
+    /* lite-режим: на мелких размерах — только моргание и пульс глаз */
+    var lite = size < 60;
+    var eyes=[A.eyeL,A.eyeR];
+    var i, e;
+
+    /* L4 — моргание: айвори-веки поверх глаз, ~120мс */
+    for(i=0;i<2;i++){ e=eyes[i];
+      R.blinkRects.push({ style:'position:absolute;left:'+(e.x-M.eyeW/2)+'%;top:'+(e.y-M.eyeH/2)+'%;width:'+M.eyeW+'%;height:'+M.eyeH+'%;border-radius:46%;background:#F3EFE6;opacity:'+(S.blink?1:0) });
+    }
+    /* L5 — приглушение глаз до 5 ур.; на 5-м медленно гаснет (прогрев «Зажжённого») */
+    if(form===1){
+      var dw=M.eyeW*0.82, dh=M.eyeH*0.82;
+      for(i=0;i<2;i++){ e=eyes[i];
+        R.eyeDims.push({ style:'position:absolute;left:'+(e.x-dw/2)+'%;top:'+(e.y-dh/2)+'%;width:'+dw+'%;height:'+dh+'%;border-radius:50%;background:var(--cloak,#4B4C45);opacity:'+(V.eyesDim?0.24:0)+';transition:opacity 1.5s ease' });
+      }
+    }
+    /* L5 — идл-пульс глаз (5+): отключён по запросу */
+    if(false){
+      var gw=M.eyeW*2.1, gh=M.eyeH*1.9, pd=V.slivers?1.5:3.6;
+      for(i=0;i<2;i++){ e=eyes[i];
+        R.eyePulses.push({ style:'position:absolute;left:'+(e.x-gw/2)+'%;top:'+(e.y-gh/2)+'%;width:'+gw+'%;height:'+gh+'%;border-radius:50%;background:radial-gradient(circle,var(--accent-soft,#ECBD84) 0%,transparent 62%);mix-blend-mode:screen;animation:gsEyePulse '+pd+'s ease-in-out '+(i*0.4)+'s infinite' });
+      }
+    }
+    /* 29 — язычки пламени над глазами */
+    if(V.slivers){
+      var sw=M.eyeW*0.75, sh=M.eyeH*1.05;
+      for(i=0;i<2;i++){ e=eyes[i];
+        R.slivers.push({ style:'position:absolute;left:'+(e.x-sw/2)+'%;top:'+(e.y-M.eyeH*1.35)+'%;width:'+sw+'%;height:'+sh+'%;background:radial-gradient(ellipse at 50% 80%,var(--flame-tip,#F3D9AF) 0%,var(--accent,#D99058) 55%,transparent 75%);mix-blend-mode:screen;animation:gsFlick '+(0.7+i*0.15)+'s ease-in-out infinite alternate' });
+      }
+    }
+    /* L3 — фликер поверх запечённого пламени (формы 2–5) */
+    if(V.flameFlicker && M.flameH>0){
+      var peaks=[A.peakL,A.peakR];
+      for(i=0;i<2;i++){ e=peaks[i];
+        R.flames.push({ style:'position:absolute;left:'+(e.x-M.flameW/2)+'%;top:'+(e.y-M.flameH)+'%;width:'+M.flameW+'%;height:'+M.flameH+'%;background:radial-gradient(ellipse at 50% 78%,var(--flame-tip,#F3D9AF) 0%,var(--accent,#D99058) 48%,transparent 72%);mix-blend-mode:screen;filter:blur(1px);animation:gsFlick '+(0.9+i*0.2)+'s ease-in-out '+(i*0.35)+'s infinite alternate' });
+      }
+    }
+    /* 5–9 — свечи-капли ровно на незажжённых точках кончиков */
+    if(V.candles && !lite){
+      var cw=M.candleW, ch=M.candleH, pk2=[A.peakL,A.peakR];
+      for(i=0;i<2;i++){ e=pk2[i];
+        R.candles.push({
+          style:'position:absolute;left:'+(e.x-cw/2)+'%;top:'+(e.y-ch+0.6)+'%;width:'+cw+'%;height:'+ch+'%;animation:gsCandle '+(0.5+i*0.08)+'s steps(2,end) infinite;transform-origin:50% 100%',
+          bodyStyle:'position:absolute;inset:6% 12% 0 12%;border-radius:50% 0 50% 50%;transform:rotate(-45deg);background:radial-gradient(circle at 32% 68%,var(--flame-tip,#F3D9AF) 0%,var(--accent,#D99058) 52%,var(--accent-deep,#B66120) 88%)',
+          coreStyle:'position:absolute;left:30%;top:42%;width:40%;height:42%;border-radius:50% 0 50% 50%;transform:rotate(-45deg);background:var(--flame-tip,#FFF3DC);opacity:.9'
+        });
+      }
+    }
+    /* L2 — свечение подкладки у подола */
+    if(V.lining>0){
+      R.hasLining=true;
+      R.liningStyle='position:absolute;left:'+(A.hemCenter.x-24)+'%;top:'+(A.hemCenter.y-15)+'%;width:48%;height:18%;background:radial-gradient(ellipse at 50% 82%,var(--accent-a45,rgba(217,144,88,.45)) 0%,transparent 68%);mix-blend-mode:screen;filter:blur(2px);--lo:'+V.lining+';animation:gsLining 3.4s ease-in-out infinite';
+    }
+    /* L6 — искры: мельче и прозрачнее, взлетают у КРАЁВ подола (не по корпусу) */
+    var n=lite?0:V.sparks;
+    for(i=0;i<n;i++){
+      var fx=A.hemCenter.x+(this._rnd(i,1)-0.5)*M.spread*0.9;
+      var fy=A.hemCenter.y-1-this._rnd(i,5)*4;
+      var sp=Math.max(1.8,size*0.028*(0.8+this._rnd(i,2)*0.6));
+      var y1=-(size*(0.16+this._rnd(i,3)*0.10));
+      var y2=-(size*(0.34+this._rnd(i,3)*0.16));
+      var sx=((this._rnd(i,4)-0.5)*size*0.06);
+      R.sparks.push({ style:'position:absolute;left:calc('+fx.toFixed(1)+'% - '+(sp/2).toFixed(1)+'px);top:'+fy.toFixed(1)+'%;width:'+sp.toFixed(1)+'px;height:'+sp.toFixed(1)+'px;border-radius:50%;background:var(--flame-tip,#F3D9AF);box-shadow:0 0 '+(sp*1.6).toFixed(1)+'px var(--accent,#D99058);opacity:0;mix-blend-mode:screen;filter:opacity(.65);--sx:'+sx.toFixed(1)+'px;--y1:'+y1.toFixed(0)+'px;--y2:'+y2.toFixed(0)+'px;animation:gsSpark '+(2.4+this._rnd(i,6)*1.6).toFixed(2)+'s ease-in-out '+(this._rnd(i,7)*2.8).toFixed(2)+'s infinite' });
+    }
+    /* L8 — дым с пиков (уровни 1–4); на мелких размерах не показываем */
+    if(V.smoke && !lite){
+      var pk=[A.peakL,A.peakR];
+      for(i=0;i<2;i++){ e=pk[i];
+        R.smokes.push({ style:'position:absolute;left:'+(e.x-1.2)+'%;top:'+(e.y-11)+'%;width:2.4%;height:11%;border-radius:45%;background:linear-gradient(to top,color-mix(in srgb,var(--text-secondary,#A9A89E) 30%,transparent),transparent);filter:blur(1.5px);animation:gsSmoke '+(3.6+i*0.5)+'s ease-out '+(i*1.8)+'s infinite' });
+      }
+    }
+    /* 29 — трещина у выреза; 30–39 — остаточное свечение 10% */
+    if(V.crack||V.residual){
+      R.hasCrack=true;
+      var cbase='position:absolute;left:'+(A.notch.x-1)+'%;top:'+(A.notch.y-3.5)+'%;width:2%;height:7%;background:linear-gradient(to bottom,var(--flame-tip,#F3D9AF),var(--accent-deep,#B66120));clip-path:polygon(45% 0,72% 20%,52% 38%,88% 55%,42% 100%,58% 62%,22% 40%,58% 22%);mix-blend-mode:screen;';
+      R.crackStyle=cbase+(V.crack?'animation:gsCrack 2.6s ease-in-out infinite':'opacity:.1');
+    }
+    /* L7 — корона из трёх капель (50+) */
+    if(V.crown){
+      var offs=[{dx:-8,dy:2.2,s:0.8},{dx:0,dy:-1.6,s:1},{dx:8,dy:2.2,s:0.8}];
+      for(i=0;i<3;i++){ var o=offs[i]; var kw=4.6*o.s, kh=6.4*o.s;
+        R.crowns.push({
+          style:'position:absolute;left:'+(A.crownCenter.x+o.dx-kw/2)+'%;top:'+(A.crownCenter.y+o.dy-kh/2)+'%;width:'+kw+'%;height:'+kh+'%;animation:gsCrown '+(2.6+i*0.3)+'s ease-in-out '+(i*0.45)+'s infinite',
+          bodyStyle:'position:absolute;inset:4% 10% 0 10%;border-radius:50% 0 50% 50%;transform:rotate(-45deg);background:radial-gradient(circle at 32% 68%,var(--flame-tip,#F3D9AF) 0%,var(--accent,#D99058) 55%,var(--accent-deep,#B66120) 90%)',
+          coreStyle:'position:absolute;left:32%;top:44%;width:36%;height:38%;border-radius:50% 0 50% 50%;transform:rotate(-45deg);background:var(--flame-tip,#FFF3DC);opacity:.85'
+        });
+      }
+    }
+    R.hasHalo=!!V.halo;
+    /* Микро-награда: 5 искр + вспышка глаз, 600мс */
+    R.burstOn=!!S.burstOn;
+    if(S.burstOn){
+      var cy=(A.eyeL.y+A.hemCenter.y)/2;
+      var mp=Math.max(3,size*0.04);
+      for(i=0;i<5;i++){
+        var ang=-Math.PI/2+(i-2)*0.55+(S.burstSeed-0.5)*0.4;
+        var rr=size*(0.26+this._rnd(i,8)*0.14);
+        R.burstMotes.push({ style:'position:absolute;left:50%;top:'+cy+'%;width:'+mp.toFixed(1)+'px;height:'+mp.toFixed(1)+'px;border-radius:50%;background:var(--flame-tip,#F3D9AF);box-shadow:0 0 '+(mp*2).toFixed(0)+'px var(--accent,#D99058);--dx:'+(Math.cos(ang)*rr).toFixed(0)+'px;--dy:'+(Math.sin(ang)*rr).toFixed(0)+'px;animation:gsMote .6s ease-out both' });
+      }
+      var fw=M.eyeW*2.4, fh=M.eyeH*2.2;
+      for(i=0;i<2;i++){ e=eyes[i];
+        R.flareGlows.push({ style:'position:absolute;left:'+(e.x-fw/2)+'%;top:'+(e.y-fh/2)+'%;width:'+fw+'%;height:'+fh+'%;border-radius:50%;background:radial-gradient(circle,var(--flame-tip,#FFF3DC) 0%,transparent 62%);mix-blend-mode:screen;animation:gsFlare .6s ease-out both' });
+      }
+    }
+    /* L9 — церемония эволюции */
+    R.ceremonyOn=!!S.ceremonyOn;
+    R.ceremonyForm=S.ceremonyOn==='form';
+    if(S.ceremonyOn==='form'){
+      for(i=0;i<14;i++){
+        var a2=(i/14)*Math.PI*2, r2=size*(0.3+(i%4)*0.07);
+        var ms2=Math.max(2.5,size*0.035);
+        R.ceremonyMotes.push({ style:'position:absolute;left:50%;top:48%;width:'+ms2.toFixed(1)+'px;height:'+ms2.toFixed(1)+'px;border-radius:50%;background:'+(i%2?'var(--accent-soft,#ECBD84)':'var(--flame-tip,#F3D9AF)')+';box-shadow:0 0 '+(ms2*2).toFixed(0)+'px var(--accent,#D99058);--dx:'+(Math.cos(a2)*r2).toFixed(0)+'px;--dy:'+(Math.sin(a2)*r2).toFixed(0)+'px;animation:gsMote '+(0.8+(i%5)*0.12).toFixed(2)+'s ease-out '+((i%4)*0.06).toFixed(2)+'s both' });
+      }
+    }
+    return R;
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<template id="__bundler_thumbnail" data-bg-color="#2E2F28">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+<rect width="1200" height="800" fill="#2E2F28"/>
+<circle cx="600" cy="400" r="150" fill="#D99058"/>
+<text x="600" y="462" text-anchor="middle" font-family="Georgia,serif" font-size="180" font-weight="bold" fill="#2E2F28">Х</text>
+</svg>
+</template>
+<meta name="ext-resource-dependency" content="./CharacterStage.dc.html" data-resource-id="charStage" />
+<meta name="ext-resource-dependency" content="./ios-frame.jsx" data-resource-id="iosFrame" />
+<meta name="ext-resource-dependency" content="uploads/form1_amber_c.png" data-resource-id="form1_amber" />
+<meta name="ext-resource-dependency" content="uploads/form2_amber_c.png" data-resource-id="form2_amber" />
+<meta name="ext-resource-dependency" content="uploads/form3_amber_c.png" data-resource-id="form3_amber" />
+<meta name="ext-resource-dependency" content="uploads/form4_amber_c.png" data-resource-id="form4_amber" />
+<meta name="ext-resource-dependency" content="uploads/form5_amber_c.png" data-resource-id="form5_amber" />
+<meta name="ext-resource-dependency" content="uploads/form1_azure_c.png" data-resource-id="form1_azure" />
+<meta name="ext-resource-dependency" content="uploads/form2_azure_c.png" data-resource-id="form2_azure" />
+<meta name="ext-resource-dependency" content="uploads/form3_azure_c.png" data-resource-id="form3_azure" />
+<meta name="ext-resource-dependency" content="uploads/form4_azure_c.png" data-resource-id="form4_azure" />
+<meta name="ext-resource-dependency" content="uploads/form5_azure_c.png" data-resource-id="form5_azure" />
+<meta name="ext-resource-dependency" content="uploads/form1_spark_c.png" data-resource-id="form1_spark" />
+<meta name="ext-resource-dependency" content="uploads/form2_spark_c.png" data-resource-id="form2_spark" />
+<meta name="ext-resource-dependency" content="uploads/form3_spark_c.png" data-resource-id="form3_spark" />
+<meta name="ext-resource-dependency" content="uploads/form4_spark_c.png" data-resource-id="form4_spark" />
+<meta name="ext-resource-dependency" content="uploads/form5_spark_c.png" data-resource-id="form5_spark" />
+<script>
+(function(){
+  if(!window.fetch) return;
+  var rf = window.fetch.bind(window);
+  function keyOf(u){
+    if (u.indexOf('CharacterStage.dc.html') !== -1) return 'charStage';
+    if (u.indexOf('ios-frame.jsx') !== -1) return 'iosFrame';
+    return null;
+  }
+  window.fetch = function(input, init){
+    var u = (typeof input === 'string') ? input : ((input && input.url) || '');
+    var k = keyOf(String(u));
+    var res = k && window.__resources && window.__resources[k];
+    if (res) return rf(res, init);
+    var p = rf(input, init);
+    if (u && String(u) === location.href && p && p.catch) p = p.catch(function(){ return new Response('', {status:200}); });
+    return p;
+  };
+})();
+</script>
+<script src="support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+
+
+<link href="vendor/fonts.css" rel="stylesheet">
+<link rel="stylesheet" href="vendor/tabler-icons.min.css">
+<script src="xp-engine.js"></script>
+<script src="sfx-engine.js"></script>
+<script src="./character-config.standalone.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;background:radial-gradient(120% 100% at 50% 0%, #2e2f28 0%, #211f1b 60%, #1b1a16 100%);font-family:'Golos Text',system-ui,sans-serif}
+::-webkit-scrollbar{width:0;height:0}
+@keyframes auraPulse{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.08);opacity:.9}}
+@keyframes emberPulse{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.07);opacity:.95}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes checkPop{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+@keyframes sparkRise{0%{transform:translate(0,0) scale(.4);opacity:0}30%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:0}}
+@keyframes gainRise{0%{transform:translateY(0);opacity:0}25%{opacity:1}100%{transform:translateY(-26px);opacity:0}}
+@keyframes streakBounce{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+@keyframes screenIn{0%{transform:translateY(10px)}100%{transform:none}}
+@keyframes toastIn{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:none}}
+@keyframes sheetIn{0%{transform:translateY(56px)}100%{transform:none}}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+@keyframes motePop{0%{transform:translate(0,0) scale(0);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:0}}
+@keyframes burstScale{0%{transform:scale(.3);opacity:0}45%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+@keyframes popIn{0%{transform:scale(.6)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes raySpin{to{transform:rotate(360deg)}}
+@keyframes heroJump{0%{transform:translateY(0) scale(1)}12%{transform:translateY(1.5%) scale(1.04,.94)}38%{transform:translateY(-7%) rotate(-1.5deg) scale(.97,1.05)}62%{transform:translateY(0) rotate(.8deg) scale(1.03,.96)}82%{transform:translateY(-2%) rotate(0deg)}100%{transform:translateY(0) scale(1)}}
+@keyframes beamUp{0%{opacity:0;transform:translateX(-50%) scaleY(.4)}100%{opacity:.7;transform:translateX(-50%) scaleY(1)}}
+@keyframes riseUp{0%{transform:translateY(46px) scale(.82)}100%{transform:translateY(0) scale(1)}}
+@keyframes expandIn{0%{transform:translateY(-6px)}100%{transform:none}}
+@keyframes glitch29{0%,88%,100%{transform:translateX(0);opacity:0}89%{transform:translateX(2px);opacity:.9}90.5%{transform:translateX(-1.5px);opacity:.65}92%{transform:translateX(0);opacity:0}}
+:root{--bg:#3B3C36;--surface:#47483F;--surface-2:#52534A;--accent:#D99058;--accent-deep:#B66120;--text-primary:#ECEBE4;--text-secondary:#A9A89E;--cloak:#4B4C45}
+*{--inset:color-mix(in srgb,var(--bg) 68%,#131310);--sheet:color-mix(in srgb,var(--surface) 55%,var(--bg));--nav:color-mix(in srgb,var(--surface) 60%,var(--bg));--nav-glass:color-mix(in srgb,var(--nav) 92%,transparent);--toast:color-mix(in srgb,var(--bg) 50%,#0B0B09);--border:color-mix(in srgb,var(--surface-2) 82%,var(--text-secondary));--border-strong:color-mix(in srgb,var(--text-secondary) 42%,var(--surface-2));--text-mid:color-mix(in srgb,var(--text-primary) 55%,var(--text-secondary));--text-faint:color-mix(in srgb,var(--text-secondary) 65%,var(--bg));--accent-soft:color-mix(in srgb,var(--accent) 80%,#FFF6E8);--flame-tip:color-mix(in srgb,var(--accent) 55%,#FFF3DC);--on-accent:#FFFFFF;--accent-a13:color-mix(in srgb,var(--accent) 13%,transparent);--accent-a15:color-mix(in srgb,var(--accent) 15%,transparent);--accent-a20:color-mix(in srgb,var(--accent) 20%,transparent);--accent-a27:color-mix(in srgb,var(--accent) 27%,transparent);--accent-a45:color-mix(in srgb,var(--accent) 45%,transparent)}
+[data-theming="on"], [data-theming="on"] *{transition:background-color .3s ease,border-color .3s ease,color .3s ease,fill .3s ease,stroke .3s ease,box-shadow .3s ease}
+input,button{font-family:inherit}
+input{outline:none}
+</style>
+</helmet>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div data-theming="{{ themingVal }}" style="height:100%;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;font-family:'Golos Text',system-ui,sans-serif;color:var(--text-primary); {{ themeVars }}">
+
+<div style="flex:1;overflow-y:auto;padding:58px 16px 104px">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div style="position:sticky;top:0;z-index:6;margin:0 -16px 18px;padding:0 16px 0;background:var(--bg)">
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin:0 4px 16px">
+<span style="color:var(--text-secondary);font-size:13px;white-space:nowrap">{{ dateLabel }}</span>
+</div>
+
+<div style="background:var(--surface);border-radius:18px;padding:15px;display:flex;align-items:center;gap:15px;margin-bottom:0;position:relative;overflow:hidden">
+<div style="position:relative;width:88px;height:88px;flex:none">
+<div style="position:absolute;inset:-9px;border-radius:30px;background:radial-gradient(circle,var(--accent-a27),transparent 68%);animation:auraPulse 3.6s ease-in-out infinite"></div>
+<div style="position:relative;width:88px;height:88px;border-radius:20px;border:1.5px solid var(--accent);background:var(--inset);display:flex;align-items:center;justify-content:center; {{ heroBumpStyle }}">
+<dc-import name="CharacterStage" size="80" level="{{ heroLevel }}" theme="{{ themeId }}" burst="{{ burstTick }}" hint-size="80px,80px"></dc-import>
+</div>
+</div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:var(--text-primary);letter-spacing:.2px">{{ heroName }}</span>
+<span style="font-size:11.5px;color:var(--accent-soft);background:var(--accent-a15);padding:2px 9px;border-radius:999px;white-space:nowrap">{{ heroLevelLabel }}</span>
+</div>
+<div style="display:flex;justify-content:space-between;gap:8px;margin:12px 0 5px">
+<span style="font-size:12px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ growthLabel }}</span>
+<span style="font-size:12px;color:var(--accent);font-weight:500;white-space:nowrap">{{ growthPctLabel }}</span>
+</div>
+<div style="height:7px;background:var(--inset);border-radius:4px;overflow:hidden">
+<div style="width: {{ growthWidth }};height:100%;background:linear-gradient(90deg,var(--accent-deep),var(--accent-soft));border-radius:4px;transition:width .7s cubic-bezier(.2,.8,.2,1)"></div>
+</div>
+</div>
+</div>
+
+</div>
+
+<div style="animation:screenIn .35s ease both">
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 12px">
+<span style="font-size:18px;font-weight:600;color:var(--text-primary)">Сегодня</span>
+<span style="font-size:12.5px;color:var(--text-secondary);white-space:nowrap">{{ taskCountLabel }}</span>
+</div>
+
+<sc-for list="{{ todayTasks }}" as="t" hint-placeholder-count="4">
+<div style="background: {{ t.cardBg }};border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:12px;margin-bottom:10px;position:relative;cursor:pointer;transition:background .2s" onClick="{{ t.onToggle }}">
+<sc-if value="{{ t.showBar }}" hint-placeholder-val="{{ true }}">
+<div style="width:4px;border-radius:4px;align-self:stretch;min-height:38px;background: {{ t.barColor }}"></div>
+</sc-if>
+<sc-if value="{{ t.showLeadDot }}" hint-placeholder-val="{{ false }}">
+<div style="width:11px;height:11px;border-radius:50%;flex:none;background: {{ t.barColor }}"></div>
+</sc-if>
+<div style="position:relative;flex:none">
+<sc-if value="{{ t.done }}" hint-placeholder-val="{{ false }}">
+<div style="width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);border:1.6px solid var(--accent);animation:checkPop .4s ease">
+<i class="ti ti-check" style="font-size:14px;color:var(--on-accent)"></i>
+</div>
+</sc-if>
+<sc-if value="{{ t.notDone }}" hint-placeholder-val="{{ true }}">
+<div style="width:23px;height:23px;border-radius:50%;border:1.6px solid {{ t.barColor }}"></div>
+</sc-if>
+<sc-if value="{{ t.spark }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;pointer-events:none">
+<sc-for list="{{ t.sparks }}" as="sp" hint-placeholder-count="0">
+<span style="position:absolute;left:9px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent-soft);--dx: {{ sp.dx }};--dy: {{ sp.dy }};animation:sparkRise .7s ease-out forwards"></span>
+</sc-for>
+<span style="position:absolute;left:-4px;top:-20px;font-size:12px;font-weight:600;color:var(--accent-soft);animation:gainRise 1s ease-out forwards;white-space:nowrap">{{ t.gainText }}</span>
+</div>
+</sc-if>
+</div>
+<div style="flex:1;min-width:0">
+<div style="font-size:15px;font-weight:500;line-height:1.3; {{ t.titleStyle }}">{{ t.title }}</div>
+<sc-if value="{{ t.showTodayGoal }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:12.5px;margin-top:3px;display:flex;align-items:center;gap:6px">
+<span style="width:8px;height:8px;border-radius:50%;flex:none;background: {{ t.dotColor }}"></span>
+<span style="color: {{ t.dotColor }}">{{ t.dotName }}</span>
+<span style="color:var(--text-faint)">· сегодня</span>
+</div>
+</sc-if>
+<sc-if value="{{ t.showStatusSub }}" hint-placeholder-val="{{ true }}">
+<div style="font-size:12.5px;margin-top:3px;color: {{ t.subColor }}">{{ t.sub }}</div>
+</sc-if>
+</div>
+<sc-if value="{{ t.showDiff }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:1px;flex:none;align-items:center">
+<sc-for list="{{ t.diffIcons }}" as="di" hint-placeholder-count="0"><i class="ti ti-flame" style="font-size:11px;color:var(--accent)"></i></sc-for>
+</div>
+</sc-if>
+<i class="ti ti-pencil" onClick="{{ t.onEdit }}" style="font-size:16px;color:var(--text-faint);flex:none;cursor:pointer;padding:5px;margin:-5px"></i>
+</div>
+</sc-for>
+
+<div style="margin:24px 4px 12px;display:flex;align-items:baseline;justify-content:space-between">
+<span style="font-size:18px;font-weight:600;color:var(--text-primary)">Привычки</span>
+<span style="font-size:12.5px;color:var(--text-secondary);white-space:nowrap">{{ habitDoneLabel }}</span>
+</div>
+
+<sc-for list="{{ todayHabits }}" as="h" hint-placeholder-count="3">
+<div style="background:var(--surface-2);border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:12px;margin-bottom:10px;cursor:pointer" onClick="{{ h.onToggle }}">
+<div style="position:relative;flex:none">
+<sc-if value="{{ h.doneToday }}" hint-placeholder-val="{{ false }}">
+<div style="width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--accent);border:1.6px solid var(--accent);animation:checkPop .4s ease"><i class="ti ti-check" style="font-size:14px;color:var(--on-accent)"></i></div>
+</sc-if>
+<sc-if value="{{ h.notDone }}" hint-placeholder-val="{{ true }}">
+<div style="width:23px;height:23px;border-radius:50%;border:1.6px solid var(--border-strong)"></div>
+</sc-if>
+<sc-if value="{{ h.spark }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;pointer-events:none">
+<sc-for list="{{ h.sparks }}" as="sp" hint-placeholder-count="0">
+<span style="position:absolute;left:9px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent-soft);--dx: {{ sp.dx }};--dy: {{ sp.dy }};animation:sparkRise .7s ease-out forwards"></span>
+</sc-for>
+<span style="position:absolute;left:-4px;top:-20px;font-size:12px;font-weight:600;color:var(--accent-soft);animation:gainRise 1s ease-out forwards;white-space:nowrap">{{ h.gainText }}</span>
+</div>
+</sc-if>
+</div>
+<div style="flex:1;min-width:0">
+<div style="font-size:15px;font-weight:500;color:var(--text-primary)">{{ h.name }}</div>
+<sc-if value="{{ h.hasContext }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:12px;color:var(--text-faint);margin-top:2px">{{ h.context }}</div>
+</sc-if>
+</div>
+<sc-if value="{{ h.showDiff }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:1px;flex:none;align-items:center">
+<sc-for list="{{ h.diffIcons }}" as="di" hint-placeholder-count="0"><i class="ti ti-flame" style="font-size:11px;color:var(--accent)"></i></sc-for>
+</div>
+</sc-if>
+<div style="display:flex;align-items:center;gap:4px;font-size:13px;color: {{ h.flameColor }}">
+<i class="ti ti-flame" style="font-size:16px"></i><span style="{{ h.streakAnim }}">{{ h.streak }}</span>
+</div>
+<i class="ti ti-pencil" onClick="{{ h.onEdit }}" style="font-size:16px;color:var(--text-faint);flex:none;cursor:pointer;padding:5px;margin:-5px"></i>
+</div>
+</sc-for>
+
+</div>
+</sc-if>
+
+<sc-if value="{{ isTasks }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .35s ease both">
+<div style="display:flex;align-items:center;margin:0 4px 18px">
+<span style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary)">Все задачи</span>
+</div>
+
+<sc-for list="{{ goals }}" as="g" hint-placeholder-count="3">
+<div style="background:var(--surface);border-radius:16px;margin-bottom:12px;overflow:hidden">
+<div style="padding:14px;display:flex;align-items:center;gap:13px;cursor:pointer" onClick="{{ g.onToggleExpand }}">
+<div style="position:relative;width:46px;height:46px;flex:none">
+<svg width="46" height="46" viewBox="0 0 46 46" style="display:block">
+<circle cx="23" cy="23" r="15" fill="none" stroke="var(--inset)" stroke-width="4"></circle>
+<circle cx="23" cy="23" r="15" fill="none" stroke="{{ g.color }}" stroke-width="4" stroke-linecap="round" stroke-dasharray="{{ g.dash }}" transform="rotate(-90 23 23)"></circle>
+</svg>
+<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text-mid)">{{ g.progressText }}</span>
+</div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font-size:15.5px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.name }}</span>
+<sc-if value="{{ g.overdue }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px;color:#CF8270;background:rgba(197,107,84,.16);padding:2px 7px;border-radius:999px;white-space:nowrap;flex:none">просрочено</span></sc-if>
+</div>
+<div style="font-size:12.5px;color:var(--text-secondary);margin-top:3px">{{ g.deadlineLabel }}</div>
+</div>
+<sc-if value="{{ g.complete }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ g.onArchive }}" style="width:32px;height:32px;border-radius:10px;flex:none;background:var(--accent-a15);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-trophy" style="font-size:17px;color:var(--accent-soft)"></i></div>
+</sc-if>
+<div onClick="{{ g.onEdit }}" style="width:30px;height:30px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-pencil" style="font-size:16px;color:var(--text-faint)"></i></div>
+<i class="ti ti-chevron-down" style="font-size:19px;color:var(--text-faint);flex:none;transition:transform .3s; {{ g.chevronStyle }}"></i>
+</div>
+<sc-if value="{{ g.expanded }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 14px 6px;animation:expandIn .3s ease">
+<sc-for list="{{ g.steps }}" as="s" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:11px;padding:10px 0;border-top:.5px solid var(--border);cursor:pointer" onClick="{{ s.onToggle }}">
+<sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}">
+<div style="width:21px;height:21px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background: {{ s.color }};animation:checkPop .4s ease"><i class="ti ti-check" style="font-size:13px;color:var(--on-accent)"></i></div>
+</sc-if>
+<sc-if value="{{ s.notDone }}" hint-placeholder-val="{{ true }}">
+<div style="width:21px;height:21px;border-radius:50%;flex:none;border:1.6px solid {{ s.color }}"></div>
+</sc-if>
+<div style="flex:1;min-width:0;font-size:14px; {{ s.titleStyle }}">{{ s.name }}</div>
+<span style="font-size:12px;flex:none;color: {{ s.dateColor }}">{{ s.dateLabel }}</span>
+<i class="ti ti-pencil" onClick="{{ s.onEdit }}" style="font-size:15px;color:var(--text-faint);flex:none;cursor:pointer;padding:4px;margin:-4px"></i>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-for>
+
+<div style="margin:20px 4px 12px"><span style="font-size:16px;font-weight:600;color:var(--text-mid)">Задачи без цели</span></div>
+<sc-for list="{{ soloTasks }}" as="t" hint-placeholder-count="2">
+<div style="background:var(--surface);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:9px;cursor:pointer" onClick="{{ t.onToggle }}">
+<sc-if value="{{ t.done }}" hint-placeholder-val="{{ false }}">
+<div style="width:22px;height:22px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:var(--text-faint);animation:checkPop .4s ease"><i class="ti ti-check" style="font-size:13px;color:var(--on-accent)"></i></div>
+</sc-if>
+<sc-if value="{{ t.notDone }}" hint-placeholder-val="{{ true }}">
+<div style="width:22px;height:22px;border-radius:50%;flex:none;border:1.6px solid var(--border-strong)"></div>
+</sc-if>
+<div style="flex:1;min-width:0;font-size:14.5px; {{ t.titleStyle }}">{{ t.name }}</div>
+<span style="font-size:12px;flex:none;color: {{ t.dateColor }}">{{ t.dateLabel }}</span>
+<sc-if value="{{ t.done }}" hint-placeholder-val="{{ false }}">
+<i class="ti ti-trophy" onClick="{{ t.onArchive }}" style="font-size:16px;color:var(--accent-soft);flex:none;cursor:pointer;padding:4px;margin:-4px"></i>
+</sc-if>
+<i class="ti ti-pencil" onClick="{{ t.onEdit }}" style="font-size:15px;color:var(--text-faint);flex:none;cursor:pointer;padding:4px;margin:-4px"></i>
+</div>
+</sc-for>
+
+<div onClick="{{ toggleArch }}" style="margin-top:26px;background:var(--surface);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:11px;cursor:pointer">
+<i class="ti ti-trophy" style="font-size:19px;color:var(--accent-soft);flex:none"></i>
+<span style="flex:1;font-size:14.5px;font-weight:600;color:var(--text-mid)">Все достигнутые задачи</span>
+<span style="font-size:12.5px;color:var(--text-faint)">{{ archCount }}</span>
+<i class="ti ti-chevron-down" style="font-size:17px;color:var(--text-faint);transition:transform .3s; {{ archChevron }}"></i>
+</div>
+<sc-if value="{{ archOpen }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:8px;animation:expandIn .3s ease">
+<sc-if value="{{ archEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="text-align:center;color:var(--text-faint);font-size:13px;padding:14px 10px;line-height:1.5">Пока пусто. Достигай целей — герой сложит их сюда как трофеи.</div>
+</sc-if>
+<sc-for list="{{ archived }}" as="ar" hint-placeholder-count="2">
+<div style="background:var(--inset);border-radius:12px;margin-bottom:8px;overflow:hidden">
+<div onClick="{{ ar.onToggleExp }}" style="padding:11px 13px;display:flex;align-items:center;gap:11px;cursor:pointer">
+<div style="width:21px;height:21px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background: {{ ar.color }}"><i class="ti ti-check" style="font-size:13px;color:var(--on-accent)"></i></div>
+<div style="flex:1;min-width:0">
+<div style="font-size:14px;color:var(--text-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ar.name }}</div>
+<div style="font-size:11.5px;color:var(--text-faint);margin-top:2px">{{ ar.meta }}</div>
+</div>
+<i class="ti ti-arrow-back-up" onClick="{{ ar.onRestore }}" style="font-size:17px;color:var(--text-faint);cursor:pointer;padding:4px"></i>
+<i class="ti ti-trash" onClick="{{ ar.onRemove }}" style="font-size:16px;color:var(--text-faint);cursor:pointer;padding:4px"></i>
+<sc-if value="{{ ar.hasSteps }}" hint-placeholder-val="{{ false }}">
+<i class="ti ti-chevron-down" style="font-size:16px;color:var(--text-faint);flex:none;transition:transform .3s; {{ ar.chevStyle }}"></i>
+</sc-if>
+</div>
+<sc-if value="{{ ar.expanded }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 13px 11px;animation:expandIn .3s ease">
+<sc-for list="{{ ar.steps }}" as="as" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-top:.5px solid var(--surface-2)">
+<i class="ti ti-check" style="font-size:14px;color:#8DA86C;flex:none"></i>
+<span style="flex:1;min-width:0;font-size:13px;color:var(--text-mid)">{{ as.name }}</span>
+<span style="font-size:11.5px;color:var(--text-faint);flex:none">{{ as.dateLabel }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCal }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Календарь" style="animation:screenIn .35s ease both;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin:0 4px">
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">{{ monthLabel }}</span>
+<div style="display:flex;gap:8px">
+<div onClick="{{ prevMonth }}" style="width:32px;height:32px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-chevron-left" style="font-size:18px;color:var(--text-mid)"></i></div>
+<div onClick="{{ nextMonth }}" style="width:32px;height:32px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-mid)"></i></div>
+</div>
+</div>
+
+<div>
+<sc-if value="{{ hasCalChips }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;padding:2px">
+<sc-for list="{{ calChips }}" as="ch" hint-placeholder-count="3">
+<div onClick="{{ ch.onTap }}" style="display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;font-size:12.5px;white-space:nowrap;cursor:pointer;flex:none; {{ ch.chipStyle }}">
+<span style="width:8px;height:8px;border-radius:50%;flex:none;background: {{ ch.dot }}"></span>
+<span>{{ ch.name }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px">
+<sc-for list="{{ weekHeaders }}" as="wh" hint-placeholder-count="7"><div style="text-align:center;font-size:11px;color:var(--text-faint);padding:4px 0">{{ wh }}</div></sc-for>
+</div>
+<sc-for list="{{ weeks }}" as="wk" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:repeat(7,1fr);position:relative">
+<sc-if value="{{ wk.hasBand }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;height:37px;top:5.5px;left: {{ wk.bandLeft }};width: {{ wk.bandWidth }}; {{ wk.bandStyle }}"></div>
+</sc-if>
+<sc-for list="{{ wk.days }}" as="dy" hint-placeholder-count="7">
+<div style="height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative" onClick="{{ dy.onTap }}">
+<div style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative; {{ dy.heat }}">
+<sc-if value="{{ dy.isToday }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-3.5px;border-radius:50%;border:1px solid var(--accent);animation:emberPulse 3.6s ease-in-out infinite;pointer-events:none"></div></sc-if>
+<span style="font-size:13.5px; {{ dy.numStyle }}">{{ dy.num }}</span>
+<sc-if value="{{ dy.isHottest }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:-3px;right:-4px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:.5px solid var(--border);display:flex;align-items:center;justify-content:center"><i class="ti ti-flame" style="font-size:10px;color:var(--accent-soft)"></i></div></sc-if>
+</div>
+<sc-if value="{{ dy.hasBandDot }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background: {{ dy.bandDot }}"></span></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+
+<div style="background:var(--surface);border-radius:18px;padding:16px 15px 15px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px">
+<span style="font-family:'Spectral',serif;font-size:17px;font-weight:600;color:var(--text-primary)">{{ dayLabel }}</span>
+<span style="font-size:13.5px;font-weight:600;flex:none;color: {{ dayXpColor }}">{{ dayXpLabel }}</span>
+</div>
+<sc-if value="{{ dayHasItems }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ dayItems }}" as="it" hint-placeholder-count="3">
+<div style="background:var(--surface-2);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:11px">
+<sc-if value="{{ it.done }}" hint-placeholder-val="{{ false }}"><div style="width:21px;height:21px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:var(--accent);border:1.5px solid var(--accent)"><i class="ti ti-check" style="font-size:12px;color:var(--on-accent)"></i></div></sc-if>
+<sc-if value="{{ it.notDone }}" hint-placeholder-val="{{ true }}"><div style="width:21px;height:21px;border-radius:50%;flex:none;border:1.5px solid {{ it.ringColor }}"></div></sc-if>
+<div style="flex:1;min-width:0">
+<div style="font-size:14px;font-weight:500;line-height:1.3; {{ it.titleStyle }}">{{ it.name }}</div>
+<sc-if value="{{ it.hasSub }}" hint-placeholder-val="{{ false }}"><div style="font-size:11.5px;color:var(--text-faint);margin-top:2px">{{ it.sub }}</div></sc-if>
+</div>
+<sc-if value="{{ it.showDiff }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:2px;flex:none"><sc-for list="{{ it.diffIcons }}" as="di" hint-placeholder-count="0"><i class="ti ti-flame" style="font-size:11px;color:var(--accent)"></i></sc-for></div></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ dayEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="color:var(--text-faint);font-size:13.5px">Тихий день — искр не было</div>
+</sc-if>
+<sc-if value="{{ dayHasGoals }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;padding-top:12px;border-top:.5px solid var(--border)">
+<sc-for list="{{ dayGoals }}" as="dg" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:9px">
+<span style="width:9px;height:9px;border-radius:3px;flex:none;background: {{ dg.color }}"></span>
+<span style="flex:1;min-width:0;font-size:13px;color:var(--text-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dg.name }}</span>
+<span style="font-size:12px;color:var(--text-faint);flex:none">{{ dg.leftLabel }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+
+<div style="background:var(--surface);border-radius:18px;padding:14px 15px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
+<span style="font-size:14px;font-weight:600;color:var(--text-primary)">Итоги месяца</span>
+<div style="display:flex;gap:3px">
+<sc-for list="{{ heatStrip }}" as="hc" hint-placeholder-count="7"><div style="width:13px;height:13px;border-radius:4px; {{ hc.fill }}"></div></sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+<div><div style="font-size:16px;font-weight:600;color:var(--accent-soft)">{{ monthHeatLabel }}</div><div style="font-size:11px;color:var(--text-faint);margin-top:2px">Искры за месяц</div></div>
+<div><div style="font-size:16px;font-weight:600;color:var(--text-primary)">{{ monthTasksLabel }}</div><div style="font-size:11px;color:var(--text-faint);margin-top:2px">задач закрыто</div></div>
+<div><div style="font-size:16px;font-weight:600;color:var(--text-primary)">{{ bestStreakLabel }}</div><div style="font-size:11px;color:var(--text-faint);margin-top:2px">лучший стрик</div></div>
+</div>
+</div>
+
+</div>
+</sc-if>
+
+<sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
+<div style="animation:screenIn .35s ease both">
+<div style="display:flex;justify-content:space-between;align-items:center;margin:0 4px 18px">
+<span style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary)">Профиль</span>
+</div>
+
+<div style="background:var(--surface);border-radius:20px;padding:24px 18px 20px;display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;overflow:hidden">
+<div style="position:relative;width:116px;height:116px;flex:none;margin-bottom:14px">
+<div style="position:absolute;inset:-8px;border-radius:36px;background:radial-gradient(circle,var(--accent-a27),transparent 68%);animation:auraPulse 3.6s ease-in-out infinite"></div>
+<div style="position:relative;width:116px;height:116px;border-radius:26px;border:2px solid var(--accent);background:var(--inset);display:flex;align-items:center;justify-content:center">
+<dc-import name="CharacterStage" size="108" level="{{ heroLevel }}" theme="{{ themeId }}" burst="{{ burstTick }}" hint-size="108px,108px"></dc-import>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:9px;margin-bottom:16px">
+<span style="font-family:'Spectral',serif;font-size:23px;font-weight:600;color:var(--text-primary)">{{ heroName }}</span>
+<span style="font-size:12px;color:var(--accent-soft);background:var(--accent-a15);padding:3px 11px;border-radius:999px">{{ heroLevelLabel }}</span>
+<div onClick="{{ openRename }}" style="width:28px;height:28px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-pencil" style="font-size:15px;color:var(--text-secondary)"></i></div>
+</div>
+<div style="width:100%;display:flex;justify-content:space-between;gap:8px;margin-bottom:6px">
+<span style="font-size:12.5px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ growthLabel }}</span>
+<span style="font-size:12.5px;color:var(--accent);font-weight:500;white-space:nowrap">{{ growthPctLabel }}</span>
+</div>
+<div style="width:100%;height:7px;background:var(--inset);border-radius:4px;overflow:hidden">
+<div style="width: {{ growthWidth }};height:100%;background:linear-gradient(90deg,var(--accent-deep),var(--accent-soft));border-radius:4px;transition:width .7s cubic-bezier(.2,.8,.2,1)"></div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+<sc-for list="{{ accountStats }}" as="stat" hint-placeholder-count="4">
+<div style="background:var(--surface);border-radius:15px;padding:15px 16px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
+<i class="ti {{ stat.icon }}" style="font-size:18px;color:var(--accent-soft)"></i>
+<span style="font-size:12px;color:var(--text-secondary)">{{ stat.label }}</span>
+</div>
+<div style="font-family:'Spectral',serif;font-size:25px;font-weight:600;color:var(--text-primary)">{{ stat.value }}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="background:var(--surface);border-radius:16px;overflow:hidden">
+<sc-for list="{{ accountActions }}" as="a" hint-placeholder-count="4">
+<div onClick="{{ a.onTap }}" style="display:flex;align-items:center;gap:13px;padding:15px 16px; {{ a.borderStyle }};cursor:pointer">
+<i class="ti {{ a.icon }}" style="font-size:20px;color:var(--text-mid);flex:none"></i>
+<span style="flex:1;font-size:15px;color:var(--text-mid)">{{ a.label }}</span>
+<i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint);flex:none"></i>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAppearance }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Внешний вид" style="animation:screenIn .35s ease both;min-height:100%;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
+<div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Внешний вид</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<sc-for list="{{ themeCards }}" as="tc" hint-placeholder-count="3">
+<div onClick="{{ tc.onPick }}" style="border-radius:16px;padding:13px;display:flex;align-items:center;gap:13px;cursor:pointer;position:relative;transition:border-color .25s;background:var(--surface);color:var(--text-primary); {{ tc.varsStyle }}; {{ tc.borderStyle }}">
+<div style="width:96px;flex:none;border-radius:12px;background:var(--bg);padding:9px;display:flex;flex-direction:column;gap:7px">
+<div style="background:var(--surface-2);border-radius:6px;padding:6px 7px;display:flex;align-items:center;gap:6px">
+<div style="width:3px;height:17px;border-radius:2px;background:#8DA86C"></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:4px">
+<div style="height:4px;border-radius:2px;width:82%;background:var(--text-primary);opacity:.85"></div>
+<div style="height:3px;border-radius:2px;width:56%;background:var(--text-secondary);opacity:.8"></div>
+</div>
+</div>
+<div style="height:5px;border-radius:3px;background:var(--inset);overflow:hidden">
+<div style="width:62%;height:100%;border-radius:3px;background:var(--accent)"></div>
+</div>
+</div>
+<dc-import name="CharacterStage" size="46" level="{{ heroLevel }}" theme="{{ tc.id }}" hint-size="46px,46px" style="flex:none"></dc-import>
+<div style="flex:1;min-width:0">
+<div style="font-size:15.5px;font-weight:600;color:var(--text-primary)">{{ tc.name }}</div>
+<div style="font-size:12.5px;color:var(--text-secondary);margin-top:3px">{{ tc.caption }}</div>
+</div>
+<sc-if value="{{ tc.sel }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;animation:popIn .3s ease"><i class="ti ti-check" style="font-size:13px;color:var(--on-accent)"></i></div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:auto;padding-top:18px;position:sticky;bottom:96px">
+<button onClick="{{ applyThemeTap }}" style="width:100%;background:var(--accent);border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:15px;border-radius:14px;cursor:pointer;box-shadow:0 6px 18px var(--accent-a27);transition:opacity .2s; {{ applyStyle }}">Применить</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Настройки" style="animation:screenIn .35s ease both">
+<div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
+<div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Настройки</span>
+</div>
+
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Общие</div>
+<div style="background:var(--surface);border-radius:16px;overflow:hidden;margin-bottom:20px">
+<sc-for list="{{ settingsToggles }}" as="r" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:13px;padding:14px 16px; {{ r.borderStyle }}">
+<i class="ti {{ r.icon }}" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
+<div style="flex:1;min-width:0">
+<div style="font-size:15px;color:var(--text-mid)">{{ r.label }}</div>
+<div style="font-size:12px;color:var(--text-secondary);margin-top:2px">{{ r.hint }}</div>
+</div>
+<div onClick="{{ r.onToggle }}" style="width:44px;height:26px;border-radius:999px;flex:none;cursor:pointer;transition:background .25s;padding:3px;box-sizing:border-box; {{ r.trackStyle }}">
+<div style="width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .22s cubic-bezier(.3,.9,.3,1); {{ r.knobStyle }}"></div>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Предпочтения</div>
+<div style="background:var(--surface);border-radius:16px;overflow:hidden">
+<sc-for list="{{ settingsRows }}" as="r" hint-placeholder-count="2">
+<div onClick="{{ r.onTap }}" style="display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer; {{ r.borderStyle }}">
+<i class="ti {{ r.icon }}" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
+<span style="flex:1;font-size:15px;color:var(--text-mid)">{{ r.label }}</span>
+<span style="font-size:14px;color:var(--text-secondary)">{{ r.value }}</span>
+<i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint);flex:none"></i>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isNotif }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Уведомления" style="animation:screenIn .35s ease both">
+<div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
+<div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Уведомления</span>
+</div>
+
+<div style="background:var(--surface);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:13px;margin-bottom:20px">
+<i class="ti ti-bell" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
+<div style="flex:1;min-width:0">
+<div style="font-size:15px;color:var(--text-mid)">Push-уведомления</div>
+<div style="font-size:12px;color:var(--text-secondary);margin-top:2px">Главный переключатель</div>
+</div>
+<div onClick="{{ pushToggle.onToggle }}" style="width:44px;height:26px;border-radius:999px;flex:none;cursor:pointer;transition:background .25s;padding:3px;box-sizing:border-box; {{ pushToggle.trackStyle }}">
+<div style="width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .22s cubic-bezier(.3,.9,.3,1); {{ pushToggle.knobStyle }}"></div>
+</div>
+</div>
+
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Что присылать</div>
+<div style="background:var(--surface);border-radius:16px;overflow:hidden">
+<sc-for list="{{ notifRows }}" as="r" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:13px;padding:14px 16px;transition:opacity .25s; {{ r.borderStyle }}; {{ r.dimStyle }}">
+<i class="ti {{ r.icon }}" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
+<div style="flex:1;min-width:0">
+<div style="font-size:15px;color:var(--text-mid)">{{ r.label }}</div>
+<div style="font-size:12px;color:var(--text-secondary);margin-top:2px">{{ r.hint }}</div>
+</div>
+<div onClick="{{ r.onToggle }}" style="width:44px;height:26px;border-radius:999px;flex:none;cursor:pointer;transition:background .25s;padding:3px;box-sizing:border-box; {{ r.trackStyle }}">
+<div style="width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .22s cubic-bezier(.3,.9,.3,1); {{ r.knobStyle }}"></div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isHelp }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Помощь" style="animation:screenIn .35s ease both">
+<div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
+<div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Помощь</span>
+</div>
+
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Частые вопросы</div>
+<div style="background:var(--surface);border-radius:16px;overflow:hidden;margin-bottom:20px">
+<sc-for list="{{ faqList }}" as="f" hint-placeholder-count="4">
+<div style="{{ f.borderStyle }}">
+<div onClick="{{ f.onTap }}" style="display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer">
+<span style="flex:1;font-size:14.5px;color:var(--text-mid)">{{ f.q }}</span>
+<i class="ti ti-chevron-down" style="font-size:18px;color:var(--text-faint);flex:none;transition:transform .25s; {{ f.rot }}"></i>
+</div>
+<div style="overflow:hidden;transition:max-height .32s ease,opacity .25s;padding:0 16px; {{ f.bodyStyle }}">
+<div style="font-size:13.5px;color:var(--text-secondary);line-height:1.55;padding-bottom:15px">{{ f.a }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Связаться с нами</div>
+<div style="background:var(--surface);border-radius:16px;overflow:hidden">
+<sc-for list="{{ helpRows }}" as="r" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer; {{ r.borderStyle }}">
+<i class="ti {{ r.icon }}" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
+<span style="flex:1;font-size:15px;color:var(--text-mid)">{{ r.label }}</span>
+<i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint);flex:none"></i>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="О приложении" style="animation:screenIn .35s ease both">
+<div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
+<div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">О приложении</span>
+</div>
+
+<div style="background:var(--surface);border-radius:20px;padding:26px 20px 22px;display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:20px">
+<div style="position:relative;width:104px;height:104px;flex:none;margin-bottom:14px">
+<div style="position:absolute;inset:-8px;border-radius:34px;background:radial-gradient(circle,var(--accent-a27),transparent 68%);animation:auraPulse 3.6s ease-in-out infinite"></div>
+<div style="position:relative;width:104px;height:104px;border-radius:24px;border:2px solid var(--accent);background:var(--inset);display:flex;align-items:center;justify-content:center">
+<dc-import name="CharacterStage" size="96" level="{{ heroLevel }}" theme="{{ themeId }}" hint-size="96px,96px"></dc-import>
+</div>
+</div>
+<div style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Хранитель</div>
+<div style="font-size:13px;color:var(--accent-soft);margin-top:4px">Версия 2.4.0</div>
+<div style="font-size:13.5px;color:var(--text-secondary);line-height:1.55;margin-top:14px;max-width:280px">Спутник продуктивности, который растёт вместе с вами. Выполняйте задачи и привычки — и наблюдайте, как крепнет ваш Хранитель.</div>
+</div>
+
+<div style="background:var(--surface);border-radius:16px;overflow:hidden">
+<sc-for list="{{ aboutRows }}" as="r" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer; {{ r.borderStyle }}">
+<i class="ti {{ r.icon }}" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
+<span style="flex:1;font-size:15px;color:var(--text-mid)">{{ r.label }}</span>
+<i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint);flex:none"></i>
+</div>
+</sc-for>
+</div>
+
+<div style="text-align:center;font-size:12px;color:var(--text-faint);margin-top:22px">Сделано с заботой · 2026</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPath }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Путь" style="animation:screenIn .35s ease both">
+<div style="display:flex;align-items:center;gap:11px;margin:0 4px 6px">
+<div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Путь Хранителя</span>
+</div>
+<div style="font-size:12.5px;color:var(--text-secondary);margin:0 4px 16px">Каждый уровень приближает следующую форму</div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<sc-for list="{{ milestones }}" as="ms" hint-placeholder-count="7">
+<div onClick="{{ ms.onTap }}" style="border-radius:16px;padding:13px 15px;display:flex;align-items:center;gap:14px;position:relative;transition:border-color .25s; {{ ms.cardStyle }}">
+<sc-if value="{{ ms.normal }}" hint-placeholder-val="{{ true }}">
+<div style="width:78px;height:78px;flex:none;border-radius:18px;background:var(--inset);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+<div style="{{ ms.stageWrapStyle }}">
+<dc-import name="CharacterStage" size="66" level="{{ ms.stageLevel }}" theme="{{ themeId }}" still="{{ ms.still }}" hint-size="66px,66px"></dc-import>
+</div>
+<sc-if value="{{ ms.showLock }}" hint-placeholder-val="{{ false }}"><i class="ti ti-lock" style="position:absolute;right:6px;bottom:6px;font-size:14px;color:var(--text-secondary)"></i></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ ms.anomaly }}" hint-placeholder-val="{{ false }}">
+<div style="width:78px;height:78px;flex:none;border-radius:18px;background:color-mix(in srgb,var(--bg) 55%,#000);display:flex;align-items:center;justify-content:center">
+<span style="width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.45;box-shadow:0 0 9px var(--accent)"></span>
+</div>
+</sc-if>
+<div style="flex:1;min-width:0">
+<div style="font-family:'Spectral',serif;font-size:17px;font-weight:600;color: {{ ms.nameColor }}">{{ ms.name }}</div>
+<div style="font-size:12.5px;color:var(--text-secondary);margin-top:3px">{{ ms.sub }}</div>
+<sc-if value="{{ ms.current }}" hint-placeholder-val="{{ false }}"><div style="font-size:11.5px;color:var(--accent-soft);margin-top:5px">Сейчас здесь</div></sc-if>
+</div>
+<sc-if value="{{ ms.anomaly }}" hint-placeholder-val="{{ false }}">
+<span style="position:relative;font-family:'Spectral',serif;font-size:25px;font-weight:600;color:var(--text-faint);flex:none">
+<span>29</span>
+<span style="position:absolute;left:0;top:0;color:var(--accent);clip-path:inset(36% 0 40% 0);animation:glitch29 5.5s steps(1) infinite;opacity:0">29</span>
+</span>
+</sc-if>
+<sc-if value="{{ ms.normal }}" hint-placeholder-val="{{ true }}"><span style="font-family:'Spectral',serif;font-size:23px;font-weight:600;flex:none;color: {{ ms.numColor }}">{{ ms.lvl }}</span></sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCalib }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Калибровка" style="animation:screenIn .35s ease both">
+<div style="display:flex;align-items:center;gap:11px;margin:0 4px 14px">
+<div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Калибровка</span>
+</div>
+<div style="font-size:11.5px;color:var(--text-secondary);margin:0 6px 8px;text-transform:uppercase;letter-spacing:.07em">Уровень · {{ calFormLabel }}</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin:0 2px 12px">
+<sc-for list="{{ calLevels }}" as="cl" hint-placeholder-count="8"><div onClick="{{ cl.onTap }}" style="padding:7px 13px;border-radius:9px;font-size:13px;cursor:pointer; {{ cl.chipStyle }}">{{ cl.label }}</div></sc-for>
+</div>
+<div style="display:flex;gap:6px;margin:0 2px 14px">
+<sc-for list="{{ calThemes }}" as="ct" hint-placeholder-count="3"><div onClick="{{ ct.onTap }}" style="flex:1;text-align:center;padding:8px;border-radius:9px;font-size:13px;cursor:pointer; {{ ct.chipStyle }}">{{ ct.label }}</div></sc-for>
+</div>
+<div style="width:322px;max-width:100%;margin:0 auto;position:relative;border-radius:20px;background:var(--inset);border:1px solid var(--surface-2);overflow:hidden; {{ calVars }}">
+<dc-import name="CharacterStage" size="320" level="{{ calLevel }}" theme="{{ calTheme }}" anchors-override="{{ calAnchors }}" hint-size="320px,320px"></dc-import>
+<div ref="{{ calRef }}" onPointerMove="{{ calMove }}" onPointerUp="{{ calUp }}" onPointerLeave="{{ calUp }}" style="position:absolute;inset:0;touch-action:none">
+<sc-for list="{{ calDots }}" as="dot" hint-placeholder-count="8">
+<div onPointerDown="{{ dot.onDown }}" style="position:absolute;left: {{ dot.left }};top: {{ dot.top }};transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;border:1.5px solid #fff;cursor:grab;box-shadow:0 1px 5px rgba(0,0,0,.55);background: {{ dot.bg }}; {{ dot.ring }}">
+<span style="position:absolute;left:50%;top:-17px;transform:translateX(-50%);font-size:9px;font-family:monospace;color:#fff;background:rgba(0,0,0,.6);padding:1px 5px;border-radius:6px;white-space:nowrap;pointer-events:none">{{ dot.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--surface-2);border-radius:13px;padding:10px 12px;margin:12px 0 10px">
+<span style="width:12px;height:12px;border-radius:50%;flex:none;background: {{ calSelColor }}"></span>
+<div style="flex:1;min-width:0">
+<div style="font-size:13.5px;font-weight:600;color:var(--text-primary)">{{ calSelName }} <span style="font-family:monospace;font-weight:400;font-size:11px;color:var(--text-faint)">{{ calSelCoords }}</span></div>
+<div style="font-size:11.5px;color:var(--text-secondary);margin-top:1px">{{ calSelDesc }}</div>
+</div>
+<div style="display:flex;gap:4px;flex:none">
+<div onClick="{{ calNL }}" style="width:32px;height:32px;border-radius:9px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-arrow-left" style="font-size:15px;color:var(--text-mid)"></i></div>
+<div onClick="{{ calNU }}" style="width:32px;height:32px;border-radius:9px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-arrow-up" style="font-size:15px;color:var(--text-mid)"></i></div>
+<div onClick="{{ calND }}" style="width:32px;height:32px;border-radius:9px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-arrow-down" style="font-size:15px;color:var(--text-mid)"></i></div>
+<div onClick="{{ calNR }}" style="width:32px;height:32px;border-radius:9px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-arrow-right" style="font-size:15px;color:var(--text-mid)"></i></div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px">
+<sc-for list="{{ calLegend }}" as="lg" hint-placeholder-count="8">
+<div onClick="{{ lg.onTap }}" style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;cursor:pointer;border:1px solid; {{ lg.rowStyle }}">
+<span style="width:10px;height:10px;border-radius:50%;flex:none;background: {{ lg.color }}"></span>
+<div style="flex:1;min-width:0">
+<div style="font-size:12px;font-weight:600;color:var(--text-primary);white-space:nowrap">{{ lg.name }}</div>
+<div style="font-size:10.5px;color:var(--text-faint);line-height:1.35">{{ lg.desc }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="font-size:11.5px;color:var(--text-faint);margin:0 6px 14px;line-height:1.5">Точки задают, где на персонаже живут эффекты. Перетащите точку на арт или выделите её и подвиньте стрелками. Правки хранятся отдельно для каждой формы и темы.</div>
+<div style="display:flex;gap:8px">
+<button onClick="{{ calSave }}" style="flex:2;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer">Сохранить</button>
+<button onClick="{{ calReset }}" style="flex:1;background:var(--surface);border:1px solid var(--surface-2);color:var(--text-mid);font-size:14px;padding:14px;border-radius:13px;cursor:pointer">Сбросить</button>
+</div>
+<div onClick="{{ calExport }}" style="text-align:center;padding:12px;color:var(--text-secondary);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Скопировать JSON</div>
+</div>
+</sc-if>
+
+</div>
+
+<!--NAV-->
+<sc-if value="{{ navFloating }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;bottom:0;padding:0 12px 18px;pointer-events:none;z-index:20">
+<div style="pointer-events:auto;background:var(--nav-glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:.5px solid var(--border);border-radius:24px;padding:8px 4px;display:flex;align-items:flex-end;justify-content:space-around;box-shadow:0 10px 30px rgba(0,0,0,.4)">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Сегодня</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Все задачи</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--accent-soft)" onClick="{{ openCreate }}"><div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));display:flex;align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 4px 12px var(--accent-a27)"><i class="ti ti-plus" style="font-size:24px;color:#fff"></i></div><span style="font-size:9.5px;white-space:nowrap">Создать</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navCalColor }}" onClick="{{ goCal }}"><i class="ti ti-calendar" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Календарь</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navAccountColor }}" onClick="{{ goAccount }}"><i class="ti ti-user" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Профиль</span></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ navFlat }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:0;right:0;bottom:0;border-top:.5px solid var(--border);padding:8px 12px 20px;display:flex;align-items:flex-end;justify-content:space-around;background:var(--nav);z-index:20">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Сегодня</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Все задачи</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;color:var(--accent-soft)" onClick="{{ openCreate }}"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));display:flex;align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 4px 12px var(--accent-a27)"><i class="ti ti-plus" style="font-size:25px;color:#fff"></i></div><span style="font-size:10px;white-space:nowrap">Создать</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navCalColor }}" onClick="{{ goCal }}"><i class="ti ti-calendar" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Календарь</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navAccountColor }}" onClick="{{ goAccount }}"><i class="ti ti-user" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Профиль</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ undo }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:96px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:25">
+<span style="font-size:13.5px;color:var(--text-mid)">{{ undoLabel }}</span>
+<button onClick="{{ onUndo }}" style="background:none;border:none;color:var(--accent-soft);font-size:13.5px;font-weight:600;cursor:pointer;padding:0">Отменить</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ themeToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:96px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:26">
+<i class="ti ti-palette" style="font-size:17px;color:var(--accent-soft)"></i>
+<span style="font-size:13.5px;color:var(--text-mid)">Тема применена</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ pathToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:96px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:26">
+<i class="ti ti-flame" style="font-size:17px;color:var(--accent-soft)"></i>
+<span style="font-size:13.5px;color:var(--text-mid)">Что-то дремлет здесь…</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ calToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:96px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:26">
+<i class="ti ti-check" style="font-size:17px;color:var(--accent-soft)"></i>
+<span style="font-size:13.5px;color:var(--text-mid)">{{ calToastMsg }}</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ capToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:152px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:27">
+<i class="ti ti-flame" style="font-size:17px;color:var(--accent-soft)"></i>
+<span style="font-size:13.5px;color:var(--text-mid)">Дух собрал достаточно искр на сегодня</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:35;background:rgba(18,18,15,.58)" onClick="{{ closeCreate }}"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:36;background:var(--sheet);border-radius:24px 24px 0 0;padding:10px 18px 30px;max-height:90%;overflow-y:auto;box-shadow:0 -14px 40px rgba(0,0,0,.5);animation:sheetIn .34s cubic-bezier(.2,.8,.2,1)">
+<div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;min-height:30px">
+<sc-if value="{{ ctChosen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ createBack }}" style="display:flex;align-items:center;gap:3px;cursor:pointer;color:var(--text-secondary)"><i class="ti ti-chevron-left" style="font-size:18px"></i><span style="font-size:14px">Назад</span></div></sc-if>
+<sc-if value="{{ ctNone }}" hint-placeholder-val="{{ true }}"><span style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:var(--text-primary)">{{ createTitle }}</span></sc-if>
+<sc-if value="{{ ctChosen }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Spectral',serif;font-size:17px;font-weight:600;color:var(--text-primary)">{{ createTitle }}</span></sc-if>
+<div onClick="{{ closeCreate }}" style="width:30px;height:30px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-x" style="font-size:16px;color:var(--text-secondary)"></i></div>
+</div>
+
+<sc-if value="{{ ctNone }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div onClick="{{ pickGoalType }}" style="background:var(--surface);border-radius:15px;padding:15px;display:flex;align-items:center;gap:14px;cursor:pointer">
+<div style="width:44px;height:44px;border-radius:12px;flex:none;background:rgba(217,144,88,.15);display:flex;align-items:center;justify-content:center"><i class="ti ti-target" style="font-size:23px;color:var(--accent-soft)"></i></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--text-primary)">Цель</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px">Крупная задача с дедлайном и шагами</div></div>
+<i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint)"></i>
+</div>
+<div onClick="{{ pickTaskType }}" style="background:var(--surface);border-radius:15px;padding:15px;display:flex;align-items:center;gap:14px;cursor:pointer">
+<div style="width:44px;height:44px;border-radius:12px;flex:none;background:rgba(141,168,108,.15);display:flex;align-items:center;justify-content:center"><i class="ti ti-circle-check" style="font-size:23px;color:#A6C27E"></i></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--text-primary)">Задача</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px">Одно конкретное действие с датой</div></div>
+<i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint)"></i>
+</div>
+<div onClick="{{ pickHabitType }}" style="background:var(--surface);border-radius:15px;padding:15px;display:flex;align-items:center;gap:14px;cursor:pointer">
+<div style="width:44px;height:44px;border-radius:12px;flex:none;background:rgba(79,160,136,.15);display:flex;align-items:center;justify-content:center"><i class="ti ti-flame" style="font-size:23px;color:#5FB39A"></i></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--text-primary)">Привычка</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px">Регулярное действие со стриком</div></div>
+<i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint)"></i>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ ctGoal }}" hint-placeholder-val="{{ false }}">
+<div>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Название</label>
+<input value="{{ draftName }}" onChange="{{ onDraftName }}" placeholder="Например, Прочитать «Дюну»" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Цвет</label>
+<div style="display:flex;gap:12px;margin-bottom:18px">
+<sc-for list="{{ swatches }}" as="sw" hint-placeholder-count="6"><div onClick="{{ sw.onPick }}" style="width:32px;height:32px;border-radius:50%;cursor:pointer;background: {{ sw.color }}; {{ sw.ring }}"></div></sc-for>
+</div>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Дедлайн</label>
+<div style="display:flex;gap:8px;margin-bottom:10px">
+<sc-for list="{{ quickDeadlines }}" as="q" hint-placeholder-count="3"><div onClick="{{ q.onTap }}" style="flex:1;text-align:center;padding:9px;border-radius:10px;font-size:13px;cursor:pointer; {{ q.chipStyle }}">{{ q.label }}</div></sc-for>
+</div>
+<div onClick="{{ openDeadlinePicker }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:13px 14px;font-size:15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:18px"><span style="color: {{ deadlineValColor }}">{{ draftDeadlineLabel }}</span><i class="ti ti-calendar-event" style="font-size:18px;color:var(--accent)"></i></div>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 8px">Шаги</label>
+<sc-if value="{{ hasSteps }}" hint-placeholder-val="{{ false }}">
+<div style="margin-bottom:10px">
+<sc-for list="{{ draftSteps }}" as="st" hint-placeholder-count="0">
+<div style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--inset);border-radius:10px;margin-bottom:7px">
+<i class="ti ti-point-filled" style="font-size:13px;color:var(--accent)"></i>
+<span style="flex:1;min-width:0;font-size:14px;color:var(--text-mid)">{{ st.name }}</span>
+<span style="display:flex;gap:1px;flex:none"><sc-for list="{{ st.diffIcons }}" as="di" hint-placeholder-count="0"><i class="ti ti-flame" style="font-size:11px;color:var(--accent)"></i></sc-for></span>
+<span style="font-size:12px;color:var(--text-faint)">{{ st.dateLabel }}</span>
+<i class="ti ti-x" onClick="{{ st.onRemove }}" style="font-size:15px;color:var(--text-faint);cursor:pointer"></i>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<div style="display:flex;gap:8px;margin-bottom:10px">
+<input value="{{ draftStepName }}" onChange="{{ onDraftStepName }}" placeholder="Новый шаг" style="flex:1;min-width:0;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:11px 12px;font-size:14px;color:var(--text-primary);color-scheme:dark"/>
+<div onClick="{{ openStepDatePicker }}" style="width:132px;flex:none;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 11px;font-size:13px;color:var(--text-primary);display:flex;align-items:center;justify-content:space-between;gap:6px;cursor:pointer"><span>{{ draftStepDateLabel }}</span><i class="ti ti-calendar-event" style="font-size:15px;color:var(--accent)"></i></div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<span style="font-size:12.5px;color:var(--text-secondary);flex:none">Сложность шага</span>
+<div style="display:flex;gap:5px;flex:1">
+<sc-for list="{{ stepDiffEmbers }}" as="de" hint-placeholder-count="5">
+<div onClick="{{ de.onTap }}" style="flex:1;height:34px;border-radius:9px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer">
+<i class="ti ti-flame" style="font-size:16px;transition:color .15s,text-shadow .15s;color: {{ de.color }}; {{ de.glow }}"></i>
+</div>
+</sc-for>
+</div>
+</div>
+<div onClick="{{ addStep }}" style="text-align:center;padding:11px;border-radius:11px;border:1px dashed var(--border);color:var(--text-mid);font-size:14px;cursor:pointer;margin-bottom:18px">+ Добавить шаг</div>
+<button onClick="{{ saveGoal }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ saveStyle }}">Создать цель</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ ctTask }}" hint-placeholder-val="{{ false }}">
+<div>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Куда добавить</label>
+<div style="display:flex;gap:4px;background:var(--inset);border:1px solid var(--surface-2);border-radius:12px;padding:4px;margin-bottom:16px">
+<div onClick="{{ setAttachSolo }}" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-size:13.5px;cursor:pointer;transition:all .2s; {{ attachSoloStyle }}">Отдельная</div>
+<div onClick="{{ setAttachGoal }}" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-size:13.5px;cursor:pointer;transition:all .2s; {{ attachGoalStyle }}">К цели</div>
+</div>
+<sc-if value="{{ attachGoal }}" hint-placeholder-val="{{ false }}">
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 8px">Цель</label>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+<sc-for list="{{ goalsForPicker }}" as="gp" hint-placeholder-count="3"><div onClick="{{ gp.onPick }}" style="display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:13px; {{ gp.chipStyle }}"><span style="width:9px;height:9px;border-radius:50%;background: {{ gp.dot }}"></span>{{ gp.name }}</div></sc-for>
+</div>
+</sc-if>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Название</label>
+<input value="{{ draftName }}" onChange="{{ onDraftName }}" placeholder="Например, Позвонить в банк" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Сложность</label>
+<div style="display:flex;gap:6px;margin-bottom:8px">
+<sc-for list="{{ diffEmbers }}" as="de" hint-placeholder-count="5">
+<div onClick="{{ de.onTap }}" style="flex:1;height:44px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer">
+<i class="ti ti-flame" style="font-size:22px;transition:color .15s,text-shadow .15s;color: {{ de.color }}; {{ de.glow }}"></i>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 2px 16px">
+<span style="font-size:13px;font-weight:500;color:var(--text-primary)">{{ diffLabel }}</span>
+<span style="font-size:13px;color:var(--accent-soft)">{{ diffPreview }}</span>
+</div>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Дата</label>
+<div onClick="{{ openTaskDatePicker }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:13px 14px;font-size:15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:18px"><span style="color:var(--text-primary)">{{ draftDateLabel }}</span><i class="ti ti-calendar-event" style="font-size:18px;color:var(--accent)"></i></div>
+<button onClick="{{ saveTask }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ saveStyle }}">Создать задачу</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ ctHabit }}" hint-placeholder-val="{{ false }}">
+<div>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Название</label>
+<input value="{{ draftName }}" onChange="{{ onDraftName }}" placeholder="Например, Стакан воды утром" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Расписание</label>
+<div style="display:flex;gap:4px;background:var(--inset);border:1px solid var(--surface-2);border-radius:12px;padding:4px;margin-bottom:14px">
+<div onClick="{{ setSchedDaily }}" style="flex:1;text-align:center;padding:9px 4px;border-radius:9px;font-size:12.5px;cursor:pointer;transition:all .2s; {{ schedDailyStyle }}">Ежедневно</div>
+<div onClick="{{ setSchedDays }}" style="flex:1;text-align:center;padding:9px 4px;border-radius:9px;font-size:12.5px;cursor:pointer;transition:all .2s; {{ schedDaysStyle }}">По дням</div>
+<div onClick="{{ setSchedCount }}" style="flex:1;text-align:center;padding:9px 4px;border-radius:9px;font-size:12.5px;cursor:pointer;transition:all .2s; {{ schedCountStyle }}">N в неделю</div>
+</div>
+<sc-if value="{{ schedDays }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:6px;margin-bottom:16px">
+<sc-for list="{{ weekdayChips }}" as="wc" hint-placeholder-count="7"><div onClick="{{ wc.onTap }}" style="flex:1;text-align:center;padding:9px 0;border-radius:9px;font-size:12.5px;cursor:pointer;border:1px solid; {{ wc.chipStyle }}">{{ wc.label }}</div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ schedCount }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px">
+<div onClick="{{ decCount }}" style="width:38px;height:38px;border-radius:10px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text-mid);cursor:pointer">−</div>
+<span style="font-size:15px;color:var(--text-primary);min-width:96px;text-align:center">{{ countVal }} раз в неделю</span>
+<div onClick="{{ incCount }}" style="width:38px;height:38px;border-radius:10px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text-mid);cursor:pointer">+</div>
+</div>
+</sc-if>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Сложность</label>
+<div style="display:flex;gap:6px;margin-bottom:8px">
+<sc-for list="{{ diffEmbers }}" as="de" hint-placeholder-count="5">
+<div onClick="{{ de.onTap }}" style="flex:1;height:44px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer">
+<i class="ti ti-flame" style="font-size:22px;transition:color .15s,text-shadow .15s;color: {{ de.color }}; {{ de.glow }}"></i>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 2px 16px">
+<span style="font-size:13px;font-weight:500;color:var(--text-primary)">{{ diffLabel }}</span>
+<span style="font-size:13px;color:var(--accent-soft)">{{ diffPreview }}</span>
+</div>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Когда / контекст (необязательно)</label>
+<input value="{{ draftContext }}" onChange="{{ onDraftContext }}" placeholder="Например, после пробуждения" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:18px;color-scheme:dark"/>
+<button onClick="{{ saveHabit }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ saveStyle }}">Создать привычку</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ datePickerOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:38;background:rgba(18,18,15,.58)" onClick="{{ closeDatePicker }}"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:39;background:var(--sheet);border-radius:24px 24px 0 0;padding:10px 18px 28px;box-shadow:0 -14px 40px rgba(0,0,0,.5);animation:sheetIn .34s cubic-bezier(.2,.8,.2,1)">
+<div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px"></div>
+<sc-if value="{{ dpShowDays }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+<div onClick="{{ dpToggleMonths }}" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+<span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;color:var(--text-primary)">{{ dpMonthLabel }}</span>
+<i class="ti ti-chevron-down" style="font-size:17px;color:var(--text-secondary)"></i>
+</div>
+<div style="display:flex;gap:8px">
+<div onClick="{{ dpPrev }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
+<div onClick="{{ dpNext }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-chevron-right" style="font-size:19px;color:var(--text-mid)"></i></div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px">
+<sc-for list="{{ dpWeekHeaders }}" as="wh" hint-placeholder-count="7"><div style="text-align:center;font-size:11px;color:var(--text-faint);padding:3px 0">{{ wh }}</div></sc-for>
+</div>
+<sc-for list="{{ dpWeeks }}" as="wk" hint-placeholder-count="6">
+<div style="display:grid;grid-template-columns:repeat(7,1fr)">
+<sc-for list="{{ wk.days }}" as="dy" hint-placeholder-count="7">
+<div style="height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative" onClick="{{ dy.onTap }}">
+<sc-if value="{{ dy.sel }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;width:34px;height:34px;border-radius:50%;background:var(--accent)"></div></sc-if>
+<sc-if value="{{ dy.todayRing }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;width:34px;height:34px;border-radius:50%;border:1px solid var(--accent)"></div></sc-if>
+<span style="position:relative;font-size:14.5px;color: {{ dy.numColor }}">{{ dy.num }}</span>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</sc-if>
+<sc-if value="{{ dpMonthList }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+<div onClick="{{ dpToggleMonths }}" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+<span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;color:var(--text-primary)">{{ dpYear }}</span>
+<i class="ti ti-chevron-up" style="font-size:17px;color:var(--text-secondary)"></i>
+</div>
+<div style="display:flex;gap:8px">
+<div onClick="{{ dpPrevYear }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
+<div onClick="{{ dpNextYear }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-chevron-right" style="font-size:19px;color:var(--text-mid)"></i></div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;min-height:273px;align-content:center">
+<sc-for list="{{ dpMonths }}" as="mo" hint-placeholder-count="12"><div onClick="{{ mo.onTap }}" style="text-align:center;padding:17px 0;border-radius:12px;cursor:pointer;font-size:14.5px; {{ mo.chipStyle }}">{{ mo.name }}</div></sc-for>
+</div>
+</sc-if>
+<div style="display:flex;gap:8px;margin-top:16px">
+<div onClick="{{ dpToday }}" style="flex:1;text-align:center;padding:11px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);color:var(--accent-soft);font-size:14px;font-weight:500;cursor:pointer">Сегодня</div>
+<div onClick="{{ dpTomorrow }}" style="flex:1;text-align:center;padding:11px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);color:var(--text-mid);font-size:14px;cursor:pointer">Завтра</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ celebrating }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:40;background:radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--bg) 95%, transparent), rgba(33,31,27,.97));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center" onClick="{{ dismissCelebrate }}">
+<sc-if value="{{ celebBurst }}" hint-placeholder-val="{{ true }}">
+<div style="position:relative;width:190px;height:190px;display:flex;align-items:center;justify-content:center">
+<div style="position:absolute;inset:0;background:conic-gradient(from 0deg, {{ celebColorA }}, {{ celebColorB }}, {{ celebColorA }}, {{ celebColorB }}, {{ celebColorA }});border-radius:50%;animation:raySpin 8s linear infinite,burstScale .7s ease both;filter:blur(2px)"></div>
+<div style="position:absolute;inset:34px;border-radius:50%;background:var(--inset)"></div>
+<div style="position:relative;animation:heroJump .45s ease .15s both">
+<div style="width:92px;height:92px;border-radius:22px;border:2px solid var(--accent-soft);background:var(--inset);display:flex;align-items:center;justify-content:center">
+<dc-import name="CharacterStage" size="72" level="{{ heroLevel }}" theme="{{ themeId }}" hint-size="72px,72px"></dc-import>
+</div>
+</div>
+<sc-for list="{{ motes }}" as="mo" hint-placeholder-count="0">
+<span style="position:absolute;left:50%;top:50%;width: {{ mo.size }};height: {{ mo.size }};border-radius:50%;background: {{ mo.color }};--dx: {{ mo.dx }};--dy: {{ mo.dy }};animation:motePop {{ mo.dur }} ease-out {{ mo.delay }} forwards"></span>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ celebAscend }}" hint-placeholder-val="{{ false }}">
+<div style="position:relative;width:150px;height:226px;display:flex;align-items:flex-end;justify-content:center;overflow:hidden">
+<div style="position:absolute;top:0;left:50%;width:92px;height:100%;background:linear-gradient(to top, {{ celebColorB }}, transparent 78%);filter:blur(7px);animation:beamUp 1.1s ease both"></div>
+<div style="position:relative;animation:riseUp 1.4s cubic-bezier(.2,.8,.2,1) both">
+<div style="width:92px;height:92px;border-radius:22px;border:2px solid var(--accent-soft);background:var(--inset);display:flex;align-items:center;justify-content:center">
+<dc-import name="CharacterStage" size="72" level="{{ heroLevel }}" theme="{{ themeId }}" hint-size="72px,72px"></dc-import>
+</div>
+</div>
+<sc-for list="{{ motes }}" as="mo" hint-placeholder-count="0">
+<span style="position:absolute;left:50%;bottom:24px;width: {{ mo.size }};height: {{ mo.size }};border-radius:50%;background: {{ mo.color }};--dx: {{ mo.dx }};--dy: {{ mo.dy }};animation:motePop {{ mo.dur }} ease-out {{ mo.delay }} forwards"></span>
+</sc-for>
+</div>
+</sc-if>
+<div style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary);margin-top:20px;animation:popIn .5s ease both">Цель достигнута</div>
+<div style="font-size:14px;color:var(--text-secondary);margin-top:6px;max-width:250px">«{{ celebGoalName }}» завершена — герой набирает силу</div>
+<button onClick="{{ dismissCelebrate }}" style="margin-top:24px;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:14px;font-weight:600;padding:12px 28px;border-radius:999px;cursor:pointer">Продолжить</button>
+<button onClick="{{ celebArchive }}" style="margin-top:12px;background:none;border:none;color:var(--text-secondary);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Убрать в достигнутые</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ editOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:33;background:rgba(18,18,15,.58)" onClick="{{ closeEdit }}"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:34;background:var(--sheet);border-radius:24px 24px 0 0;padding:10px 18px 28px;max-height:88%;overflow-y:auto;box-shadow:0 -14px 40px rgba(0,0,0,.5);animation:sheetIn .34s cubic-bezier(.2,.8,.2,1)">
+<div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+<span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;color:var(--text-primary)">{{ editTitle }}</span>
+<div onClick="{{ closeEdit }}" style="width:30px;height:30px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-x" style="font-size:16px;color:var(--text-secondary)"></i></div>
+</div>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Название</label>
+<input value="{{ editName }}" onChange="{{ onEditName }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
+<sc-if value="{{ editHasDiff }}" hint-placeholder-val="{{ false }}">
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Сложность</label>
+<div style="display:flex;gap:6px;margin-bottom:8px">
+<sc-for list="{{ editDiffEmbers }}" as="de" hint-placeholder-count="5">
+<div onClick="{{ de.onTap }}" style="flex:1;height:44px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer">
+<i class="ti ti-flame" style="font-size:22px;transition:color .15s,text-shadow .15s;color: {{ de.color }}; {{ de.glow }}"></i>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 2px 16px">
+<span style="font-size:13px;font-weight:500;color:var(--text-primary)">{{ editDiffLabel }}</span>
+<span style="font-size:13px;color:var(--accent-soft)">{{ editDiffPreview }}</span>
+</div>
+</sc-if>
+<sc-if value="{{ editHasColor }}" hint-placeholder-val="{{ false }}">
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Цвет</label>
+<div style="display:flex;gap:12px;margin-bottom:16px">
+<sc-for list="{{ editSwatches }}" as="sw" hint-placeholder-count="6"><div onClick="{{ sw.onPick }}" style="width:32px;height:32px;border-radius:50%;cursor:pointer;background: {{ sw.color }}; {{ sw.ring }}"></div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ editHasDate }}" hint-placeholder-val="{{ true }}">
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ editDateCaption }}</label>
+<div onClick="{{ openEditDatePicker }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:13px 14px;font-size:15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:20px"><span style="color:var(--text-primary)">{{ editDateLabel }}</span><i class="ti ti-calendar-event" style="font-size:18px;color:var(--accent)"></i></div>
+</sc-if>
+<button onClick="{{ saveEdit }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ editSaveStyle }}">Сохранить</button>
+<div onClick="{{ requestDelete }}" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;padding:8px;color:#CF8270;font-size:14px;cursor:pointer"><i class="ti ti-trash" style="font-size:16px"></i><span>{{ editDeleteLabel }}</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ renameOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:33;background:rgba(18,18,15,.58)" onClick="{{ closeRename }}"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:34;background:var(--sheet);border-radius:24px 24px 0 0;padding:10px 18px 28px;box-shadow:0 -14px 40px rgba(0,0,0,.5);animation:sheetIn .34s cubic-bezier(.2,.8,.2,1)">
+<div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+<span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;color:var(--text-primary)">Имя Хранителя</span>
+<div onClick="{{ closeRename }}" style="width:30px;height:30px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-x" style="font-size:16px;color:var(--text-secondary)"></i></div>
+</div>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Имя</label>
+<input value="{{ renameVal }}" onChange="{{ onRenameChange }}" maxLength="{{ 20 }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
+<button onClick="{{ saveRename }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ renameSaveStyle }}">Сохранить</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:42;background:rgba(18,18,15,.66);display:flex;align-items:center;justify-content:center;padding:30px;animation:fadeIn .22s ease" onClick="{{ cancelDelete }}">
+<div onClick="{{ stopProp }}" style="background:var(--sheet);border:.5px solid var(--border);border-radius:22px;padding:24px 20px 18px;width:100%;max-width:300px;text-align:center;animation:popIn .32s ease;box-shadow:0 18px 50px rgba(0,0,0,.5)">
+<div style="width:74px;height:74px;border-radius:19px;border:1.5px solid var(--border-strong);background:var(--inset);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+<dc-import name="CharacterStage" size="56" level="{{ heroLevel }}" theme="{{ themeId }}" hint-size="56px,56px"></dc-import>
+</div>
+<div style="font-family:'Spectral',serif;font-size:18px;font-weight:600;color:var(--text-primary)">Хранитель насторожился</div>
+<div style="font-size:13.5px;color:var(--text-secondary);line-height:1.55;margin:8px 0 18px">{{ confirmText }}</div>
+<button onClick="{{ cancelDelete }}" style="width:100%;background:var(--accent);border:none;color:var(--on-accent);font-size:14.5px;font-weight:600;padding:13px;border-radius:12px;cursor:pointer">Оставить, я справлюсь</button>
+<button onClick="{{ confirmDeleteTap }}" style="width:100%;background:none;border:none;color:#CF8270;font-size:13.5px;padding:13px 0 2px;cursor:pointer">Всё равно удалить</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ leveled }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:45;background:radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--surface) 96%, transparent), rgba(34,31,27,.98));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px" onClick="{{ dismissLevel }}">
+<div style="position:relative;width:170px;height:170px;display:flex;align-items:center;justify-content:center">
+<div style="position:absolute;inset:0;border-radius:50%;border:2px solid var(--accent-soft);animation:burstScale .7s ease both;box-shadow:0 0 50px var(--accent-a45)"></div>
+<div style="position:absolute;inset:-12px;border-radius:50%;background:conic-gradient(from 0deg,transparent,var(--accent-a27),transparent,var(--accent-a20),transparent);animation:raySpin 9s linear infinite"></div>
+<div style="position:relative;animation:heroJump .45s ease both">
+<div style="width:96px;height:96px;border-radius:24px;border:2px solid var(--accent-soft);background:var(--inset);display:flex;align-items:center;justify-content:center">
+<dc-import name="CharacterStage" size="76" level="{{ heroLevel }}" theme="{{ themeId }}" play-ceremony="{{ leveledKind }}" hint-size="76px,76px"></dc-import>
+</div>
+</div>
+</div>
+<div style="font-family:'Spectral',serif;font-size:13px;color:var(--accent-soft);margin-top:18px;letter-spacing:3px;text-transform:uppercase;white-space:nowrap">{{ leveledCaption }}</div>
+<div style="font-family:'Spectral',serif;font-size:40px;font-weight:600;color:var(--text-primary);margin-top:2px;animation:popIn .5s ease both">Уровень {{ leveledNum }}</div>
+<button onClick="{{ dismissLevel }}" style="margin-top:22px;background:none;border:1px solid var(--accent-soft);color:var(--accent-soft);font-size:14px;font-weight:600;padding:11px 28px;border-radius:999px;cursor:pointer">Дальше</button>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
+class Component extends DCLogic {
+  DEV_CALIBRATION = false; /* dev-флаг: показать пункт «Калибровка» в Кабинете */
+  calRef = React.createRef();
+  state = {
+    screen: 'home',
+    theme: (function(){ try{ return localStorage.getItem('guardian-theme')||'amber'; }catch(e){ return 'amber'; } })(),
+    themeSel: 'amber',
+    theming: false,
+    themeToast: false,
+    settings: { sounds:true, haptics:true, starfield:true, monday:true },
+    notif: { push:true, tasks:true, habits:true, achievements:true, weekly:false },
+    faqOpen: null,
+    lang: 'Русский',
+    createOpen: false,
+    createType: null,
+    expanded: 'g2',
+    selDay: null,
+    sheetOpen: false,
+    calHabits: false,
+    calGoal: null,
+    calYear: 2026,
+    calMonth: 5,
+    datePicker: null,
+    celebrating: null,
+    leveled: null,
+    pendingLevel: null,
+    undo: null,
+    edit: null,
+    confirm: null,
+    archOpen: false,
+    archExp: null,
+    spark: {},
+    justDone: {},
+    burstTick: 0,
+    heroBump: false,
+    pathToast: false,
+    calToast: false,
+    calib: null,
+    rename: null,
+    draft: { name:'', hue:55, deadline:'', date:'2026-06-12', steps:[], stepName:'', stepDate:'2026-06-20', stepDiff:2, schedule:'daily', context:'', goalId:'g1', attach:'solo', days:[1,3,5], count:3, difficulty:2 },
+    hero: { name:'Гермес', level:3 },
+    /* XP: total — источник истины; level выводится. dailyRaw — «сырой» XP за день (дневной жар).
+       log — сколько реально начислено за каждый пункт (для честного отката). maxLevel — церемонии не повторяются. */
+    xp: { total:56, day:'2026-06-12', dailyRaw:20, log:{}, maxLevel:3 },
+    /* Дневной жар по датам — история для тепловой карты календаря (сегодня берётся из xp.dailyRaw) */
+    xpDays: { '2026-05-25':38, '2026-05-27':72, '2026-05-30':15, '2026-05-31':52, '2026-06-01':25, '2026-06-03':58, '2026-06-04':12, '2026-06-05':44, '2026-06-06':96, '2026-06-07':8, '2026-06-08':52, '2026-06-09':118, '2026-06-10':30 },
+    capToast: false,
+    goals: [
+      { id:'g1', name:'Книга месяца', hue:190, deadline:'2026-06-30', steps:[
+        {id:'g1s1', name:'Выбрать книгу', date:'2026-06-01', done:true, difficulty:1},
+        {id:'g1s2', name:'Прочитать главы 1–5', date:'2026-06-08', done:true, difficulty:2},
+        {id:'g1s3', name:'Прочитать 30 минут', date:'2026-06-12', done:false, difficulty:2},
+        {id:'g1s4', name:'Прочитать главы 6–10', date:'2026-06-18', done:false, difficulty:2},
+        {id:'g1s5', name:'Выписать цитаты', date:'2026-06-24', done:false, difficulty:2},
+        {id:'g1s6', name:'Финальный обзор', date:'2026-06-30', done:false, difficulty:3},
+      ]},
+      { id:'g2', name:'Квартальный отчёт', hue:55, deadline:'2026-06-15', steps:[
+        {id:'g2s1', name:'Собрать данные', date:'2026-06-03', done:true, difficulty:3},
+        {id:'g2s2', name:'Сводка по продажам', date:'2026-06-06', done:true, difficulty:3},
+        {id:'g2s3', name:'Черновик презентации', date:'2026-06-09', done:true, difficulty:4},
+        {id:'g2s4', name:'Защитить на встрече', date:'2026-06-15', done:true, difficulty:5},
+        {id:'g2s5', name:'Отправить отчёт по проекту', date:'2026-06-11', done:false, difficulty:3},
+      ]},
+      { id:'g3', name:'Подготовка к полумарафону', hue:25, deadline:'2026-07-26', steps:[
+        {id:'g3s1', name:'План тренировок', date:'2026-06-05', done:true, difficulty:2},
+        {id:'g3s2', name:'Длинная пробежка 8 км', date:'2026-06-14', done:false, difficulty:3},
+        {id:'g3s3', name:'Интервалы', date:'2026-06-17', done:false, difficulty:3},
+        {id:'g3s4', name:'Длинная пробежка 12 км', date:'2026-06-21', done:false, difficulty:4},
+        {id:'g3s5', name:'Темповый бег', date:'2026-06-25', done:false, difficulty:3},
+        {id:'g3s6', name:'Длинная пробежка 16 км', date:'2026-07-05', done:false, difficulty:5},
+        {id:'g3s7', name:'Контрольный забег', date:'2026-07-19', done:false, difficulty:4},
+      ]},
+    ],
+    solo: [
+      {id:'t1', name:'Записаться к стоматологу', date:'2026-06-09', done:false, difficulty:3},
+      {id:'t2', name:'Купить продукты', date:'2026-06-12', done:false, difficulty:1},
+      {id:'t3', name:'Забрать посылку', date:'2026-06-13', done:false, difficulty:1},
+      {id:'t4', name:'Оплатить счёт за интернет', date:'2026-06-20', done:false, difficulty:2},
+    ],
+    habits: [
+      {id:'h1', name:'Медитация', streak:12, doneToday:true, schedule:'Ежедневно', context:'по утрам', difficulty:2},
+      {id:'h2', name:'Зал', streak:5, doneToday:false, schedule:'Пн · Ср · Пт', context:'после работы', difficulty:4},
+      {id:'h3', name:'Без сахара', streak:23, doneToday:true, schedule:'Ежедневно', context:'', difficulty:3},
+    ],
+  };
+
+  _today(){ return new Date(2026,5,12); }
+  _d(s){ const p=s.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
+  _diff(a,b){ return Math.round((a-b)/86400000); }
+  _overdue(s){ return this._diff(this._today(), this._d(s)); }
+  _left(s){ return this._diff(this._d(s), this._today()); }
+  _pl(n,a,b,c){ const x=n%10,y=n%100; if(x===1&&y!==11)return a; if(x>=2&&x<=4&&!(y>=12&&y<=14))return b; return c; }
+  _fmt(s){ const m=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']; const d=this._d(s); return d.getDate()+' '+m[d.getMonth()]; }
+  _wd(s){ const w=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота']; return w[this._d(s).getDay()]; }
+  _triage(s){ const o=this._overdue(s);
+    if(o<=0) return {bar:'#8DA86C', sub:'Сегодня', subColor:'#9C977F', tint:'#3C443A'};
+    if(o<=2) return {bar:'#D2A85B', sub:'Просрочено на '+o+' '+this._pl(o,'день','дня','дней'), subColor:'#DAB571', tint:'#45423A'};
+    return {bar:'#C56B54', sub:'Просрочено на '+o+' '+this._pl(o,'день','дня','дней'), subColor:'#CF8270', tint:'#473C39'};
+  }
+  _goalById(id){ return this.state.goals.find(g=>g.id===id); }
+  _goalOfStep(id){ return this.state.goals.find(g=>g.steps.some(s=>s.id===id)); }
+  _gcolor(hue,dl){ let t; if(dl<=2)t=1; else if(dl>=21)t=0; else t=(21-dl)/19; const c=(0.045+t*0.115).toFixed(3); const l=(0.74-t*0.10).toFixed(3); return 'oklch('+l+' '+c+' '+hue+')'; }
+  _vivid(hue){ return 'oklch(0.70 0.13 '+hue+')'; }
+  _dot(hue){ return 'oklch(0.68 0.12 '+hue+')'; }
+  _tint(hue){ return 'oklch(0.345 0.03 '+hue+')'; }
+
+  go(screen){ this.setState({screen, createOpen:false, sheetOpen:false, selDay:null, calGoal:null}); }
+
+  _themes(){ return {
+    amber:{ id:'amber', name:'Янтарь', caption:'Тёплая нейтральная, как свеча', bg:'#3B3C36', surface:'#47483F', surface2:'#52534A', accent:'#D99058', deep:'#B66120', tp:'#ECEBE4', ts:'#A9A89E', cloak:'#4B4C45' },
+    azure:{ id:'azure', name:'Лазурь', caption:'Прохладная и собранная', bg:'#1A2935', surface:'#263643', surface2:'#31424F', accent:'#3EAFD8', deep:'#0E7EA6', tp:'#E3EAF0', ts:'#9AAAB8', cloak:'#20557A' },
+    spark:{ id:'spark', name:'Искра', caption:'Тёплая и смелая, уголёк в ночи', bg:'#2B1F24', surface:'#392B30', surface2:'#45353B', accent:'#DF4B61', deep:'#96384E', tp:'#F2E7EA', ts:'#B39CA4', cloak:'#DF4B61' },
+  }; }
+  _varsOf(t){ return '--bg:'+t.bg+';--surface:'+t.surface+';--surface-2:'+t.surface2+';--accent:'+t.accent+';--accent-deep:'+t.deep+';--text-primary:'+t.tp+';--text-secondary:'+t.ts+';--cloak:'+t.cloak; }
+  openAppearance(){ this.setState({screen:'appearance', themeSel:this.state.theme, createOpen:false, sheetOpen:false}); }
+  openRename(){ this.setState({rename:this.state.hero.name, createOpen:false, sheetOpen:false}); }
+  closeRename(){ this.setState({rename:null}); }
+  saveRename(){ const v=(this.state.rename||'').trim(); if(!v) return; this.setState(s=>({hero:{...s.hero, name:v}, rename:null})); }
+  openSettings(){ this.setState({screen:'settings', createOpen:false, sheetOpen:false}); }
+  openNotif(){ this.setState({screen:'notifications', createOpen:false, sheetOpen:false}); }
+  openHelp(){ this.setState({screen:'help', faqOpen:null, createOpen:false, sheetOpen:false}); }
+  openAbout(){ this.setState({screen:'about', createOpen:false, sheetOpen:false}); }
+  toggleSetting(k){ this.setState(s=>{ const v=!s.settings[k]; if(k==='sounds'&&window.GuardianSfx){ window.GuardianSfx.setEnabled(v); if(v) window.GuardianSfx.play('toggle', true); } return {settings:{...s.settings,[k]:v}}; }); }
+  toggleNotif(k){ this.setState(s=>({notif:{...s.notif,[k]:!s.notif[k]}})); }
+  toggleFaq(i){ this.setState(s=>({faqOpen:s.faqOpen===i?null:i})); }
+  applyTheme(){
+    const sel=this.state.themeSel;
+    if(!sel || sel===this.state.theme) return;
+    this.setState({theming:true}, ()=>{
+      requestAnimationFrame(()=>{
+        this.setState({theme:sel});
+        if(window.GuardianSfx) window.GuardianSfx.setTheme(sel);
+        try{ localStorage.setItem('guardian-theme', sel); }catch(e){}
+        this._sfx('open');
+        setTimeout(()=>{
+          this.setState({theming:false, screen:'account', themeToast:true});
+          setTimeout(()=>this.setState({themeToast:false}), 2400);
+        }, 380);
+      });
+    });
+  }
+  openCreate(){ this._sfx('tap'); this.setState({createOpen:true, createType:null}); }
+
+  /* ---- Путь / калибровка ---- */
+  tapAnomaly(){ this.setState({pathToast:true}); clearTimeout(this._ptT); this._ptT=setTimeout(()=>this.setState({pathToast:false}),2600); }
+  openCalib(){
+    const CC=window.GuardianCharConfig; if(!CC) return;
+    const th=this.state.theme;
+    const an=JSON.parse(JSON.stringify(CC.ANCHORS[th]||CC.ANCHORS.amber));
+    this.setState({screen:'calibration', calib:{level:this.state.hero.level, theme:th, anchors:an, drag:null, sel:'peakL', stash:{}}, createOpen:false, sheetOpen:false});
+  }
+  calSetLevel(l){ this.setState(s=>({calib:{...s.calib, level:l, drag:null}})); }
+  calSetTheme(t){ const CC=window.GuardianCharConfig; this.setState(s=>{ const c=s.calib; const stash={...(c.stash||{}), [c.theme]:c.anchors}; const an=stash[t]?JSON.parse(JSON.stringify(stash[t])):JSON.parse(JSON.stringify(CC.ANCHORS[t]||CC.ANCHORS.amber)); return {calib:{...c, theme:t, anchors:an, stash, drag:null}}; }); }
+  calSelect(key){ this.setState(s=>({calib:{...s.calib, sel:key}})); }
+  calNudge(dx,dy){ const c=this.state.calib; if(!c||!c.sel) return; const fk='form'+this._calForm(); this.setState(s=>{ const an=JSON.parse(JSON.stringify(s.calib.anchors)); const p=an[fk]&&an[fk][s.calib.sel]; if(!p) return null; p.x=Math.max(0,Math.min(100,Math.round((p.x+dx)*10)/10)); p.y=Math.max(0,Math.min(100,Math.round((p.y+dy)*10)/10)); return {calib:{...s.calib, anchors:an}}; }); }
+  _calToastShow(msg){ this.setState({calToast:msg}); clearTimeout(this._ctT); this._ctT=setTimeout(()=>this.setState({calToast:false}),2400); }
+  calSave(){ const CC=window.GuardianCharConfig; const c=this.state.calib; if(!CC||!c) return; const all={...(c.stash||{}), [c.theme]:c.anchors}; Object.keys(all).forEach(t=>CC.saveAnchors(t, all[t])); this.setState(s=>({calib:{...s.calib, stash:{}}})); this._calToastShow('Сохранено — применено во всём приложении'); }
+  calReset(){ const CC=window.GuardianCharConfig; const c=this.state.calib; if(!CC||!c) return; CC.resetAnchors(c.theme); const an=JSON.parse(JSON.stringify(CC.ANCHORS[c.theme]||CC.ANCHORS.amber)); this.setState(s=>{ const stash={...(s.calib.stash||{})}; delete stash[s.calib.theme]; return {calib:{...s.calib, anchors:an, stash}}; }); this._calToastShow('Сброшено к значениям по умолчанию'); }
+  _calForm(){ const CC=window.GuardianCharConfig; return CC?CC.formFor(this.state.calib.level):1; }
+  calDown(key,ev){ ev.preventDefault(); this.setState(s=>({calib:{...s.calib, drag:key, sel:key}})); }
+  calMove(ev){
+    const c=this.state.calib; if(!c||!c.drag) return;
+    const el=this.calRef&&this.calRef.current; if(!el) return;
+    const r=el.getBoundingClientRect();
+    let x=(ev.clientX-r.left)/r.width*100, y=(ev.clientY-r.top)/r.height*100;
+    x=Math.max(0,Math.min(100,Math.round(x*10)/10)); y=Math.max(0,Math.min(100,Math.round(y*10)/10));
+    const fk='form'+this._calForm();
+    this.setState(s=>{ const an=JSON.parse(JSON.stringify(s.calib.anchors)); an[fk][s.calib.drag]={x:x,y:y}; return {calib:{...s.calib, anchors:an}}; });
+  }
+  calUp(){ const c=this.state.calib; if(c&&c.drag) this.setState(s=>({calib:{...s.calib, drag:null}})); }
+  calExport(){
+    const c=this.state.calib; if(!c) return;
+    const out=JSON.stringify({anchors:{[c.theme]:c.anchors}}, null, 2);
+    try{ navigator.clipboard.writeText(out); }catch(e){}
+    this._calToastShow('JSON скопирован в буфер');
+  }
+
+  _sfx(name, arg){ const S=this.state.settings; if(S&&S.sounds!==false && window.GuardianSfx) window.GuardianSfx.play(name, arg); }
+  componentDidMount(){ if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); } }
+
+  _spark(id, label, strong){
+    this.setState(s=>({spark:{...s.spark,[id]:label||true}, burstTick:s.burstTick+1, heroBump:true}));
+    /* сложность 5 («Вызов»): двойная вспышка глаз персонажа */
+    if(strong){ clearTimeout(this._db); this._db=setTimeout(()=>this.setState(s=>({burstTick:s.burstTick+1})),380); }
+    setTimeout(()=>this.setState(s=>{const sp={...s.spark}; delete sp[id]; return {spark:sp, heroBump:false};}),900);
+  }
+
+  _todayStr(){ const t=this._today(); const p=n=>String(n).padStart(2,'0'); return t.getFullYear()+'-'+p(t.getMonth()+1)+'-'+p(t.getDate()); }
+
+  /* Начислить XP (с учётом дневного жара). Возвращает {granted}. */
+  _grantXp(id, amount, opts){
+    opts=opts||{};
+    const XP=window.GuardianXP;
+    if(!XP) return {granted:amount};
+    const x=this.state.xp;
+    const ds=this._todayStr();
+    const rawBefore=(x.day===ds)?x.dailyRaw:0; /* новый день — жар обнуляется */
+    const res=XP.applyCap(rawBefore, amount);
+    const total=x.total+res.granted;
+    const lvNew=XP.levelFromXp(total).level;
+    const lvOld=XP.levelFromXp(x.total).level;
+    const nx={...x, total, day:ds, dailyRaw:res.rawAfter, maxLevel:Math.max(x.maxLevel, lvNew)};
+    if(!opts.noLog) nx.log={...x.log, [id]:{gain:res.granted, raw:amount}};
+    const st={xp:nx, hero:{...this.state.hero, level:lvNew}};
+    /* Церемония уровня — только если уровень взят впервые (после отката не повторяется) */
+    if(lvNew>lvOld && lvNew>x.maxLevel){ if(opts.silent||this.state.celebrating) st.pendingLevel=lvNew; else { st.leveled={level:lvNew}; this._sfx('levelup'); } }
+    this.setState(st);
+    if(res.capJustHit){ this.setState({capToast:true}); this._sfx('cap'); clearTimeout(this._capT); this._capT=setTimeout(()=>this.setState({capToast:false}),3000); }
+    return {granted:res.granted};
+  }
+
+  /* Откат: вычитаем ровно то, что было начислено; уровень пересчитывается честно вниз */
+  _revokeXp(id){
+    const XP=window.GuardianXP; const x=this.state.xp; const rec=x.log&&x.log[id]; if(!XP||!rec) return;
+    const log={...x.log}; delete log[id];
+    const total=Math.max(0, x.total-rec.gain);
+    const dailyRaw=Math.max(0, x.dailyRaw-rec.raw);
+    const lvNew=XP.levelFromXp(total).level;
+    this.setState({xp:{...x, total, dailyRaw, log}, hero:{...this.state.hero, level:lvNew}});
+  }
+
+  _celebrate(id){ this.setState({celebrating:id}); this._sfx('goal'); this._grantXp('goal-bonus:'+id, 30, {silent:true, noLog:true}); }
+
+  toggleTask(id){
+    const inSolo=this.state.solo.find(t=>t.id===id);
+    let item=inSolo; if(!item){ const g=this._goalOfStep(id); item=g&&g.steps.find(s=>s.id===id); }
+    if(!item) return;
+    const willDone=!item.done;
+    this.setState(s=>{
+      const solo=s.solo.map(t=>t.id===id?{...t,done:willDone}:t);
+      const goals=s.goals.map(g=>({...g,steps:g.steps.map(st=>st.id===id?{...st,done:willDone}:st)}));
+      const justDone={...s.justDone}; if(willDone) justDone[id]=true; else delete justDone[id];
+      return {solo,goals,justDone};
+    }, ()=>{
+      if(willDone){
+        const XP=window.GuardianXP;
+        const diff=item.difficulty||2;
+        /* Просроченные — полный XP, без штрафов */
+        const res=this._grantXp(id, XP?XP.taskXp(diff):10);
+        this._spark(id, '+'+res.granted+' ✦', diff===5);
+        this._sfx('complete', diff);
+        this.setState({undo:{id, kind:'task', label:'Задача отмечена · +'+res.granted+' ✦'}});
+        const u=id; setTimeout(()=>this.setState(s=>(s.undo&&s.undo.id===u)?{undo:null}:null),4500);
+        const g=this._goalOfStep(id);
+        if(g && g.steps.every(st=>st.done)) this._celebrate(g.id);
+      } else { this._revokeXp(id); this.setState({undo:null}); this._sfx('undo'); }
+    });
+  }
+
+  toggleHabit(id){
+    const h=this.state.habits.find(x=>x.id===id); if(!h) return;
+    const willDone=!h.doneToday;
+    const newStreak=willDone?h.streak+1:Math.max(0,h.streak-1);
+    this.setState(s=>({habits:s.habits.map(x=>x.id===id?{...x,doneToday:willDone,streak:newStreak}:x)}), ()=>{
+      if(willDone){
+        const XP=window.GuardianXP;
+        const diff=h.difficulty||2;
+        const mult=XP?XP.streakMult(newStreak):1;
+        const res=this._grantXp(id, XP?XP.habitXp(diff,newStreak):8);
+        /* с активным множителем показываем базу и множитель: «+8 ×1.5» */
+        const label = (mult>1&&XP) ? ('+'+XP.habitBase(diff)+' ×'+mult) : ('+'+res.granted+' ✦');
+        this._spark(id, label, false);
+        if(newStreak>0 && newStreak%7===0) this._sfx('streak'); else this._sfx('habit', newStreak);
+        this.setState({undo:{id,kind:'habit',label:'Привычка отмечена · '+label}});
+        const u=id; setTimeout(()=>this.setState(s=>(s.undo&&s.undo.id===u)?{undo:null}:null),4500);
+      }
+      else { this._revokeXp(id); this.setState({undo:null}); this._sfx('undo'); }
+    });
+  }
+
+  doUndo(){ const u=this.state.undo; if(!u) return; this.setState({undo:null}); if(u.kind==='habit') this.toggleHabit(u.id); else this.toggleTask(u.id); }
+
+  openEdit(kind,id){
+    let e=null;
+    if(kind==='goal'){ const g=this._goalById(id); if(!g) return; e={kind,id,name:g.name,hue:g.hue,date:g.deadline}; }
+    else if(kind==='solo'){ const t=this.state.solo.find(x=>x.id===id); if(!t) return; e={kind,id,name:t.name,date:t.date,difficulty:t.difficulty||2}; }
+    else if(kind==='habit'){ const h=this.state.habits.find(x=>x.id===id); if(!h) return; e={kind,id,name:h.name,difficulty:h.difficulty||2}; }
+    else { const g=this._goalOfStep(id); const s=g&&g.steps.find(x=>x.id===id); if(!s) return; e={kind:'step',id,name:s.name,date:s.date,difficulty:s.difficulty||2}; }
+    this.setState({edit:e, undo:null});
+  }
+  setEdit(p){ this.setState(s=>({edit:{...s.edit,...p}})); }
+  closeEdit(){ this.setState({edit:null, confirm:null}); }
+  saveEdit(){
+    const e=this.state.edit; if(!e||!e.name.trim()) return;
+    if(e.kind==='goal') this.setState(s=>({goals:s.goals.map(g=>g.id===e.id?{...g,name:e.name,hue:e.hue,deadline:e.date}:g), edit:null}));
+    else if(e.kind==='solo') this.setState(s=>({solo:s.solo.map(t=>t.id===e.id?{...t,name:e.name,date:e.date,difficulty:e.difficulty||2}:t), edit:null}));
+    else if(e.kind==='habit') this.setState(s=>({habits:s.habits.map(h=>h.id===e.id?{...h,name:e.name,difficulty:e.difficulty||2}:h), edit:null}));
+    else this.setState(s=>({goals:s.goals.map(g=>({...g,steps:g.steps.map(st=>st.id===e.id?{...st,name:e.name,date:e.date,difficulty:e.difficulty||2}:st)})), edit:null}));
+  }
+  requestDelete(){
+    const e=this.state.edit; if(!e) return;
+    let done=false;
+    if(e.kind==='goal'){ const g=this._goalById(e.id); done=!!g && g.steps.length>0 && g.steps.every(s=>s.done); }
+    else if(e.kind==='solo'){ const t=this.state.solo.find(x=>x.id===e.id); done=!!t && t.done; }
+    else if(e.kind==='habit'){ done=false; }
+    else { const g=this._goalOfStep(e.id); const s=g&&g.steps.find(x=>x.id===e.id); done=!!s && s.done; }
+    if(done) this.doDelete(e.kind, e.id);
+    else this.setState({confirm:{kind:e.kind, id:e.id, name:e.name}});
+  }
+  doDelete(kind,id){
+    if(kind==='goal') this.setState(s=>({goals:s.goals.filter(g=>g.id!==id), edit:null, confirm:null}));
+    else if(kind==='solo') this.setState(s=>({solo:s.solo.filter(t=>t.id!==id), edit:null, confirm:null}));
+    else if(kind==='habit') this.setState(s=>({habits:s.habits.filter(h=>h.id!==id), edit:null, confirm:null}));
+    else this.setState(s=>({goals:s.goals.map(g=>({...g,steps:g.steps.filter(st=>st.id!==id)})), edit:null, confirm:null}));
+  }
+  archiveGoal(id){ const g=this._goalById(id); const complete=g&&g.steps.length>0&&g.steps.every(st=>st.done); if(complete) this._sfx('goal'); this.setState(s=>({goals:s.goals.map(g=>g.id===id?{...g,archived:true}:g)})); }
+  archiveSolo(id){ this.setState(s=>({solo:s.solo.map(t=>t.id===id?{...t,archived:true}:t)})); }
+  celebArchive(){ const id=this.state.celebrating; if(id) this.archiveGoal(id); this.dismissCelebrate(); }
+
+  dismissCelebrate(){ if(this.state.pendingLevel!=null) this._sfx('levelup'); this.setState(s=>({celebrating:null, leveled: s.pendingLevel?{level:s.pendingLevel}:null, pendingLevel:null})); }
+  dismissLevel(){ this.setState({leveled:null}); }
+  toggleExpand(id){ this.setState(s=>({expanded: s.expanded===id?null:id})); }
+  selectDay(str){ this.setState({selDay:str}); }
+  closeSheet(){ this.setState({sheetOpen:false}); }
+  toggleCalHabits(){ this.setState(s=>({calHabits:!s.calHabits})); }
+  toggleCalGoal(id){ this.setState(s=>({calGoal:s.calGoal===id?null:id})); }
+  prevMonth(){ this.setState(s=>{ let m=s.calMonth-1,y=s.calYear; if(m<0){m=11;y--;} return {calMonth:m,calYear:y}; }); }
+  nextMonth(){ this.setState(s=>{ let m=s.calMonth+1,y=s.calYear; if(m>11){m=0;y++;} return {calMonth:m,calYear:y}; }); }
+
+  setDraft(p){ this.setState(s=>({draft:{...s.draft,...p}})); }
+  openDatePicker(field){ let cur; if(field==='editDate'){ cur=this.state.edit&&this.state.edit.date; } else { const d=this.state.draft; cur = field==='deadline'?d.deadline : (field==='stepDate'?d.stepDate : d.date); } const base = cur ? this._d(cur) : this._today(); this.setState({datePicker:{field, y:base.getFullYear(), m:base.getMonth()}}); }
+  closeDatePicker(){ this.setState({datePicker:null}); }
+  dpPrev(){ this.setState(s=>{ if(!s.datePicker) return null; let m=s.datePicker.m-1,y=s.datePicker.y; if(m<0){m=11;y--;} return {datePicker:{...s.datePicker,m,y}}; }); }
+  dpNext(){ this.setState(s=>{ if(!s.datePicker) return null; let m=s.datePicker.m+1,y=s.datePicker.y; if(m>11){m=0;y++;} return {datePicker:{...s.datePicker,m,y}}; }); }
+  dpQuick(off){ const t=this._today(); const x=new Date(t.getTime()+off*86400000); const p=n=>String(n).padStart(2,'0'); this.pickDate(x.getFullYear()+'-'+p(x.getMonth()+1)+'-'+p(x.getDate())); }
+  pickDate(ds, other, Y, M){ const dp=this.state.datePicker; if(!dp) return; if(dp.field==='editDate'){ this.setEdit({date:ds}); } else { const key = dp.field==='deadline'?'deadline' : (dp.field==='stepDate'?'stepDate':'date'); this.setDraft({[key]:ds}); } if(other){ this.setState({datePicker:{...dp, y:Y, m:M, monthList:false}}); } else { this.setState({datePicker:null}); } }
+  dpToggleMonths(){ this.setState(s=> s.datePicker?{datePicker:{...s.datePicker, monthList:!s.datePicker.monthList}}:null); }
+  dpPrevYear(){ this.setState(s=> s.datePicker?{datePicker:{...s.datePicker, y:s.datePicker.y-1}}:null); }
+  dpNextYear(){ this.setState(s=> s.datePicker?{datePicker:{...s.datePicker, y:s.datePicker.y+1}}:null); }
+  dpPickMonth(m){ this.setState(s=> s.datePicker?{datePicker:{...s.datePicker, m, monthList:false}}:null); }
+  pickType(t){ this._sfx('open'); this.setState({createType:t, draft:{ name:'', hue:55, deadline:'', date:'2026-06-12', steps:[], stepName:'', stepDate:'2026-06-20', stepDiff:2, schedule:'daily', context:'', goalId:this.state.goals[0]&&this.state.goals[0].id, attach:'solo', days:[1,3,5], count:3, difficulty:2 }}); }
+  addStep(){ const d=this.state.draft; if(!d.stepName.trim()) return; this.setState(s=>({draft:{...s.draft, steps:[...s.draft.steps,{name:d.stepName,date:d.stepDate,difficulty:d.stepDiff||2}], stepName:'', stepDiff:2}})); }
+  removeStep(i){ this.setState(s=>({draft:{...s.draft, steps:s.draft.steps.filter((_,x)=>x!==i)}})); }
+  saveGoal(){ const d=this.state.draft; if(!d.name.trim()) return; const id='g'+Date.now(); const steps=d.steps.map((st,i)=>({id:id+'s'+i, name:st.name, date:st.date, done:false, difficulty:st.difficulty||2})); this.setState(s=>({goals:[...s.goals,{id,name:d.name,hue:d.hue,deadline:d.deadline||'2026-07-15',steps}], createOpen:false, screen:'tasks', expanded:id})); }
+  saveTask(){ const d=this.state.draft; if(!d.name.trim()) return; if(d.attach==='goal'&&d.goalId){ const st={id:'ts'+Date.now(),name:d.name,date:d.date,done:false,difficulty:d.difficulty||2}; this.setState(s=>({goals:s.goals.map(g=>g.id===d.goalId?{...g,steps:[...g.steps,st]}:g), createOpen:false})); } else { this.setState(s=>({solo:[...s.solo,{id:'t'+Date.now(),name:d.name,date:d.date,done:false,difficulty:d.difficulty||2}], createOpen:false})); } }
+  saveHabit(){ const d=this.state.draft; if(!d.name.trim()) return; let sched='Ежедневно'; if(d.schedule==='days'){ const w=['Пн','Вт','Ср','Чт','Пт','Сб','Вс']; sched=(d.days||[]).slice().sort().map(i=>w[i]).join(' · ')||'По дням'; } else if(d.schedule==='count'){ sched=d.count+' '+this._pl(d.count,'раз','раза','раз')+' в неделю'; } this.setState(s=>({habits:[...s.habits,{id:'h'+Date.now(),name:d.name,streak:0,doneToday:false,schedule:sched,context:d.context,difficulty:d.difficulty||2}], createOpen:false})); }
+
+  renderVals(){
+    const S=this.state;
+    const P=this.props||{};
+    const THEMES=this._themes();
+    const themeCards=['amber','azure','spark'].map(id=>{ const t=THEMES[id]; const sel=S.themeSel===id; return {
+      id, name:t.name, caption:t.caption, varsStyle:this._varsOf(t), sel,
+      borderStyle: sel?'border:2px solid var(--accent)':'border:2px solid transparent',
+      onPick:(ii=>()=>this.setState({themeSel:ii}))(id),
+    };});
+    const cardStyle=P.cardStyle||'Полоса';
+    const navStyle=P.navStyle||'Плоская';
+    const celebStyle=P.celebrationStyle||'Вспышка';
+    const sparks=[{dx:'-14px',dy:'-10px'},{dx:'14px',dy:'-12px'},{dx:'-16px',dy:'8px'},{dx:'15px',dy:'10px'},{dx:'0px',dy:'-18px'}];
+
+    // ---- hero ----
+    const XP=window.GuardianXP;
+    const lv=XP?XP.levelFromXp(S.xp.total):{level:S.hero.level, into:0, need:100, progress:0};
+    const hero={...S.hero, level:lv.level};
+    const heroGlow=Math.min(0.85,(0.3+hero.level*0.07)).toFixed(2);
+
+    // ---- today tasks ----
+    const all=[];
+    S.solo.filter(t=>!t.archived).forEach(t=>all.push({...t, solo:true}));
+    S.goals.filter(g=>!g.archived).forEach(g=>g.steps.forEach(s=>all.push({...s, solo:false, goalId:g.id})));
+    const todayTasks=all.filter(t=> (!t.done && this._overdue(t.date)>=0) || S.justDone[t.id])
+      .sort((a,b)=>{ const ad=a.done?1:0, bd=b.done?1:0; if(ad!==bd)return ad-bd; return this._overdue(b.date)-this._overdue(a.date); })
+      .map(t=>{
+        const tr=this._triage(t.date);
+        const goal=t.solo?null:this._goalById(t.goalId);
+        const isToday=this._overdue(t.date)<=0;
+        let showTodayGoal=false, showStatusSub=true, sub=tr.sub, subColor=tr.subColor;
+        if(t.done){ sub='Выполнено'; subColor='#7E8A66'; }
+        else if(isToday && goal){ showTodayGoal=true; showStatusSub=false; }
+        else if(isToday){ sub='Сегодня'; subColor='#9C977F'; }
+        return {
+          id:t.id, title:t.name, done:t.done, notDone:!t.done,
+          barColor:tr.bar, sub, subColor, showStatusSub, showTodayGoal,
+          dotColor: goal?this._dot(goal.hue):'var(--text-faint)', dotName: goal?goal.name:'',
+          cardBg: cardStyle==='Пастель'? tr.tint : 'var(--surface-2)',
+          showBar: cardStyle==='Полоса', showLeadDot: cardStyle==='Точка',
+          titleStyle: t.done?'text-decoration:line-through;color:var(--text-faint)':'color:var(--text-primary)',
+          gainText:(typeof S.spark[t.id]==='string')?S.spark[t.id]:('+'+(XP?XP.taskXp(t.difficulty||2):10)+' ✦'),
+          spark: !!S.spark[t.id], sparks,
+          showDiff:(t.difficulty||2)>=3, diffIcons:Array.from({length:t.difficulty||2},(_,ii)=>({k:ii})),
+          onToggle: ()=>this.toggleTask(t.id),
+          onEdit:(ev)=>{ev.stopPropagation(); this.openEdit(t.solo?'solo':'step', t.id);},
+        };
+      });
+
+    // ---- habits ----
+    const habitDone=S.habits.filter(h=>h.doneToday).length;
+    const todayHabits=S.habits.map(h=>({
+      id:h.id, name:h.name, streak:h.streak, doneToday:h.doneToday, notDone:!h.doneToday,
+      flameColor: h.doneToday?'var(--accent)':'var(--text-secondary)', context:h.context, hasContext:!!h.context,
+      streakAnim: S.spark[h.id]?'display:inline-block;animation:streakBounce .5s ease':'',
+      gainText:(typeof S.spark[h.id]==='string')?S.spark[h.id]:('+'+(XP?XP.habitXp(h.difficulty||2,h.streak):8)+' ✦'),
+      showDiff:(h.difficulty||2)>=3, diffIcons:Array.from({length:h.difficulty||2},(_,ii)=>({k:ii})),
+      spark: !!S.spark[h.id], sparks, onToggle: ()=>this.toggleHabit(h.id),
+      onEdit:(ev)=>{ev.stopPropagation(); this.openEdit('habit', h.id);},
+    }));
+
+    // ---- goals (all tasks) ----
+    const goalsView=S.goals.filter(g=>!g.archived).map(g=>{
+      const done=g.steps.filter(s=>s.done).length, total=g.steps.length;
+      const dl=this._left(g.deadline); const overdue=dl<0 && done<total;
+      const color=this._gcolor(g.hue,dl); const C=2*Math.PI*15;
+      const steps=g.steps.slice().sort((a,b)=>this._d(a.date)-this._d(b.date)).map(s=>({
+        id:s.id, name:s.name, done:s.done, notDone:!s.done, dateLabel:this._fmt(s.date),
+        overdue: this._overdue(s.date)>0 && !s.done, color, onToggle:()=>this.toggleTask(s.id),
+        onEdit:(ev)=>{ev.stopPropagation(); this.openEdit('step', s.id);},
+        titleStyle: s.done?'text-decoration:line-through;color:var(--text-faint)':'color:var(--text-mid)',
+        dateColor: (this._overdue(s.date)>0 && !s.done)?'#CF8270':'var(--text-faint)',
+      }));
+      return {
+        id:g.id, name:g.name, color, tint:this._tint(g.hue),
+        progressText:done+'/'+total, dash:(done/total*C).toFixed(1)+' '+C.toFixed(1),
+        deadlineLabel:(done===total&&total>0)?'Цель достигнута':((overdue?'Просрочено · ':'До ')+this._fmt(g.deadline)),
+        overdue, expanded:S.expanded===g.id, onToggleExpand:()=>this.toggleExpand(g.id), steps,
+        onEdit:(ev)=>{ev.stopPropagation(); this.openEdit('goal', g.id);},
+        onArchive:(ev)=>{ev.stopPropagation(); this.archiveGoal(g.id);},
+        complete: done===total, chevronStyle:S.expanded===g.id?'transform:rotate(180deg)':'',
+      };
+    });
+    const soloView=S.solo.filter(t=>!t.archived).map(t=>({
+      id:t.id, name:t.name, done:t.done, notDone:!t.done, dateLabel:this._fmt(t.date),
+      overdue:this._overdue(t.date)>0 && !t.done, onToggle:()=>this.toggleTask(t.id),
+      titleStyle: t.done?'text-decoration:line-through;color:var(--text-faint)':'color:var(--text-mid)',
+      dateColor: (this._overdue(t.date)>0 && !t.done)?'#CF8270':'var(--text-faint)',
+      onEdit:(ev)=>{ev.stopPropagation(); this.openEdit('solo', t.id);},
+      onArchive:(ev)=>{ev.stopPropagation(); this.archiveSolo(t.id);},
+    }));
+
+    const archived=[];
+    S.goals.filter(g=>g.archived).forEach(g=>{ archived.push({ id:g.id, name:g.name, color:this._vivid(g.hue), meta:'Цель · '+g.steps.length+' '+this._pl(g.steps.length,'шаг','шага','шагов')+' · до '+this._fmt(g.deadline), hasSteps:g.steps.length>0, expanded:S.archExp===g.id, chevStyle:S.archExp===g.id?'transform:rotate(180deg)':'', onToggleExp:()=>this.setState(s=>({archExp:s.archExp===g.id?null:g.id})), steps:g.steps.slice().sort((a,b)=>this._d(a.date)-this._d(b.date)).map(st=>({name:st.name, dateLabel:this._fmt(st.date)})), onRestore:(ev)=>{ev.stopPropagation(); this.setState(s=>({goals:s.goals.map(x=>x.id===g.id?{...x,archived:false}:x)}));}, onRemove:(ev)=>{ev.stopPropagation(); this.doDelete('goal', g.id);} }); });
+    S.solo.filter(t=>t.archived).forEach(t=>{ archived.push({ id:t.id, name:t.name, color:'var(--text-faint)', meta:'Задача · '+this._fmt(t.date), hasSteps:false, expanded:false, chevStyle:'', onToggleExp:()=>{}, steps:[], onRestore:(ev)=>{ev.stopPropagation(); this.setState(s=>({solo:s.solo.map(x=>x.id===t.id?{...x,archived:false}:x)}));}, onRemove:(ev)=>{ev.stopPropagation(); this.doDelete('solo', t.id);} }); });
+
+    // ---- calendar: тепловая карта жара ----
+    const y=S.calYear, m=S.calMonth;
+    const monthLabel=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'][m]+' '+y;
+    const dim=new Date(y,m+1,0).getDate();
+    let fw=new Date(y,m,1).getDay(); fw=(fw+6)%7;
+    const pad=n=>String(n).padStart(2,'0');
+    const dstr=n=>y+'-'+pad(m+1)+'-'+pad(n);
+    const today=this._today(), todayStr=this._todayStr();
+    const selDay=S.selDay||todayStr;
+    const selD=this._d(selDay);
+    const heatOf=ds=> ds===todayStr ? S.xp.dailyRaw : (S.xpDays[ds]||0);
+    const heatStep=v=> v<=0?0 : (v<=40?1 : (v<=90?2 : 3));
+    const heatFills=['background:transparent','background:color-mix(in srgb,var(--accent) 25%,transparent)','background:color-mix(in srgb,var(--accent) 55%,transparent)','background:color-mix(in srgb,var(--accent) 90%,transparent)'];
+    let hotDay=-1, hotVal=0;
+    for(let n=1;n<=dim;n++){ const v=heatOf(dstr(n)); if(v>hotVal){ hotVal=v; hotDay=n; } }
+    /* палитра целей: акцент темы и сдвиги тона ±25° */
+    const goalPalette=['var(--accent)','oklch(from var(--accent) l c calc(h - 25))','oklch(from var(--accent) l c calc(h + 25))'];
+    const activeGoalsCal=S.goals.filter(g=>!g.archived);
+    const goalColorOf=gi=>goalPalette[gi%3];
+    const goalRange=g=>{ const sd=g.steps.map(s=>this._d(s.date)); return { start: sd.length?new Date(Math.min.apply(null,sd)):this._d(g.deadline), end: this._d(g.deadline) }; };
+    const monthStart=new Date(y,m,1), monthEnd=new Date(y,m,dim);
+    /* чипы целей месяца + подсветка диапазона выбранной цели */
+    const hlIdx=S.calGoal?activeGoalsCal.findIndex(g=>g.id===S.calGoal):-1;
+    const hlGoal=hlIdx>=0?activeGoalsCal[hlIdx]:null;
+    const hlColor=hlGoal?goalColorOf(hlIdx):null;
+    const hlRange=hlGoal?goalRange(hlGoal):null;
+    const hlStartN=(hlRange&&hlRange.start.getFullYear()===y&&hlRange.start.getMonth()===m)?hlRange.start.getDate():-1;
+    const hlEndN=(hlRange&&hlRange.end.getFullYear()===y&&hlRange.end.getMonth()===m)?hlRange.end.getDate():-1;
+    const calChips=activeGoalsCal.map((g,gi)=>({g,gi})).filter(o=>{ const r=goalRange(o.g); return !(r.end<monthStart||r.start>monthEnd); }).map(o=>{
+      const c=goalColorOf(o.gi), on=S.calGoal===o.g.id;
+      return { k:o.g.id, name:o.g.name, dot:c,
+        chipStyle: on?('background:color-mix(in srgb,'+c+' 16%,transparent);border:1px solid '+c+';color:var(--text-primary)'):'background:var(--surface);border:1px solid transparent;color:var(--text-mid)',
+        onTap:(id=>()=>this.toggleCalGoal(id))(o.g.id) };
+    });
+    const weeks=[];
+    for(let w=0;w<6;w++){
+      const days=[]; let any=false;
+      for(let i=0;i<7;i++){ const n=1-fw+w*7+i;
+        if(n>=1&&n<=dim){ any=true;
+          const ds=dstr(n), dObj=new Date(y,m,n);
+          const isFuture=dObj>today, isToday=ds===todayStr, sel=ds===selDay;
+          const v=isFuture?0:heatOf(ds);
+          const st=heatStep(v);
+          let heat=heatFills[st];
+          if(st===0&&!isFuture) heat+=';border:1px solid var(--border)';
+          const rings=[];
+          if(sel) rings.push('0 0 0 2px var(--bg)','0 0 0 4.5px var(--accent)');
+          if(st===3) rings.push('0 0 14px var(--accent-a45)');
+          if(rings.length) heat+=';box-shadow:'+rings.join(',');
+          const numStyle= isToday?'font-weight:700;color:#F3EFE6' : ('font-weight:500;color:'+(st>=2?'var(--bg)':(isFuture?'var(--text-faint)':'var(--text-mid)')));
+          days.push({num:n, empty:false, isToday, isHottest:n===hotDay, heat, numStyle, hasBandDot:!!hlGoal&&(n===hlStartN||n===hlEndN), bandDot:hlColor||'', onTap:(nn=>()=>this.selectDay(dstr(nn)))(n), k:n});
+        } else days.push({num:'', empty:true, isToday:false, isHottest:false, heat:'', numStyle:'color:transparent', hasBandDot:false, bandDot:'', onTap:()=>{}, k:'e'+w+'-'+i});
+      }
+      /* фоновая капсула диапазона подсвеченной цели */
+      const wf=1-fw+w*7, wl=wf+6;
+      let band=null;
+      if(hlRange && !(hlRange.end<monthStart||hlRange.start>monthEnd)){
+        const sN=hlRange.start<monthStart?1:hlRange.start.getDate();
+        const eN=hlRange.end>monthEnd?dim:hlRange.end.getDate();
+        const segS=Math.max(sN,wf,1), segE=Math.min(eN,wl,dim);
+        if(segS<=segE){
+          const roundL=(segS===sN)&&hlRange.start>=monthStart;
+          const roundR=(segE===eN)&&hlRange.end<=monthEnd;
+          const c20='color-mix(in srgb,'+hlColor+' 20%,transparent)';
+          const c6='color-mix(in srgb,'+hlColor+' 7%,transparent)';
+          let bg;
+          if(roundL&&roundR) bg='background:'+c20;
+          else if(!roundL&&!roundR) bg='background:linear-gradient(90deg,'+c6+','+c20+' 22px,'+c20+' calc(100% - 22px),'+c6+')';
+          else if(!roundL) bg='background:linear-gradient(90deg,'+c6+','+c20+' 22px)';
+          else bg='background:linear-gradient(270deg,'+c6+','+c20+' 22px)';
+          const cs=segS-wf, ce=segE-wf;
+          band={ left:(cs/7*100).toFixed(2)+'%', width:((ce-cs+1)/7*100).toFixed(2)+'%', style:bg+';border-radius:'+(roundL?'999px':'4px')+' '+(roundR?'999px':'4px')+' '+(roundR?'999px':'4px')+' '+(roundL?'999px':'4px') };
+        }
+      }
+      if(any||w<5) weeks.push({ days, hasBand:!!band, bandLeft:band?band.left:'0%', bandWidth:band?band.width:'0%', bandStyle:band?band.style:'', k:w });
+    }
+
+    /* панель выбранного дня */
+    const selHeat=(selD>today)?0:heatOf(selDay);
+    const dayRaw=[];
+    S.solo.filter(t=>!t.archived).forEach(t=>{ if(t.date===selDay) dayRaw.push({name:t.name, done:t.done, ringColor:'var(--text-faint)', sub:'Задача', diff:t.difficulty||2}); });
+    activeGoalsCal.forEach((g,gi)=>g.steps.forEach(s=>{ if(s.date===selDay) dayRaw.push({name:s.name, done:s.done, ringColor:goalColorOf(gi), sub:g.name, diff:s.difficulty||2}); }));
+    if(selDay===todayStr) S.habits.forEach(h=>dayRaw.push({name:h.name, done:h.doneToday, ringColor:'var(--text-faint)', sub:'Привычка · стрик '+h.streak, diff:h.difficulty||2}));
+    const dayItems=dayRaw.map((it,i)=>({ ...it, k:i, notDone:!it.done, hasSub:!!it.sub, showDiff:it.diff>=3, diffIcons:Array.from({length:it.diff},(_,ii)=>({k:ii})), titleStyle: it.done?'text-decoration:line-through;color:var(--text-faint)':'color:var(--text-primary)' }));
+    const dayGoals=activeGoalsCal.map((g,gi)=>({g,gi})).filter(o=>{ const r=goalRange(o.g); return r.start<=selD&&selD<=r.end; }).map(o=>{ const dl=this._diff(this._d(o.g.deadline), selD); return { k:o.g.id, name:o.g.name, color:goalColorOf(o.gi), leftLabel: dl<=0?'последний день':'ещё '+dl+' '+this._pl(dl,'день','дня','дней') }; });
+    const dayLabel=this._wd(selDay)+', '+this._fmt(selDay);
+
+    /* итоги месяца */
+    let monthHeat=0; for(let n=1;n<=dim;n++) monthHeat+=heatOf(dstr(n));
+    let monthTasksDone=0;
+    S.solo.forEach(t=>{ const d=this._d(t.date); if(t.done&&d.getFullYear()===y&&d.getMonth()===m) monthTasksDone++; });
+    S.goals.forEach(g=>g.steps.forEach(s=>{ const d=this._d(s.date); if(s.done&&d.getFullYear()===y&&d.getMonth()===m) monthTasksDone++; }));
+    const bestStreakCal=S.habits.reduce((mx,h)=>Math.max(mx,h.streak),0);
+    const dsOf=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    const stripFills=['background:var(--inset)',heatFills[1],heatFills[2],heatFills[3]];
+    const heatStrip=Array.from({length:7},(_,i)=>{ const d=new Date(today.getTime()-(6-i)*86400000); return { k:i, fill:stripFills[heatStep(heatOf(dsOf(d)))] }; });
+
+    // ---- account ----
+    const activeGoals=S.goals.filter(g=>!g.archived && g.steps.some(s=>!s.done)).length;
+    let stepsDone=0; S.goals.forEach(g=>g.steps.forEach(s=>{if(s.done)stepsDone++;})); S.solo.forEach(t=>{if(t.done)stepsDone++;});
+    const bestStreak=S.habits.reduce((m,h)=>Math.max(m,h.streak),0);
+    const accountStats=[
+      {icon:'ti-target', label:'Активные цели', value:String(activeGoals)},
+      {icon:'ti-checks', label:'Шагов выполнено', value:String(stepsDone)},
+      {icon:'ti-flame', label:'Лучший стрик', value:bestStreak+' дн.'},
+      {icon:'ti-calendar-check', label:'Привычки сегодня', value:habitDone+'/'+S.habits.length},
+    ];
+    const accountActions=[
+      {icon:'ti-flame', label:'Путь Хранителя', onTap:()=>this.go('path')},
+      {icon:'ti-palette', label:'Внешний вид', onTap:()=>this.openAppearance()},
+      ...(this.DEV_CALIBRATION?[{icon:'ti-adjustments-alt', label:'Калибровка', onTap:()=>this.openCalib()}]:[]),
+      {icon:'ti-settings', label:'Настройки', onTap:()=>this.openSettings()},
+      {icon:'ti-bell', label:'Уведомления', onTap:()=>this.openNotif()},
+      {icon:'ti-help-circle', label:'Помощь и поддержка', onTap:()=>this.openHelp()},
+      {icon:'ti-info-circle', label:'О приложении', onTap:()=>this.openAbout()},
+    ].map((a,i)=>({...a, onTap:a.onTap||(()=>{}), borderStyle: i===0?'':'border-top:.5px solid var(--border)'}));
+
+    const tgl=(on)=>({ trackStyle: on?'background:var(--accent)':'background:var(--inset)', knobStyle: on?'transform:translateX(18px)':'transform:translateX(0)' });
+    const settingsToggles=[
+      {key:'sounds', icon:'ti-volume', label:'Звуковые эффекты', hint:'Звук при отметке задач'},
+      {key:'haptics', icon:'ti-device-mobile', label:'Виброотклик', hint:'Тактильная отдача'},
+      {key:'starfield', icon:'ti-sparkles', label:'Живой фон', hint:'Анимация ауры и частиц'},
+    ].map((r,i)=>({...r, ...tgl(S.settings[r.key]), onToggle:()=>this.toggleSetting(r.key), borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
+    const settingsRows=[
+      {icon:'ti-language', label:'Язык', value:S.lang, onTap:()=>{}},
+      {icon:'ti-calendar', label:'Первый день недели', value:S.settings.monday?'Понедельник':'Воскресенье', onTap:()=>this.toggleSetting('monday')},
+    ].map((r,i)=>({...r, borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
+
+    const notifRows=[
+      {key:'tasks', icon:'ti-checklist', label:'Напоминания о задачах', hint:'За час до срока'},
+      {key:'habits', icon:'ti-repeat', label:'Привычки', hint:'Ежедневное напоминание'},
+      {key:'achievements', icon:'ti-trophy', label:'Достижения', hint:'Новый уровень Хранителя'},
+      {key:'weekly', icon:'ti-mail', label:'Еженедельный отчёт', hint:'По понедельникам утром'},
+    ].map((r,i)=>({...r, ...tgl(S.notif.push && S.notif[r.key]), onToggle:()=>{ if(S.notif.push) this.toggleNotif(r.key); }, borderStyle:i===0?'':'border-top:.5px solid var(--border)', dimStyle:S.notif.push?'':'opacity:.4;pointer-events:none'}));
+    const pushToggle={ ...tgl(S.notif.push), onToggle:()=>this.toggleNotif('push') };
+
+    const faqList=[
+      {q:'Кто такой Хранитель?', a:'Хранитель — ваш спутник, который растёт вместе с вами. Каждая выполненная задача и привычка питает его и поднимает уровень.'},
+      {q:'Как персонаж набирает уровень?', a:'За задачи и привычки начисляется рост. Когда шкала заполняется до 100%, Хранитель переходит на новый уровень и меняет облик.'},
+      {q:'Чем цель отличается от привычки?', a:'Цель — это результат с шагами и сроком. Привычка — регулярное действие по расписанию, которое формирует ритм.'},
+      {q:'Сохранятся ли мои данные?', a:'Все данные хранятся в вашем аккаунте Telegram и синхронизируются между устройствами автоматически.'},
+    ].map((f,i)=>({...f, open:S.faqOpen===i, onTap:()=>this.toggleFaq(i), rot:S.faqOpen===i?'transform:rotate(180deg)':'', bodyStyle:S.faqOpen===i?'max-height:240px;opacity:1':'max-height:0;opacity:0', borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
+    const helpRows=[
+      {icon:'ti-message-circle', label:'Написать в поддержку'},
+      {icon:'ti-brand-telegram', label:'Наш Telegram-канал'},
+      {icon:'ti-bug', label:'Сообщить о проблеме'},
+    ].map((r,i)=>({...r, borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
+    const aboutRows=[
+      {icon:'ti-star', label:'Оценить приложение'},
+      {icon:'ti-file-text', label:'Условия использования'},
+      {icon:'ti-shield-lock', label:'Политика конфиденциальности'},
+    ].map((r,i)=>({...r, borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
+
+    // ---- create draft ----
+    const d=S.draft;
+    /* Пикер сложности: 5 угольков, подпись и живой предпросмотр искр */
+    const dNames=['Мелочь','Обычная','Серьёзная','Сложная','Вызов'];
+    const dv=Math.max(1,Math.min(5,d.difficulty||2));
+    const diffEmbers=[1,2,3,4,5].map(n=>({
+      k:n,
+      color: n<=dv?'var(--accent)':'var(--text-secondary)',
+      glow: n<=dv?'text-shadow:0 0 9px var(--accent-a45)':'opacity:.55',
+      onTap:(nn=>()=>this.setDraft({difficulty:nn}))(n),
+    }));
+    const prevXp=S.createType==='habit'?(XP?XP.habitBase(dv):8):(XP?XP.taskXp(dv):10);
+    const diffLabel=dNames[dv-1];
+    const diffPreview='+'+prevXp+' '+this._pl(prevXp,'искра','искры','искр');
+    const segOn='background:var(--accent);color:var(--on-accent);font-weight:600', segOff='background:transparent;color:var(--text-secondary)';
+    const swatches=[55,190,25,140,275,340].map(h=>({hue:h, color:this._vivid(h), sel:d.hue===h, ring:d.hue===h?'box-shadow:0 0 0 2px var(--sheet),0 0 0 4px var(--text-primary)':'', onPick:(hh=>()=>this.setDraft({hue:hh}))(h)}));
+    const goalsForPicker=S.goals.map(g=>({id:g.id, name:g.name, dot:this._vivid(g.hue), chipStyle: d.goalId===g.id?'border:1.5px solid '+this._vivid(g.hue)+';background:var(--accent-a13);color:var(--text-primary)':'border:1.5px solid var(--surface-2);background:var(--inset);color:var(--text-mid)', onPick:(id=>()=>this.setDraft({goalId:id}))(g.id)}));
+    const quickDeadlines=[{l:'1 неделя',n:7},{l:'2 недели',n:14},{l:'1 месяц',n:30}].map(q=>{ const t=this._today(); const x=new Date(t.getTime()+q.n*86400000); const s=x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate()); return {label:q.l, chipStyle:d.deadline===s?'background:var(--accent);color:var(--on-accent)':'background:var(--inset);color:var(--text-mid)', onTap:(ss=>()=>this.setDraft({deadline:ss}))(s)}; });
+    const weekdayChips=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map((w,i)=>({label:w, chipStyle:(d.days||[]).includes(i)?'background:var(--accent);color:var(--on-accent);border-color:var(--accent)':'background:var(--inset);color:var(--text-mid);border-color:var(--surface-2)', onTap:(ii=>()=>{ const cur=this.state.draft.days||[]; const nx=cur.includes(ii)?cur.filter(x=>x!==ii):[...cur,ii]; this.setDraft({days:nx}); })(i)}));
+
+    // ---- date picker ----
+    const dp=S.datePicker;
+    let dpMonthLabel='', dpWeeks=[], dpMonths=[], dpYear=0; const dpMonthList=!!(dp&&dp.monthList); const dpShowDays=!dpMonthList;
+    if(dp){
+      const yy=dp.y, mm=dp.m; dpYear=yy;
+      const p2=n=>String(n).padStart(2,'0');
+      const fmt=(Y,M,D)=>Y+'-'+p2(M+1)+'-'+p2(D);
+      let fw2=new Date(yy,mm,1).getDay(); fw2=(fw2+6)%7;
+      const curVal = dp.field==='editDate' ? ((S.edit&&S.edit.date)||'') : (dp.field==='deadline'?d.deadline : (dp.field==='stepDate'?d.stepDate : d.date));
+      const tt=this._today(); const todayStr=fmt(tt.getFullYear(),tt.getMonth(),tt.getDate());
+      dpMonthLabel=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'][mm]+' '+yy;
+      const start=new Date(yy,mm,1-fw2);
+      for(let w=0;w<6;w++){ const days=[];
+        for(let i=0;i<7;i++){
+          const dt=new Date(start.getFullYear(),start.getMonth(),start.getDate()+(w*7+i));
+          const Y=dt.getFullYear(),M=dt.getMonth(),D=dt.getDate(); const ds=fmt(Y,M,D);
+          const other=M!==mm; const sel=ds===curVal; const isT=ds===todayStr;
+          days.push({num:D, other, sel, todayRing:isT&&!sel, numColor: sel?'var(--on-accent)':(isT?'var(--accent-soft)':(other?'var(--text-faint)':'var(--text-mid)')), onTap:((s,o,Yr,Mo)=>()=>this.pickDate(s,o,Yr,Mo))(ds,other,Y,M)});
+        }
+        dpWeeks.push({days, k:w});
+      }
+      dpMonths=['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'].map((nm,i)=>({name:nm, chipStyle: i===mm?'background:var(--accent);color:var(--on-accent);font-weight:600':'background:var(--inset);color:var(--text-mid)', onTap:(mi=>()=>this.dpPickMonth(mi))(i)}));
+    }
+
+    // ---- Путь Хранителя ----
+    const MS=[{lvl:1,name:'Тлеющий'},{lvl:5,name:'Зажжённый'},{lvl:10,name:'Окрепший'},{lvl:20,name:'Яркий'},{lvl:29,name:'???',anomaly:true},{lvl:40,name:'Пылающий'},{lvl:50,name:'Хранитель'}];
+    let curMs=1; MS.forEach(m=>{ if(!m.anomaly && hero.level>=m.lvl) curMs=m.lvl; });
+    const milestones=MS.map(m=>{
+      const achieved=hero.level>=m.lvl;
+      const current=!m.anomaly && m.lvl===curMs;
+      return {
+        lvl:String(m.lvl), name:m.name, anomaly:!!m.anomaly, normal:!m.anomaly,
+        current, showLock:!achieved && !m.anomaly, still:!current,
+        stageLevel: current?hero.level:m.lvl,
+        stageWrapStyle: achieved?'':'filter:brightness(0);opacity:.5',
+        sub:'Уровень '+m.lvl,
+        nameColor: m.anomaly?'var(--text-secondary)':(achieved?'var(--text-primary)':'var(--text-mid)'),
+        numColor: achieved?'var(--accent-soft)':'var(--text-faint)',
+        cardStyle: current?'border:1.5px solid var(--accent);background:var(--surface)':(m.anomaly?'border:1.5px solid transparent;background:color-mix(in srgb,var(--surface) 45%,#0B0B09);cursor:pointer':'border:1.5px solid transparent;background:var(--surface)'),
+        onTap: m.anomaly?()=>this.tapAnomaly():()=>{},
+      };
+    });
+
+    // ---- калибровка ----
+    const cal=S.calib;
+    const isCalibScreen=S.screen==='calibration';
+    let calDots=[], calVars='', calAnchors=null, calLevel=hero.level, calTheme=S.theme, calFormLabel='форма 1', calLevels=[], calThemes=[];
+    let calLegend=[], calSelName='', calSelDesc='', calSelCoords='', calSelColor='#888';
+    if(isCalibScreen && cal){
+      const CC=window.GuardianCharConfig;
+      calLevel=cal.level; calTheme=cal.theme; calAnchors=cal.anchors;
+      calVars=this._varsOf(THEMES[cal.theme]||THEMES.amber);
+      const cform=CC?CC.formFor(cal.level):1;
+      calFormLabel='форма '+cform;
+      const dotColors={peakL:'#E8A54B',peakR:'#E8A54B',eyeL:'#4FC3A1',eyeR:'#4FC3A1',scarfKnot:'#4FA3E0',notch:'#E05A6E',hemCenter:'#9BC26B',crownCenter:'#B98BD9'};
+      const dotNames={peakL:'Пламя Л',peakR:'Пламя П',eyeL:'Глаз Л',eyeR:'Глаз П',scarfKnot:'Шарф',notch:'Трещина',hemCenter:'Подол',crownCenter:'Корона'};
+      const dotDescs={peakL:'Огонь на ухе, свеча, дым',peakR:'Огонь на ухе, свеча, дым',eyeL:'Моргание, приглушение глаз',eyeR:'Моргание, приглушение глаз',scarfKnot:'Узел шарфа (резерв)',notch:'Скол маски — ур. 29',hemCenter:'Искры от подола',crownCenter:'Сияние — ур. 50'};
+      const fa=cal.anchors && cal.anchors['form'+cform];
+      if(fa){
+        calDots=Object.keys(fa).map(k=>({key:k,label:dotNames[k]||k,left:fa[k].x+'%',top:fa[k].y+'%',bg:dotColors[k]||'#888',
+          ring: cal.sel===k?'width:20px;height:20px;border-width:2.5px;z-index:2':'opacity:.82',
+          onDown:(kk=>(ev)=>this.calDown(kk,ev))(k)}));
+        calLegend=Object.keys(fa).map(k=>({key:k,name:dotNames[k]||k,desc:dotDescs[k]||'',color:dotColors[k]||'#888',
+          rowStyle: cal.sel===k?'border-color:var(--accent);background:var(--accent-a13)':'border-color:var(--surface-2);background:var(--surface)',
+          onTap:(kk=>()=>this.calSelect(kk))(k)}));
+        const sp=cal.sel&&fa[cal.sel];
+        if(sp){ calSelName=dotNames[cal.sel]||cal.sel; calSelDesc=dotDescs[cal.sel]||''; calSelCoords=sp.x.toFixed(1)+' · '+sp.y.toFixed(1); calSelColor=dotColors[cal.sel]||'#888'; }
+      }
+      calLevels=[1,5,10,20,29,30,40,50].map(l=>({label:String(l), chipStyle: cal.level===l?'background:var(--accent);color:var(--on-accent);font-weight:600':'background:var(--inset);color:var(--text-mid)', onTap:(ll=>()=>this.calSetLevel(ll))(l)}));
+      calThemes=['amber','azure','spark'].map(t=>({label:THEMES[t].name, chipStyle: cal.theme===t?'background:var(--accent);color:var(--on-accent);font-weight:600':'background:var(--inset);color:var(--text-mid)', onTap:(tt=>()=>this.calSetTheme(tt))(t)}));
+    }
+
+    const leveledKind = S.leveled ? ([10,20,40,50].indexOf(S.leveled.level)>=0?'form':([5,29].indexOf(S.leveled.level)>=0?'title':'none')) : 'none';
+    const leveledCaption = leveledKind==='form' ? 'Новый облик' : (leveledKind==='title' ? 'Новый титул' : 'Новый уровень');
+
+    // ---- celebration ----
+    const celG=S.celebrating?this._goalById(S.celebrating):null;
+    const cc=celG?this._vivid(celG.hue):'var(--accent-soft)';
+    const motes=Array.from({length:22},(_,i)=>{ const ang=(i/22)*Math.PI*2; const r=64+(i%5)*16; return { size:(5+(i%4)*2)+'px', dx:(Math.cos(ang)*r).toFixed(0)+'px', dy:(Math.sin(ang)*r).toFixed(0)+'px', dur:(1.2+(i%5)*0.18).toFixed(2)+'s', delay:((i%6)*0.05).toFixed(2)+'s', color: i%3===0?cc:(i%3===1?'var(--accent-soft)':'var(--accent-soft)') }; });
+
+    return {
+      // screen
+      isHome:S.screen==='home', isTasks:S.screen==='tasks', isCal:S.screen==='calendar',
+      navHomeColor:S.screen==='home'?'var(--accent-soft)':'var(--text-faint)',
+      navTasksColor:S.screen==='tasks'?'var(--accent-soft)':'var(--text-faint)',
+      navCalColor:S.screen==='calendar'?'var(--accent-soft)':'var(--text-faint)',
+      navAccountColor:(['account','appearance','settings','notifications','help','about','path','calibration'].indexOf(S.screen)>=0)?'var(--accent-soft)':'var(--text-faint)',
+      navFloating:navStyle==='Плавающая', navFlat:navStyle==='Плоская',
+      goHome:()=>this.go('home'), goTasks:()=>this.go('tasks'), goCal:()=>this.go('calendar'), goAccount:()=>this.go('account'),
+      openCreate:()=>this.openCreate(),
+      isAccount:S.screen==='account', accountStats, accountActions,
+      renameOpen:S.rename!=null, renameVal:S.rename||'',
+      onRenameChange:e=>this.setState({rename:e.target.value}),
+      openRename:()=>this.openRename(), closeRename:()=>this.closeRename(), saveRename:()=>this.saveRename(),
+      renameSaveStyle:(S.rename&&S.rename.trim())?'':'opacity:.4;pointer-events:none',
+      isAppearance:S.screen==='appearance', themeCards,
+      isSettings:S.screen==='settings', settingsToggles, settingsRows,
+      isNotif:S.screen==='notifications', notifRows, pushToggle,
+      isHelp:S.screen==='help', faqList, helpRows,
+      isAbout:S.screen==='about', aboutRows,
+      isPath:S.screen==='path', milestones, pathToast:S.pathToast,
+      isCalib:isCalibScreen, calLevels, calThemes, calDots, calAnchors, calLevel, calTheme, calVars, calFormLabel, calToast:S.calToast,
+      calToastMsg:(typeof S.calToast==='string')?S.calToast:'Готово',
+      calLegend, calSelName, calSelDesc, calSelCoords, calSelColor,
+      calNL:()=>this.calNudge(-0.5,0), calNR:()=>this.calNudge(0.5,0), calNU:()=>this.calNudge(0,-0.5), calND:()=>this.calNudge(0,0.5),
+      calSave:()=>this.calSave(), calReset:()=>this.calReset(),
+      calRef:this.calRef, calMove:(ev)=>this.calMove(ev), calUp:()=>this.calUp(), calExport:()=>this.calExport(),
+      heroLevel:hero.level, themeId:S.theme, burstTick:S.burstTick,
+      heroBumpStyle:S.heroBump?'animation:heroJump .45s ease':'',
+      leveledKind,
+      themeVars:this._varsOf(THEMES[S.theme]||THEMES.amber),
+      themingVal:S.theming?'on':'off',
+      themeToast:S.themeToast,
+      applyThemeTap:()=>this.applyTheme(),
+      applyStyle:(S.themeSel===S.theme)?'opacity:.4;pointer-events:none':'',
+      // hero
+      heroName:hero.name, heroLevelLabel:'ур. '+hero.level,
+      growthLabel:'Рост до '+(hero.level+1)+' уровня', growthPctLabel:Math.round(lv.progress*100)+'%', growthWidth:Math.round(lv.progress*100)+'%',
+      dateLabel:this._wd('2026-06-12')+', '+this._fmt('2026-06-12'),
+      taskCountLabel: todayTasks.length+' '+this._pl(todayTasks.length,'задача','задачи','задач'),
+      todayTasks,
+      habitDoneLabel:'Готово '+habitDone+' из '+S.habits.length, todayHabits,
+      // tasks screen
+      goals:goalsView, soloTasks:soloView, hasSolo:soloView.length>0,
+      // calendar
+      monthLabel, weeks, weekHeaders:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+      prevMonth:()=>this.prevMonth(), nextMonth:()=>this.nextMonth(),
+      dayLabel, dayItems, dayHasItems:dayItems.length>0, dayEmpty:dayItems.length===0,
+      dayXpLabel: selHeat>0?('+'+selHeat+' ✦'):'0 ✦',
+      dayXpColor: selHeat>0?'var(--accent-soft)':'var(--text-faint)',
+      dayGoals, dayHasGoals:dayGoals.length>0,
+      calChips, hasCalChips:calChips.length>0,
+      monthHeatLabel:monthHeat+' ✦', monthTasksLabel:String(monthTasksDone),
+      bestStreakLabel:bestStreakCal+' дн.', heatStrip,
+      // create
+      createOpen:S.createOpen, ctNone:S.createType===null, ctChosen:S.createType!==null, ctGoal:S.createType==='goal', ctTask:S.createType==='task', ctHabit:S.createType==='habit',
+      createTitle: S.createType===null?'Создать':(S.createType==='goal'?'Новая цель':(S.createType==='task'?'Новая задача':'Новая привычка')),
+      pickGoalType:()=>this.pickType('goal'), pickTaskType:()=>this.pickType('task'), pickHabitType:()=>this.pickType('habit'),
+      createBack:()=>this.setState({createType:null}), closeCreate:()=>this.setState({createOpen:false}),
+      draftName:d.name, onDraftName:e=>this.setDraft({name:e.target.value}),
+      draftContext:d.context, onDraftContext:e=>this.setDraft({context:e.target.value}),
+      draftDeadline:d.deadline||'', onDraftDeadline:e=>this.setDraft({deadline:e.target.value}),
+      draftDate:d.date, onDraftDate:e=>this.setDraft({date:e.target.value}),
+      draftStepName:d.stepName, onDraftStepName:e=>this.setDraft({stepName:e.target.value}),
+      draftStepDate:d.stepDate, onDraftStepDate:e=>this.setDraft({stepDate:e.target.value}),
+      draftDeadlineLabel: d.deadline ? (this._fmt(d.deadline)+' '+this._d(d.deadline).getFullYear()) : 'Выберите дату',
+      deadlineValColor: d.deadline ? 'var(--text-primary)' : 'var(--text-faint)',
+      draftDateLabel: this._fmt(d.date)+' '+this._d(d.date).getFullYear(),
+      draftStepDateLabel: this._fmt(d.stepDate),
+      openDeadlinePicker:()=>this.openDatePicker('deadline'), openTaskDatePicker:()=>this.openDatePicker('date'), openStepDatePicker:()=>this.openDatePicker('stepDate'),
+      datePickerOpen:!!dp, dpMonthLabel, dpWeeks, dpWeekHeaders:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+      dpShowDays, dpMonthList, dpYear, dpMonths,
+      dpPrev:()=>this.dpPrev(), dpNext:()=>this.dpNext(), closeDatePicker:()=>this.closeDatePicker(),
+      dpToggleMonths:()=>this.dpToggleMonths(), dpPrevYear:()=>this.dpPrevYear(), dpNextYear:()=>this.dpNextYear(),
+      dpToday:()=>this.dpQuick(0), dpTomorrow:()=>this.dpQuick(1),
+      draftSteps:(d.steps||[]).map((s,i)=>({name:s.name, dateLabel:this._fmt(s.date), diffIcons:Array.from({length:s.difficulty||2},(_,ii)=>({k:ii})), onRemove:(idx=>()=>this.removeStep(idx))(i)})),
+      stepDiffEmbers:[1,2,3,4,5].map(n=>({ k:n,
+        color: n<=(d.stepDiff||2)?'var(--accent)':'var(--text-secondary)',
+        glow: n<=(d.stepDiff||2)?'text-shadow:0 0 8px var(--accent-a45)':'opacity:.55',
+        onTap:(nn=>()=>this.setDraft({stepDiff:nn}))(n) })),
+      hasSteps:(d.steps||[]).length>0,
+      swatches, goalsForPicker, quickDeadlines, weekdayChips,
+      diffEmbers, diffLabel, diffPreview,
+      capToast:S.capToast,
+      attachSolo:d.attach==='solo', attachGoal:d.attach==='goal',
+      setAttachSolo:()=>this.setDraft({attach:'solo'}), setAttachGoal:()=>this.setDraft({attach:'goal'}),
+      schedDaily:d.schedule==='daily', schedDays:d.schedule==='days', schedCount:d.schedule==='count',
+      setSchedDaily:()=>this.setDraft({schedule:'daily'}), setSchedDays:()=>this.setDraft({schedule:'days'}), setSchedCount:()=>this.setDraft({schedule:'count'}),
+      attachSoloStyle:d.attach==='solo'?segOn:segOff, attachGoalStyle:d.attach==='goal'?segOn:segOff,
+      schedDailyStyle:d.schedule==='daily'?segOn:segOff, schedDaysStyle:d.schedule==='days'?segOn:segOff, schedCountStyle:d.schedule==='count'?segOn:segOff,
+      saveStyle:d.name.trim()?'':'opacity:.4;pointer-events:none',
+      countVal:d.count, incCount:()=>this.setDraft({count:Math.min(7,(this.state.draft.count||3)+1)}), decCount:()=>this.setDraft({count:Math.max(1,(this.state.draft.count||3)-1)}),
+      addStep:()=>this.addStep(), saveGoal:()=>this.saveGoal(), saveTask:()=>this.saveTask(), saveHabit:()=>this.saveHabit(),
+      canSave:!!d.name.trim(),
+      // edit & archive
+      editOpen:!!S.edit,
+      editTitle: S.edit ? (S.edit.kind==='goal'?'Правка цели':(S.edit.kind==='step'?'Правка шага':(S.edit.kind==='habit'?'Правка привычки':'Правка задачи'))) : '',
+      editHasDiff: !!S.edit && S.edit.kind!=='goal',
+      editHasDate: !!S.edit && S.edit.kind!=='habit',
+      editDiffEmbers:[1,2,3,4,5].map(n=>{ const ev2=S.edit?Math.max(1,Math.min(5,S.edit.difficulty||2)):2; return { k:n,
+        color: n<=ev2?'var(--accent)':'var(--text-secondary)',
+        glow: n<=ev2?'text-shadow:0 0 9px var(--accent-a45)':'opacity:.55',
+        onTap:(nn=>()=>this.setEdit({difficulty:nn}))(n) }; }),
+      editDiffLabel: S.edit?dNames[Math.max(1,Math.min(5,S.edit.difficulty||2))-1]:'',
+      editDiffPreview: S.edit?('+'+(S.edit.kind==='habit'?(XP?XP.habitBase(S.edit.difficulty||2):8):(XP?XP.taskXp(S.edit.difficulty||2):10))+' '+this._pl((S.edit.kind==='habit'?(XP?XP.habitBase(S.edit.difficulty||2):8):(XP?XP.taskXp(S.edit.difficulty||2):10)),'искра','искры','искр')):'',
+      editName: S.edit?S.edit.name:'', onEditName:e=>this.setEdit({name:e.target.value}),
+      editHasColor: !!S.edit && S.edit.kind==='goal',
+      editDateCaption: (S.edit&&S.edit.kind==='goal')?'Дедлайн':'Дата',
+      editDateLabel: (S.edit&&S.edit.date) ? (this._fmt(S.edit.date)+' '+this._d(S.edit.date).getFullYear()) : 'Выберите дату',
+      editSwatches:[55,190,25,140,275,340].map(h=>({color:this._vivid(h), ring:(S.edit&&S.edit.hue===h)?'box-shadow:0 0 0 2px var(--sheet),0 0 0 4px var(--text-primary)':'', onPick:(hh=>()=>this.setEdit({hue:hh}))(h)})),
+      openEditDatePicker:()=>this.openDatePicker('editDate'),
+      saveEdit:()=>this.saveEdit(), closeEdit:()=>this.closeEdit(),
+      editSaveStyle:(S.edit&&S.edit.name.trim())?'':'opacity:.4;pointer-events:none',
+      requestDelete:()=>this.requestDelete(),
+      editDeleteLabel: S.edit ? (S.edit.kind==='goal'?'Удалить цель':(S.edit.kind==='step'?'Удалить шаг':(S.edit.kind==='habit'?'Удалить привычку':'Удалить задачу'))) : '',
+      confirmOpen:!!S.confirm,
+      confirmText: S.confirm ? (S.confirm.kind==='goal' ? 'Цель «'+S.confirm.name+'» ещё не достигнута — герой в неё верил. Точно отпускаем?' : (S.confirm.kind==='step' ? 'Шаг «'+S.confirm.name+'» ещё не сделан. Хранитель сделает вид, что не заметил… но точно удаляем?' : (S.confirm.kind==='habit' ? 'Привычка «'+S.confirm.name+'» держит стрик. Точно удаляем?' : 'Задача «'+S.confirm.name+'» ещё не выполнена. Хранитель сделает вид, что не заметил… но точно удаляем?'))) : '',
+      cancelDelete:()=>this.setState({confirm:null}),
+      confirmDeleteTap:()=>{ const c=this.state.confirm; if(c) this.doDelete(c.kind, c.id); },
+      stopProp:(ev)=>ev.stopPropagation(),
+      archOpen:S.archOpen, toggleArch:()=>this.setState(s=>({archOpen:!s.archOpen})),
+      archChevron:S.archOpen?'transform:rotate(180deg)':'',
+      archived, archCount:String(archived.length), archEmpty:archived.length===0,
+      // overlays
+      undo:!!S.undo, undoLabel:S.undo?S.undo.label:'', onUndo:()=>this.doUndo(),
+      celebrating:!!S.celebrating, celebGoalName:celG?celG.name:'', celebColorA:'transparent', celebColorB:'color-mix(in srgb, '+cc+' 40%, transparent)',
+      celebBurst:celebStyle==='Вспышка', celebAscend:celebStyle==='Восхождение', motes,
+      dismissCelebrate:()=>this.dismissCelebrate(),
+      celebArchive:(ev)=>{ev.stopPropagation(); this.celebArchive();},
+      leveled:!!S.leveled, leveledNum:S.leveled?S.leveled.level:0, leveledCaption, dismissLevel:()=>this.dismissLevel(),
+    };
+  }
+}
+</script>
+</body>
+</html>
