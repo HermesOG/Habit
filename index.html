@@ -105,8 +105,8 @@
       });
     }catch(e){ L('roundtrip искл: '+e.message); }
   }
-  if(document.readyState==='complete') setTimeout(run,1500);
-  else window.addEventListener('load', function(){ setTimeout(run,1500); });
+  var _diagOn=false; try{ _diagOn=(location.hash.indexOf('diag')>-1)||(localStorage.getItem('__diag_on')==='1'); }catch(e){}
+  if(_diagOn){ if(document.readyState==='complete') setTimeout(run,1500); else window.addEventListener('load', function(){ setTimeout(run,1500); }); }
 })();
 </script>
 <script src="xp-engine.js"></script>
@@ -1193,6 +1193,18 @@ input{outline:none}
 </div>
 </sc-if>
 
+<sc-if value="{{ showSplash }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;z-index:70;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center">
+<div style="position:relative;width:118px;height:118px;display:flex;align-items:center;justify-content:center">
+<div style="position:absolute;inset:-8px;border-radius:34px;background:radial-gradient(circle,var(--accent-a27),transparent 68%);animation:auraPulse 2.4s ease-in-out infinite"></div>
+<div style="position:relative;width:102px;height:102px;border-radius:26px;border:1.5px solid var(--accent);background:var(--inset);display:flex;align-items:center;justify-content:center">
+<dc-import name="CharacterStage" size="90" level="{{ heroLevel }}" theme="{{ themeId }}" hint-size="90px,90px"></dc-import>
+</div>
+</div>
+<div style="font-family:'Spectral',serif;font-size:12px;color:var(--accent-soft);letter-spacing:3px;text-transform:uppercase;margin-top:18px">Хранитель</div>
+</div>
+</sc-if>
+
 <sc-if value="{{ showOnboarding }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 26px calc(env(safe-area-inset-bottom,0px) + 24px);overflow-y:auto; {{ obVars }}">
 <div style="position:relative;width:144px;height:144px;display:flex;align-items:center;justify-content:center;flex:none">
@@ -1225,6 +1237,7 @@ class Component extends DCLogic {
   state = {
     screen: 'home',
     onboarded: false,
+    loaded: false,
     obEl: 'amber',
     obName: '',
     theme: (function(){ try{ return localStorage.getItem('guardian-theme')||'amber'; }catch(e){ return 'amber'; } })(),
@@ -1393,6 +1406,7 @@ class Component extends DCLogic {
     try{ window.addEventListener('resize', setAppH); window.addEventListener('orientationchange', setAppH); }catch(e){}
     if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
     this._loadData((d)=>this._applyLoaded(d));
+    setTimeout(()=>{ if(!this.state.loaded) this.setState({loaded:true}); }, 2500);
     const flush=()=>this._flush();
     try{
       document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') flush(); });
@@ -1443,13 +1457,15 @@ class Component extends DCLogic {
         cs.getItem('gsN', (err,n)=>{
           const cnt=parseInt(n,10);
           if(err || !cnt){ cb(this._parseState(local)); return; }
-          const keys=[]; for(let i=0;i<cnt;i++) keys.push('gs'+i);
-          cs.getItems(keys, (e2,map)=>{
-            if(e2 || !map){ cb(this._parseState(local)); return; }
-            let json=''; for(let i=0;i<cnt;i++) json+=(map['gs'+i]||'');
-            this._gsN=cnt;
-            cb(this._parseState(json) || this._parseState(local));
-          });
+          const parts=new Array(cnt); let got=0, failed=false;
+          for(let i=0;i<cnt;i++){
+            cs.getItem('gs'+i, (e2,val)=>{
+              if(failed) return;
+              if(e2){ failed=true; cb(this._parseState(local)); return; }
+              parts[i]=val||''; got++;
+              if(got===cnt){ this._gsN=cnt; cb(this._parseState(parts.join('')) || this._parseState(local)); }
+            });
+          }
         });
         return;
       }catch(e){ cb(this._parseState(local)); return; }
@@ -1457,8 +1473,8 @@ class Component extends DCLogic {
     cb(this._parseState(local));
   }
   _applyLoaded(d){
-    if(!d){ this._lastSaved=JSON.stringify(this._persistSlice()); return; }
-    const patch={}; ['onboarded','theme','settings','notif','hero','xp','xpDays','goals','solo','habits','lang'].forEach(k=>{ if(d[k]!==undefined) patch[k]=d[k]; });
+    if(!d){ this._lastSaved=JSON.stringify(this._persistSlice()); this.setState({loaded:true}); return; }
+    const patch={loaded:true}; ['onboarded','theme','settings','notif','hero','xp','xpDays','goals','solo','habits','lang'].forEach(k=>{ if(d[k]!==undefined) patch[k]=d[k]; });
     this.setState(patch, ()=>{
       if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
       try{ if(patch.theme) localStorage.setItem('guardian-theme', patch.theme); }catch(e){}
@@ -2003,7 +2019,8 @@ class Component extends DCLogic {
       heroBumpStyle:S.heroBump?'animation:heroJump .45s ease':'',
       leveledKind,
       themeVars:this._varsOf(THEMES[S.theme]||THEMES.amber),
-      showOnboarding: !S.onboarded,
+      showOnboarding: S.loaded && !S.onboarded,
+      showSplash: !S.loaded,
       obThemeId: S.obEl,
       obVars: this._varsOf(THEMES[S.obEl]||THEMES.amber),
       obName: S.obName,
