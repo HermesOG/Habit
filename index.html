@@ -57,6 +57,12 @@
 <link href="vendor/fonts.css" rel="stylesheet">
 <link rel="stylesheet" href="vendor/tabler-icons.min.css">
 <script src="vendor/telegram-web-app.js"></script>
+<style>
+  html,body{margin:0;padding:0;background:#16171a}
+  body{overflow:hidden;overscroll-behavior:none}
+  .tg-app-root{position:fixed;top:0;left:0;right:0;height:var(--app-h,100dvh);width:100%;overflow:hidden;background:#16171a;z-index:1}
+  @supports not (height:100dvh){ .tg-app-root{height:var(--app-h,100vh)} }
+</style>
 <script src="xp-engine.js"></script>
 <script src="sfx-engine.js"></script>
 <script src="./character-config.standalone.js"></script>
@@ -91,10 +97,10 @@ input,button{font-family:inherit}
 input{outline:none}
 </style>
 </helmet>
-<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div class="tg-app-root">
 <div data-theming="{{ themingVal }}" style="height:100%;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;font-family:'Golos Text',system-ui,sans-serif;color:var(--text-primary); {{ themeVars }}">
 
-<div style="flex:1;overflow-y:auto;padding:58px 16px 104px">
+<div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px calc(env(safe-area-inset-bottom,0px) + 96px)">
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <div style="position:sticky;top:0;z-index:6;margin:0 -16px 18px;padding:0 16px 0;background:var(--bg)">
@@ -762,7 +768,7 @@ input{outline:none}
 
 <!--NAV-->
 <sc-if value="{{ navFloating }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;left:0;right:0;bottom:0;padding:0 12px 18px;pointer-events:none;z-index:20">
+<div style="position:absolute;left:0;right:0;bottom:0;padding:0 12px calc(env(safe-area-inset-bottom,0px) + 14px);pointer-events:none;z-index:20">
 <div style="pointer-events:auto;background:var(--nav-glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:.5px solid var(--border);border-radius:24px;padding:8px 4px;display:flex;align-items:flex-end;justify-content:space-around;box-shadow:0 10px 30px rgba(0,0,0,.4)">
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Сегодня</span></div>
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Все задачи</span></div>
@@ -773,7 +779,7 @@ input{outline:none}
 </div>
 </sc-if>
 <sc-if value="{{ navFlat }}" hint-placeholder-val="{{ true }}">
-<div style="position:absolute;left:0;right:0;bottom:0;border-top:.5px solid var(--border);padding:8px 12px 20px;display:flex;align-items:flex-end;justify-content:space-around;background:var(--nav);z-index:20">
+<div style="position:absolute;left:0;right:0;bottom:0;border-top:.5px solid var(--border);padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 12px);display:flex;align-items:flex-end;justify-content:space-around;background:var(--nav);z-index:20">
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Сегодня</span></div>
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Все задачи</span></div>
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;color:var(--accent-soft)" onClick="{{ openCreate }}"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));display:flex;align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 4px 12px var(--accent-a27)"><i class="ti ti-plus" style="font-size:25px;color:#fff"></i></div><span style="font-size:10px;white-space:nowrap">Создать</span></div>
@@ -1141,8 +1147,30 @@ input{outline:none}
 </div>
 </sc-if>
 
+<sc-if value="{{ showOnboarding }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 26px calc(env(safe-area-inset-bottom,0px) + 24px);overflow-y:auto; {{ obVars }}">
+<div style="position:relative;width:144px;height:144px;display:flex;align-items:center;justify-content:center;flex:none">
+<div style="position:absolute;inset:-10px;border-radius:40px;background:radial-gradient(circle,var(--accent-a27),transparent 68%);animation:auraPulse 3.6s ease-in-out infinite"></div>
+<div style="position:relative;width:128px;height:128px;border-radius:30px;border:1.5px solid var(--accent);background:var(--inset);display:flex;align-items:center;justify-content:center">
+<dc-import name="CharacterStage" size="112" level="{{ 1 }}" theme="{{ obThemeId }}" hint-size="112px,112px"></dc-import>
 </div>
-</x-import>
+</div>
+<div style="font-family:'Spectral',serif;font-size:11px;color:var(--accent-soft);letter-spacing:3px;text-transform:uppercase;margin-top:16px">Хранитель</div>
+<div style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary);margin-top:6px;line-height:1.25">Пробуди своего<br>хранителя огня</div>
+<div style="font-size:13.5px;color:var(--text-secondary);line-height:1.55;max-width:290px;margin:11px auto 0">Выполняй задачи и привычки — а он растёт вместе с тобой, от искры до великого стража.</div>
+<div style="font-size:11px;color:var(--text-faint);letter-spacing:.5px;text-transform:uppercase;margin:22px 0 10px">Выбери стихию</div>
+<div style="display:flex;gap:9px;width:100%;max-width:320px">
+<div onClick="{{ obPickAmber }}" style="flex:1;padding:11px 4px;border-radius:14px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px; {{ obPillAmber }}"><span style="width:20px;height:20px;border-radius:50%;background:#D99058"></span><span style="font-size:12px;color:var(--text-primary)">Янтарь</span></div>
+<div onClick="{{ obPickAzure }}" style="flex:1;padding:11px 4px;border-radius:14px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px; {{ obPillAzure }}"><span style="width:20px;height:20px;border-radius:50%;background:#3EAFD8"></span><span style="font-size:12px;color:var(--text-primary)">Лазурь</span></div>
+<div onClick="{{ obPickSpark }}" style="flex:1;padding:11px 4px;border-radius:14px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px; {{ obPillSpark }}"><span style="width:20px;height:20px;border-radius:50%;background:#DF4B61"></span><span style="font-size:12px;color:var(--text-primary)">Искра</span></div>
+</div>
+<input value="{{ obName }}" onChange="{{ onObName }}" maxLength="{{ 20 }}" placeholder="Имя хранителя (по желанию)" style="width:100%;max-width:320px;box-sizing:border-box;background:var(--inset);border:1px solid var(--surface-2);border-radius:12px;padding:13px 14px;font-size:15px;color:var(--text-primary);margin-top:15px;text-align:center;color-scheme:dark"/>
+<button onClick="{{ finishOnboarding }}" style="width:100%;max-width:320px;margin-top:16px;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:16px;font-weight:600;padding:15px;border-radius:14px;cursor:pointer;box-shadow:0 12px 30px var(--accent-a27)">Пробудить хранителя</button>
+</div>
+</sc-if>
+
+</div>
+</div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
 class Component extends DCLogic {
@@ -1150,6 +1178,9 @@ class Component extends DCLogic {
   calRef = React.createRef();
   state = {
     screen: 'home',
+    onboarded: false,
+    obEl: 'amber',
+    obName: '',
     theme: (function(){ try{ return localStorage.getItem('guardian-theme')||'amber'; }catch(e){ return 'amber'; } })(),
     themeSel: 'amber',
     theming: false,
@@ -1242,6 +1273,7 @@ class Component extends DCLogic {
     this.setState({theming:true}, ()=>{
       requestAnimationFrame(()=>{
         this.setState({theme:sel});
+        const _t=this._tg(); if(_t){ const _th=this._themes()[sel]; try{ if(_t.setHeaderColor)_t.setHeaderColor(_th.bg); if(_t.setBackgroundColor)_t.setBackgroundColor(_th.bg); }catch(e){} }
         if(window.GuardianSfx) window.GuardianSfx.setTheme(sel);
         try{ localStorage.setItem('guardian-theme', sel); }catch(e){}
         this._sfx('open');
@@ -1253,6 +1285,15 @@ class Component extends DCLogic {
     });
   }
   openCreate(){ this._sfx('tap'); this.setState({createOpen:true, createType:null}); }
+
+  obPick(el){ this._sfx('tap'); const _t=this._tg(); if(_t){ const _th=this._themes()[el]; try{ if(_t.setHeaderColor)_t.setHeaderColor(_th.bg); if(_t.setBackgroundColor)_t.setBackgroundColor(_th.bg); }catch(e){} } this.setState({obEl:el}); }
+  finishOnboarding(){
+    const el=this.state.obEl||'amber';
+    const nm=(this.state.obName||'').trim();
+    try{ if(window.GuardianSfx){ window.GuardianSfx.unlock&&window.GuardianSfx.unlock(); window.GuardianSfx.setTheme(el); this._sfx('levelup'); } }catch(e){}
+    try{ localStorage.setItem('guardian-theme', el); }catch(e){}
+    this.setState(s=>({ onboarded:true, theme:el, themeSel:el, hero:{...s.hero, name: nm||s.hero.name} }), ()=>{ this._flush(); });
+  }
 
   /* ---- Путь / калибровка ---- */
   tapAnomaly(){ this.setState({pathToast:true}); clearTimeout(this._ptT); this._ptT=setTimeout(()=>this.setState({pathToast:false}),2600); }
@@ -1290,9 +1331,28 @@ class Component extends DCLogic {
 
   _sfx(name, arg){ const S=this.state.settings; if(S&&S.sounds!==false && window.GuardianSfx) window.GuardianSfx.play(name, arg); }
   componentDidMount(){
-    const t=this._tg(); if(t){ try{ t.ready(); t.expand(); }catch(e){} }
+    const t=this._tg();
+    const setAppH=()=>{ const h=(t&&t.viewportStableHeight)?t.viewportStableHeight:window.innerHeight; if(h) document.documentElement.style.setProperty('--app-h', h+'px'); };
+    if(t){
+      try{
+        t.ready(); t.expand();
+        const th=this._themes()[this.state.theme]||this._themes().amber;
+        if(t.setHeaderColor) t.setHeaderColor(th.bg);
+        if(t.setBackgroundColor) t.setBackgroundColor(th.bg);
+        if(t.onEvent) t.onEvent('viewportChanged', setAppH);
+        try{ if(t.disableVerticalSwipes) t.disableVerticalSwipes(); }catch(e){}
+      }catch(e){}
+    }
+    setAppH();
+    try{ window.addEventListener('resize', setAppH); window.addEventListener('orientationchange', setAppH); }catch(e){}
     if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
     this._loadData((d)=>this._applyLoaded(d));
+    const flush=()=>this._flush();
+    try{
+      document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') flush(); });
+      window.addEventListener('pagehide', flush);
+      window.addEventListener('blur', flush);
+    }catch(e){}
   }
   componentDidUpdate(prevProps){ this._scheduleSave(); }
 
@@ -1300,27 +1360,33 @@ class Component extends DCLogic {
   _tg(){ return (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null; }
   _inTG(){ const t=this._tg(); return !!(t && (t.initData || (t.initDataUnsafe && t.initDataUnsafe.user))); }
   _cloud(){ const t=this._tg(); return (t && t.CloudStorage) ? t.CloudStorage : null; }
-  _persistSlice(){ const s=this.state; return { v:1, theme:s.theme, settings:s.settings, notif:s.notif, hero:s.hero, xp:s.xp, xpDays:s.xpDays, goals:s.goals, solo:s.solo, habits:s.habits, lang:s.lang }; }
+  _persistSlice(){ const s=this.state; return { v:1, onboarded:s.onboarded, theme:s.theme, settings:s.settings, notif:s.notif, hero:s.hero, xp:s.xp, xpDays:s.xpDays, goals:s.goals, solo:s.solo, habits:s.habits, lang:s.lang }; }
   _scheduleSave(){
     clearTimeout(this._saveT);
-    this._saveT=setTimeout(()=>{
-      let json; try{ json=JSON.stringify(this._persistSlice()); }catch(e){ return; }
-      if(json===this._lastSaved) return;
-      this._lastSaved=json;
-      try{ localStorage.setItem('guardian-state-v1', json); }catch(e){}
-      this._cloudSave(json);
-    }, 500);
+    this._saveT=setTimeout(()=>this._flush(), 400);
   }
+  _flush(){
+    clearTimeout(this._saveT);
+    let json; try{ json=JSON.stringify(this._persistSlice()); }catch(e){ return; }
+    const changed = json!==this._lastSaved;
+    this._lastSaved=json;
+    try{ localStorage.setItem('guardian-state-v1', json); }catch(e){}
+    if(changed || !this._cloudOk) this._cloudSave(json);
+  }
+  _setSync(ok){ this._cloudOk=ok; try{ this._syncAt=new Date(); }catch(e){} }
   _cloudSave(json){
     const cs=this._cloud(); if(!cs || !this._inTG()) return;
+    const self=this;
     try{
-      const SZ=3800, chunks=[]; for(let i=0;i<json.length;i+=SZ) chunks.push(json.slice(i,i+SZ));
-      chunks.forEach((c,i)=>cs.setItem('gs'+i, c, ()=>{}));
-      cs.setItem('gsN', String(chunks.length), ()=>{});
-      const prev=this._gsN||0;
-      if(prev>chunks.length && cs.removeItems){ const rm=[]; for(let i=chunks.length;i<prev;i++) rm.push('gs'+i); cs.removeItems(rm, ()=>{}); }
-      this._gsN=chunks.length;
-    }catch(e){}
+      const SZ=3500, chunks=[]; for(let i=0;i<json.length;i+=SZ) chunks.push(json.slice(i,i+SZ));
+      const prevN=this._gsN||0; let i=0;
+      const finish=(ok)=>{ self._gsN=chunks.length; if(ok && prevN>chunks.length && cs.removeItems){ const rm=[]; for(let j=chunks.length;j<prevN;j++) rm.push('gs'+j); cs.removeItems(rm, ()=>{}); } self._setSync(ok); };
+      const next=()=>{
+        if(i>=chunks.length){ cs.setItem('gsN', String(chunks.length), (err)=>finish(!err)); return; }
+        cs.setItem('gs'+i, chunks[i], (err)=>{ if(err){ self._setSync(false); return; } i++; next(); });
+      };
+      next();
+    }catch(e){ this._setSync(false); }
   }
   _parseState(s){ if(!s) return null; try{ const o=JSON.parse(s); return (o && typeof o==='object')?o:null; }catch(e){ return null; } }
   _loadData(cb){
@@ -1346,7 +1412,7 @@ class Component extends DCLogic {
   }
   _applyLoaded(d){
     if(!d){ this._lastSaved=JSON.stringify(this._persistSlice()); return; }
-    const patch={}; ['theme','settings','notif','hero','xp','xpDays','goals','solo','habits','lang'].forEach(k=>{ if(d[k]!==undefined) patch[k]=d[k]; });
+    const patch={}; ['onboarded','theme','settings','notif','hero','xp','xpDays','goals','solo','habits','lang'].forEach(k=>{ if(d[k]!==undefined) patch[k]=d[k]; });
     this.setState(patch, ()=>{
       if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
       try{ if(patch.theme) localStorage.setItem('guardian-theme', patch.theme); }catch(e){}
@@ -1891,6 +1957,18 @@ class Component extends DCLogic {
       heroBumpStyle:S.heroBump?'animation:heroJump .45s ease':'',
       leveledKind,
       themeVars:this._varsOf(THEMES[S.theme]||THEMES.amber),
+      showOnboarding: !S.onboarded,
+      obThemeId: S.obEl,
+      obVars: this._varsOf(THEMES[S.obEl]||THEMES.amber),
+      obName: S.obName,
+      onObName:(ev)=>this.setState({obName:ev.target.value}),
+      obPickAmber:()=>this.obPick('amber'),
+      obPickAzure:()=>this.obPick('azure'),
+      obPickSpark:()=>this.obPick('spark'),
+      obPillAmber: S.obEl==='amber'?'border:1.5px solid var(--accent);box-shadow:0 0 0 1px var(--accent)':'border:1.5px solid var(--border)',
+      obPillAzure: S.obEl==='azure'?'border:1.5px solid var(--accent);box-shadow:0 0 0 1px var(--accent)':'border:1.5px solid var(--border)',
+      obPillSpark: S.obEl==='spark'?'border:1.5px solid var(--accent);box-shadow:0 0 0 1px var(--accent)':'border:1.5px solid var(--border)',
+      finishOnboarding:()=>this.finishOnboarding(),
       themingVal:S.theming?'on':'off',
       themeToast:S.themeToast,
       applyThemeTap:()=>this.applyTheme(),
