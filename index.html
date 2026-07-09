@@ -1228,7 +1228,7 @@ input{outline:none}
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
 class Component extends DCLogic {
   DEV_CALIBRATION = false; /* dev-флаг: показать пункт «Калибровка» в Кабинете */
-  BUILD = 'v4.2-0709';
+  BUILD = 'v4.3-0709';
   calRef = React.createRef();
   state = {
     screen: 'home',
@@ -1450,13 +1450,16 @@ class Component extends DCLogic {
     const self=this;
     try{
       const SZ=3500, chunks=[]; for(let i=0;i<json.length;i+=SZ) chunks.push(json.slice(i,i+SZ));
-      const prevN=this._gsN||0; let i=0;
-      const finish=(ok)=>{ self._gsN=chunks.length; if(ok && prevN>chunks.length && cs.removeItems){ const rm=[]; for(let j=chunks.length;j<prevN;j++) rm.push('gs'+j); cs.removeItems(rm, function(){}); } self._dbgLog('облако: запись '+(ok?'OK':'СБОЙ')+' n='+chunks.length); self._setSync(ok); };
+      const prevN=this._gsN||0; let i=0, done=false;
+      const finish=(ok)=>{ if(done) return; done=true; self._gsN=chunks.length; if(ok && prevN>chunks.length && cs.removeItems){ const rm=[]; for(let j=chunks.length;j<prevN;j++) rm.push('gs'+j); cs.removeItems(rm, function(){}); } self._dbgLog('облако: запись '+(ok?'OK':'СБОЙ')+' n='+chunks.length); self._setSync(ok); };
       const next=()=>{
+        if(done) return;
         if(i>=chunks.length){ cs.setItem('gsN', String(chunks.length), (err)=>finish(!err)); return; }
-        cs.setItem('gs'+i, chunks[i], (err)=>{ if(err){ self._dbgLog('облако: gs'+i+' СБОЙ'); self._setSync(false); return; } i++; next(); });
+        cs.setItem('gs'+i, chunks[i], (err)=>{ if(done) return; if(err){ self._dbgLog('облако: gs'+i+' СБОЙ'); finish(false); return; } i++; next(); });
       };
       next();
+      /* сторож: если мост потерял запрос — пометить сбой, следующий flush повторит запись */
+      setTimeout(()=>{ if(!done){ self._dbgLog('облако: запись без ответа — повтор при следующем сохранении'); finish(false); } }, 4000);
     }catch(e){ this._dbgLog('облако: исключение '+e.message); this._setSync(false); }
   }
   _parseState(s){ if(!s) return null; try{ const o=JSON.parse(s); return (o && typeof o==='object')?o:null; }catch(e){ return null; } }
@@ -1465,23 +1468,40 @@ class Component extends DCLogic {
     this._dbgLog('чтение: local='+(local?('len '+local.length):'нет'));
     const cs=this._cloud();
     if(cs && this._inTG()){
-      try{
-        cs.getItem('gsN', (err,n)=>{
-          const cnt=parseInt(n,10);
-          this._dbgLog('чтение: gsN='+(err?'ОШИБКА':((n===''||n==null)?'нет':n)));
-          if(err || !cnt){ cb(this._parseState(local)); return; }
-          const parts=new Array(cnt); let got=0, failed=false;
-          for(let i=0;i<cnt;i++){
-            cs.getItem('gs'+i, (e2,val)=>{
-              if(failed) return;
-              if(e2){ failed=true; this._dbgLog('чтение: gs'+i+' ОШИБКА'); cb(this._parseState(local)); return; }
-              parts[i]=val||''; got++;
-              if(got===cnt){ this._gsN=cnt; const j=parts.join(''); this._dbgLog('чтение: облако len='+j.length); cb(this._parseState(j) || this._parseState(local)); }
-            });
-          }
-        });
-        return;
-      }catch(e){ this._dbgLog('чтение: исключение '+e.message); cb(this._parseState(local)); return; }
+      /* На tdesktop самый первый запрос к CloudStorage может уйти до готовности моста и потеряться
+         без ответа (доказано на устройстве: ранний вызов молчит, поздние работают).
+         Поэтому: повторяем попытки, пока облако не ответит. */
+      const self=this; let settled=false;
+      const localFallback=()=>{ if(!settled){ settled=true; cb(self._parseState(local)); } };
+      let attempt=0;
+      const tryLoad=()=>{
+        if(settled) return;
+        attempt++;
+        if(attempt>6){ self._dbgLog('чтение: облако молчит ('+(attempt-1)+' попыток) — локальный фолбэк'); localFallback(); return; }
+        let answered=false;
+        try{
+          cs.getItem('gsN', (err,n)=>{
+            answered=true;
+            if(settled) return;
+            const cnt=parseInt(n,10);
+            self._dbgLog('чтение: gsN='+(err?'ОШИБКА':((n===''||n==null)?'нет':n))+' (попытка '+attempt+')');
+            if(err){ localFallback(); return; }
+            if(!cnt){ settled=true; cb(self._parseState(local)); return; }
+            const parts=new Array(cnt); let got=0, failed=false;
+            for(let i=0;i<cnt;i++){
+              cs.getItem('gs'+i, (e2,val)=>{
+                if(settled||failed) return;
+                if(e2){ failed=true; self._dbgLog('чтение: gs'+i+' ОШИБКА'); localFallback(); return; }
+                parts[i]=val||''; got++;
+                if(got===cnt){ settled=true; self._gsN=cnt; const j=parts.join(''); self._dbgLog('чтение: облако len='+j.length+' (попытка '+attempt+')'); cb(self._parseState(j) || self._parseState(local)); }
+              });
+            }
+          });
+        }catch(e){ self._dbgLog('чтение: исключение '+e.message); localFallback(); return; }
+        setTimeout(()=>{ if(!answered && !settled){ self._dbgLog('чтение: попытка '+attempt+' без ответа — повтор'); tryLoad(); } }, 1200);
+      };
+      tryLoad();
+      return;
     }
     cb(this._parseState(local));
   }
