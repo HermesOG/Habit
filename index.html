@@ -63,6 +63,52 @@
   .tg-app-root{position:fixed;top:0;left:0;right:0;height:var(--app-h,100dvh);width:100%;overflow:hidden;background:#16171a;z-index:1}
   @supports not (height:100dvh){ .tg-app-root{height:var(--app-h,100vh)} }
 </style>
+<script>
+/* TEMP storage diagnostic — remove after debugging */
+(function(){
+  function build(){
+    var box=document.createElement('div'); box.id='__diag';
+    box.style.cssText='position:fixed;top:0;left:0;right:0;z-index:2147483647;background:rgba(0,0,0,.95);color:#7CFC7C;font:13px/1.55 ui-monospace,monospace;padding:14px;max-height:84vh;overflow:auto;border-bottom:2px solid #7DE3FF';
+    var head=document.createElement('div'); head.style.cssText='display:flex;justify-content:space-between;align-items:center;margin-bottom:8px';
+    var t=document.createElement('b'); t.style.cssText='color:#7DE3FF;font-size:15px'; t.textContent='ХРАНИЛИЩЕ — ДИАГНОСТИКА';
+    var b=document.createElement('button'); b.textContent='Закрыть'; b.style.cssText='background:#c0392b;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:14px'; b.onclick=function(){ box.remove(); };
+    head.appendChild(t); head.appendChild(b);
+    var log=document.createElement('div'); log.id='__dlog'; log.style.cssText='white-space:pre-wrap;word-break:break-word';
+    var f=document.createElement('div'); f.style.cssText='color:#999;margin-top:12px;font-size:11px'; f.textContent='Сделай скриншот и пришли, потом нажми «Закрыть».';
+    box.appendChild(head); box.appendChild(log); box.appendChild(f); document.body.appendChild(box);
+  }
+  function L(s){ var d=document.getElementById('__dlog'); if(d) d.textContent += s + '\n'; }
+  function run(){
+    if(document.getElementById('__diag')) return;
+    build();
+    var tg = window.Telegram && window.Telegram.WebApp;
+    L('Telegram.WebApp: ' + (tg?'ДА':'НЕТ'));
+    if(!tg){ return; }
+    L('version: ' + (tg.version||'?') + '   platform: ' + (tg.platform||'?'));
+    L('initData length: ' + ((tg.initData||'').length));
+    L('user: ' + (tg.initDataUnsafe && tg.initDataUnsafe.user ? ('id '+tg.initDataUnsafe.user.id) : 'НЕТ'));
+    L('CloudStorage API: ' + (tg.CloudStorage?'ДА':'НЕТ'));
+    var ls; try{ localStorage.setItem('__d','1'); ls=(localStorage.getItem('__d')==='1')?'OK':'НЕ сохраняет'; localStorage.removeItem('__d'); }catch(e){ ls='ОШИБКА '+e.message; }
+    L('localStorage: ' + ls);
+    L('');
+    if(!tg.CloudStorage){ L('CloudStorage недоступен.'); return; }
+    try{ tg.CloudStorage.getItem('gsN', function(err,n){ L('сохранённые данные (gsN): ' + (err?('ОШИБКА '+JSON.stringify(err)):('"'+(n||'')+'"'+(n?' → ЕСТЬ':' → НЕТ')))); }); }catch(e){ L('gsN искл: '+e.message); }
+    var v='v'+(new Date().getTime());
+    try{
+      tg.CloudStorage.setItem('__diagcs', v, function(err,ok){
+        if(err){ L('setItem: ОШИБКА ' + JSON.stringify(err)); return; }
+        L('setItem: ok=' + ok);
+        tg.CloudStorage.getItem('__diagcs', function(e2,got){
+          if(e2){ L('getItem: ОШИБКА ' + JSON.stringify(e2)); return; }
+          L('getItem: "' + got + '" → ' + (got===v?'СОВПАЛО — облако работает ✓':'НЕ совпало ✗'));
+        });
+      });
+    }catch(e){ L('roundtrip искл: '+e.message); }
+  }
+  if(document.readyState==='complete') setTimeout(run,1500);
+  else window.addEventListener('load', function(){ setTimeout(run,1500); });
+})();
+</script>
 <script src="xp-engine.js"></script>
 <script src="sfx-engine.js"></script>
 <script src="./character-config.standalone.js"></script>
@@ -1358,7 +1404,7 @@ class Component extends DCLogic {
 
   /* ---------- Хранение прогресса: Telegram CloudStorage (чанки ≤4КБ) + localStorage ---------- */
   _tg(){ return (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null; }
-  _inTG(){ const t=this._tg(); return !!(t && (t.initData || (t.initDataUnsafe && t.initDataUnsafe.user))); }
+  _inTG(){ const t=this._tg(); return !!(t && t.platform && t.platform!=='unknown'); }
   _cloud(){ const t=this._tg(); return (t && t.CloudStorage) ? t.CloudStorage : null; }
   _persistSlice(){ const s=this.state; return { v:1, onboarded:s.onboarded, theme:s.theme, settings:s.settings, notif:s.notif, hero:s.hero, xp:s.xp, xpDays:s.xpDays, goals:s.goals, solo:s.solo, habits:s.habits, lang:s.lang }; }
   _scheduleSave(){
