@@ -1422,10 +1422,12 @@ class Component extends DCLogic {
   _cloud(){ const t=this._tg(); return (t && t.CloudStorage) ? t.CloudStorage : null; }
   _persistSlice(){ const s=this.state; return { v:1, onboarded:s.onboarded, theme:s.theme, settings:s.settings, notif:s.notif, hero:s.hero, xp:s.xp, xpDays:s.xpDays, goals:s.goals, solo:s.solo, habits:s.habits, lang:s.lang }; }
   _scheduleSave(){
+    if(!this.state.loaded) return;
     clearTimeout(this._saveT);
     this._saveT=setTimeout(()=>this._flush(), 400);
   }
   _flush(){
+    if(!this.state.loaded) return; /* никогда не сохраняем пустое состояние до загрузки — иначе затрём данные */
     clearTimeout(this._saveT);
     let json; try{ json=JSON.stringify(this._persistSlice()); }catch(e){ return; }
     const changed = json!==this._lastSaved;
