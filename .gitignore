@@ -16,3 +16,6 @@ node_modules/
 # Claude Code (keep only launch config)
 .claude/*
 !.claude/launch.json
+
+.vercel
+.env*

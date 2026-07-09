@@ -56,6 +56,7 @@
 
 <link href="vendor/fonts.css" rel="stylesheet">
 <link rel="stylesheet" href="vendor/tabler-icons.min.css">
+<script src="vendor/telegram-web-app.js"></script>
 <script src="xp-engine.js"></script>
 <script src="sfx-engine.js"></script>
 <script src="./character-config.standalone.js"></script>
@@ -1159,13 +1160,13 @@ class Component extends DCLogic {
     lang: 'Русский',
     createOpen: false,
     createType: null,
-    expanded: 'g2',
+    expanded: null,
     selDay: null,
     sheetOpen: false,
     calHabits: false,
     calGoal: null,
-    calYear: 2026,
-    calMonth: 5,
+    calYear: (new Date()).getFullYear(),
+    calMonth: (new Date()).getMonth(),
     datePicker: null,
     celebrating: null,
     leveled: null,
@@ -1183,54 +1184,20 @@ class Component extends DCLogic {
     calToast: false,
     calib: null,
     rename: null,
-    draft: { name:'', hue:55, deadline:'', date:'2026-06-12', steps:[], stepName:'', stepDate:'2026-06-20', stepDiff:2, schedule:'daily', context:'', goalId:'g1', attach:'solo', days:[1,3,5], count:3, difficulty:2 },
-    hero: { name:'Гермес', level:3 },
+    draft: { name:'', hue:55, deadline:'', date:this._todayStr(), steps:[], stepName:'', stepDate:this._todayStr(), stepDiff:2, schedule:'daily', context:'', goalId:null, attach:'solo', days:[1,3,5], count:3, difficulty:2 },
+    hero: { name:'Хранитель', level:1 },
     /* XP: total — источник истины; level выводится. dailyRaw — «сырой» XP за день (дневной жар).
        log — сколько реально начислено за каждый пункт (для честного отката). maxLevel — церемонии не повторяются. */
-    xp: { total:56, day:'2026-06-12', dailyRaw:20, log:{}, maxLevel:3 },
+    xp: { total:0, day:'', dailyRaw:0, log:{}, maxLevel:1 },
     /* Дневной жар по датам — история для тепловой карты календаря (сегодня берётся из xp.dailyRaw) */
-    xpDays: { '2026-05-25':38, '2026-05-27':72, '2026-05-30':15, '2026-05-31':52, '2026-06-01':25, '2026-06-03':58, '2026-06-04':12, '2026-06-05':44, '2026-06-06':96, '2026-06-07':8, '2026-06-08':52, '2026-06-09':118, '2026-06-10':30 },
+    xpDays: {},
     capToast: false,
-    goals: [
-      { id:'g1', name:'Книга месяца', hue:190, deadline:'2026-06-30', steps:[
-        {id:'g1s1', name:'Выбрать книгу', date:'2026-06-01', done:true, difficulty:1},
-        {id:'g1s2', name:'Прочитать главы 1–5', date:'2026-06-08', done:true, difficulty:2},
-        {id:'g1s3', name:'Прочитать 30 минут', date:'2026-06-12', done:false, difficulty:2},
-        {id:'g1s4', name:'Прочитать главы 6–10', date:'2026-06-18', done:false, difficulty:2},
-        {id:'g1s5', name:'Выписать цитаты', date:'2026-06-24', done:false, difficulty:2},
-        {id:'g1s6', name:'Финальный обзор', date:'2026-06-30', done:false, difficulty:3},
-      ]},
-      { id:'g2', name:'Квартальный отчёт', hue:55, deadline:'2026-06-15', steps:[
-        {id:'g2s1', name:'Собрать данные', date:'2026-06-03', done:true, difficulty:3},
-        {id:'g2s2', name:'Сводка по продажам', date:'2026-06-06', done:true, difficulty:3},
-        {id:'g2s3', name:'Черновик презентации', date:'2026-06-09', done:true, difficulty:4},
-        {id:'g2s4', name:'Защитить на встрече', date:'2026-06-15', done:true, difficulty:5},
-        {id:'g2s5', name:'Отправить отчёт по проекту', date:'2026-06-11', done:false, difficulty:3},
-      ]},
-      { id:'g3', name:'Подготовка к полумарафону', hue:25, deadline:'2026-07-26', steps:[
-        {id:'g3s1', name:'План тренировок', date:'2026-06-05', done:true, difficulty:2},
-        {id:'g3s2', name:'Длинная пробежка 8 км', date:'2026-06-14', done:false, difficulty:3},
-        {id:'g3s3', name:'Интервалы', date:'2026-06-17', done:false, difficulty:3},
-        {id:'g3s4', name:'Длинная пробежка 12 км', date:'2026-06-21', done:false, difficulty:4},
-        {id:'g3s5', name:'Темповый бег', date:'2026-06-25', done:false, difficulty:3},
-        {id:'g3s6', name:'Длинная пробежка 16 км', date:'2026-07-05', done:false, difficulty:5},
-        {id:'g3s7', name:'Контрольный забег', date:'2026-07-19', done:false, difficulty:4},
-      ]},
-    ],
-    solo: [
-      {id:'t1', name:'Записаться к стоматологу', date:'2026-06-09', done:false, difficulty:3},
-      {id:'t2', name:'Купить продукты', date:'2026-06-12', done:false, difficulty:1},
-      {id:'t3', name:'Забрать посылку', date:'2026-06-13', done:false, difficulty:1},
-      {id:'t4', name:'Оплатить счёт за интернет', date:'2026-06-20', done:false, difficulty:2},
-    ],
-    habits: [
-      {id:'h1', name:'Медитация', streak:12, doneToday:true, schedule:'Ежедневно', context:'по утрам', difficulty:2},
-      {id:'h2', name:'Зал', streak:5, doneToday:false, schedule:'Пн · Ср · Пт', context:'после работы', difficulty:4},
-      {id:'h3', name:'Без сахара', streak:23, doneToday:true, schedule:'Ежедневно', context:'', difficulty:3},
-    ],
+    goals: [],
+    solo: [],
+    habits: [],
   };
 
-  _today(){ return new Date(2026,5,12); }
+  _today(){ const n=new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
   _d(s){ const p=s.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
   _diff(a,b){ return Math.round((a-b)/86400000); }
   _overdue(s){ return this._diff(this._today(), this._d(s)); }
@@ -1322,7 +1289,70 @@ class Component extends DCLogic {
   }
 
   _sfx(name, arg){ const S=this.state.settings; if(S&&S.sounds!==false && window.GuardianSfx) window.GuardianSfx.play(name, arg); }
-  componentDidMount(){ if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); } }
+  componentDidMount(){
+    const t=this._tg(); if(t){ try{ t.ready(); t.expand(); }catch(e){} }
+    if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
+    this._loadData((d)=>this._applyLoaded(d));
+  }
+  componentDidUpdate(prevProps){ this._scheduleSave(); }
+
+  /* ---------- Хранение прогресса: Telegram CloudStorage (чанки ≤4КБ) + localStorage ---------- */
+  _tg(){ return (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null; }
+  _inTG(){ const t=this._tg(); return !!(t && (t.initData || (t.initDataUnsafe && t.initDataUnsafe.user))); }
+  _cloud(){ const t=this._tg(); return (t && t.CloudStorage) ? t.CloudStorage : null; }
+  _persistSlice(){ const s=this.state; return { v:1, theme:s.theme, settings:s.settings, notif:s.notif, hero:s.hero, xp:s.xp, xpDays:s.xpDays, goals:s.goals, solo:s.solo, habits:s.habits, lang:s.lang }; }
+  _scheduleSave(){
+    clearTimeout(this._saveT);
+    this._saveT=setTimeout(()=>{
+      let json; try{ json=JSON.stringify(this._persistSlice()); }catch(e){ return; }
+      if(json===this._lastSaved) return;
+      this._lastSaved=json;
+      try{ localStorage.setItem('guardian-state-v1', json); }catch(e){}
+      this._cloudSave(json);
+    }, 500);
+  }
+  _cloudSave(json){
+    const cs=this._cloud(); if(!cs || !this._inTG()) return;
+    try{
+      const SZ=3800, chunks=[]; for(let i=0;i<json.length;i+=SZ) chunks.push(json.slice(i,i+SZ));
+      chunks.forEach((c,i)=>cs.setItem('gs'+i, c, ()=>{}));
+      cs.setItem('gsN', String(chunks.length), ()=>{});
+      const prev=this._gsN||0;
+      if(prev>chunks.length && cs.removeItems){ const rm=[]; for(let i=chunks.length;i<prev;i++) rm.push('gs'+i); cs.removeItems(rm, ()=>{}); }
+      this._gsN=chunks.length;
+    }catch(e){}
+  }
+  _parseState(s){ if(!s) return null; try{ const o=JSON.parse(s); return (o && typeof o==='object')?o:null; }catch(e){ return null; } }
+  _loadData(cb){
+    let local=null; try{ local=localStorage.getItem('guardian-state-v1'); }catch(e){}
+    const cs=this._cloud();
+    if(cs && this._inTG()){
+      try{
+        cs.getItem('gsN', (err,n)=>{
+          const cnt=parseInt(n,10);
+          if(err || !cnt){ cb(this._parseState(local)); return; }
+          const keys=[]; for(let i=0;i<cnt;i++) keys.push('gs'+i);
+          cs.getItems(keys, (e2,map)=>{
+            if(e2 || !map){ cb(this._parseState(local)); return; }
+            let json=''; for(let i=0;i<cnt;i++) json+=(map['gs'+i]||'');
+            this._gsN=cnt;
+            cb(this._parseState(json) || this._parseState(local));
+          });
+        });
+        return;
+      }catch(e){ cb(this._parseState(local)); return; }
+    }
+    cb(this._parseState(local));
+  }
+  _applyLoaded(d){
+    if(!d){ this._lastSaved=JSON.stringify(this._persistSlice()); return; }
+    const patch={}; ['theme','settings','notif','hero','xp','xpDays','goals','solo','habits','lang'].forEach(k=>{ if(d[k]!==undefined) patch[k]=d[k]; });
+    this.setState(patch, ()=>{
+      if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
+      try{ if(patch.theme) localStorage.setItem('guardian-theme', patch.theme); }catch(e){}
+      this._lastSaved=JSON.stringify(this._persistSlice());
+    });
+  }
 
   _spark(id, label, strong){
     this.setState(s=>({spark:{...s.spark,[id]:label||true}, burstTick:s.burstTick+1, heroBump:true}));
@@ -1474,7 +1504,7 @@ class Component extends DCLogic {
   dpPrevYear(){ this.setState(s=> s.datePicker?{datePicker:{...s.datePicker, y:s.datePicker.y-1}}:null); }
   dpNextYear(){ this.setState(s=> s.datePicker?{datePicker:{...s.datePicker, y:s.datePicker.y+1}}:null); }
   dpPickMonth(m){ this.setState(s=> s.datePicker?{datePicker:{...s.datePicker, m, monthList:false}}:null); }
-  pickType(t){ this._sfx('open'); this.setState({createType:t, draft:{ name:'', hue:55, deadline:'', date:'2026-06-12', steps:[], stepName:'', stepDate:'2026-06-20', stepDiff:2, schedule:'daily', context:'', goalId:this.state.goals[0]&&this.state.goals[0].id, attach:'solo', days:[1,3,5], count:3, difficulty:2 }}); }
+  pickType(t){ this._sfx('open'); const _t=this._todayStr(); this.setState({createType:t, draft:{ name:'', hue:55, deadline:'', date:_t, steps:[], stepName:'', stepDate:_t, stepDiff:2, schedule:'daily', context:'', goalId:this.state.goals[0]&&this.state.goals[0].id, attach:'solo', days:[1,3,5], count:3, difficulty:2 }}); }
   addStep(){ const d=this.state.draft; if(!d.stepName.trim()) return; this.setState(s=>({draft:{...s.draft, steps:[...s.draft.steps,{name:d.stepName,date:d.stepDate,difficulty:d.stepDiff||2}], stepName:'', stepDiff:2}})); }
   removeStep(i){ this.setState(s=>({draft:{...s.draft, steps:s.draft.steps.filter((_,x)=>x!==i)}})); }
   saveGoal(){ const d=this.state.draft; if(!d.name.trim()) return; const id='g'+Date.now(); const steps=d.steps.map((st,i)=>({id:id+'s'+i, name:st.name, date:st.date, done:false, difficulty:st.difficulty||2})); this.setState(s=>({goals:[...s.goals,{id,name:d.name,hue:d.hue,deadline:d.deadline||'2026-07-15',steps}], createOpen:false, screen:'tasks', expanded:id})); }
@@ -1868,7 +1898,7 @@ class Component extends DCLogic {
       // hero
       heroName:hero.name, heroLevelLabel:'ур. '+hero.level,
       growthLabel:'Рост до '+(hero.level+1)+' уровня', growthPctLabel:Math.round(lv.progress*100)+'%', growthWidth:Math.round(lv.progress*100)+'%',
-      dateLabel:this._wd('2026-06-12')+', '+this._fmt('2026-06-12'),
+      dateLabel:(()=>{ const _ts=this._todayStr(); return this._wd(_ts)+', '+this._fmt(_ts); })(),
       taskCountLabel: todayTasks.length+' '+this._pl(todayTasks.length,'задача','задачи','задач'),
       todayTasks,
       habitDoneLabel:'Готово '+habitDone+' из '+S.habits.length, todayHabits,
