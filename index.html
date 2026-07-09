@@ -157,9 +157,9 @@ input{outline:none}
 </style>
 </helmet>
 <div class="tg-app-root">
-<div data-theming="{{ themingVal }}" style="height:100%;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;font-family:'Golos Text',system-ui,sans-serif;color:var(--text-primary); {{ themeVars }}">
+<div data-theming="{{ themingVal }}" style="height:100%;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;box-sizing:border-box;padding-top:var(--tg-top,0px);font-family:'Golos Text',system-ui,sans-serif;color:var(--text-primary); {{ themeVars }}">
 
-<div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px calc(env(safe-area-inset-bottom,0px) + 96px)">
+<div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px calc(var(--tg-bottom,env(safe-area-inset-bottom,0px)) + 96px)">
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <div style="position:sticky;top:0;z-index:6;margin:0 -16px 18px;padding:0 16px 0;background:var(--bg)">
@@ -831,7 +831,7 @@ input{outline:none}
 
 <!--NAV-->
 <sc-if value="{{ navFloating }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;left:0;right:0;bottom:0;padding:0 12px calc(env(safe-area-inset-bottom,0px) + 14px);pointer-events:none;z-index:20">
+<div style="position:absolute;left:0;right:0;bottom:0;padding:0 12px calc(var(--tg-bottom,env(safe-area-inset-bottom,0px)) + 14px);pointer-events:none;z-index:20">
 <div style="pointer-events:auto;background:var(--nav-glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:.5px solid var(--border);border-radius:24px;padding:8px 4px;display:flex;align-items:flex-end;justify-content:space-around;box-shadow:0 10px 30px rgba(0,0,0,.4)">
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Сегодня</span></div>
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Все задачи</span></div>
@@ -842,7 +842,7 @@ input{outline:none}
 </div>
 </sc-if>
 <sc-if value="{{ navFlat }}" hint-placeholder-val="{{ true }}">
-<div style="position:absolute;left:0;right:0;bottom:0;border-top:.5px solid var(--border);padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 12px);display:flex;align-items:flex-end;justify-content:space-around;background:var(--nav);z-index:20">
+<div style="position:absolute;left:0;right:0;bottom:0;border-top:.5px solid var(--border);padding:8px 12px calc(var(--tg-bottom,env(safe-area-inset-bottom,0px)) + 12px);display:flex;align-items:flex-end;justify-content:space-around;background:var(--nav);z-index:20">
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Сегодня</span></div>
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Все задачи</span></div>
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;color:var(--accent-soft)" onClick="{{ openCreate }}"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));display:flex;align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 4px 12px var(--accent-a27)"><i class="ti ti-plus" style="font-size:25px;color:#fff"></i></div><span style="font-size:10px;white-space:nowrap">Создать</span></div>
@@ -1228,7 +1228,7 @@ input{outline:none}
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
 class Component extends DCLogic {
   DEV_CALIBRATION = false; /* dev-флаг: показать пункт «Калибровка» в Кабинете */
-  BUILD = 'v4.3-0709';
+  BUILD = 'v4.4-0709';
   calRef = React.createRef();
   state = {
     screen: 'home',
@@ -1383,7 +1383,18 @@ class Component extends DCLogic {
         const th=this._themes()[this.state.theme]||this._themes().amber;
         if(t.setHeaderColor) t.setHeaderColor(th.bg);
         if(t.setBackgroundColor) t.setBackgroundColor(th.bg);
-        if(t.onEvent) t.onEvent('viewportChanged', setAppH);
+        /* safe-area: на мобиле шапка Telegram (Закрыть) сверху и жест-бар снизу перекрывают вебвью.
+           env(safe-area-inset-*) Telegram НЕ прокидывает — берём из API: safeAreaInset (устройство)
+           + contentSafeAreaInset (UI Telegram). */
+        const applyInsets=()=>{ try{
+          const sa=t.safeAreaInset||{}, ca=t.contentSafeAreaInset||{};
+          const top=(sa.top||0)+(ca.top||0), bot=(sa.bottom||0)+(ca.bottom||0);
+          const de=document.documentElement.style;
+          de.setProperty('--tg-top', top+'px'); de.setProperty('--tg-bottom', bot+'px');
+          this._dbgLog('insets top='+top+' bottom='+bot);
+        }catch(e){} };
+        applyInsets(); setTimeout(applyInsets,300); setTimeout(applyInsets,1200);
+        if(t.onEvent){ t.onEvent('viewportChanged', setAppH); t.onEvent('safeAreaChanged', applyInsets); t.onEvent('contentSafeAreaChanged', applyInsets); }
         try{ if(t.disableVerticalSwipes) t.disableVerticalSwipes(); }catch(e){}
       }catch(e){}
     }
