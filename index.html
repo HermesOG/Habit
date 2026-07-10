@@ -1228,7 +1228,7 @@ input{outline:none}
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
 class Component extends DCLogic {
   DEV_CALIBRATION = false; /* dev-флаг: показать пункт «Калибровка» в Кабинете */
-  BUILD = 'v4.6-0711';
+  BUILD = 'v4.7-0711';
   calRef = React.createRef();
   state = {
     screen: 'home',
@@ -1393,16 +1393,25 @@ class Component extends DCLogic {
         const applyInsets=()=>{ try{
           const sa=t.safeAreaInset||{}, ca=t.contentSafeAreaInset||{};
           const fs=!!t.isFullscreen;
+          /* настойчивый компакт: при запуске из СПИСКА ЧАТОВ Android включает fullscreen
+             уже ПОСЛЕ старта — выходим из него каждый раз, как заметили (не только на mount) */
+          if(fs && t.exitFullscreen){ try{ t.exitFullscreen(); }catch(e){} }
           /* компакт-режим: шапка Telegram СНАРУЖИ webview — сверху компенсировать нечего,
              insets сверху нужны ТОЛЬКО в fullscreen (иначе лишняя дыра ~90px под шапкой). */
           const top=fs?((sa.top||0)+(ca.top||0)):0, bot=(sa.bottom||0)+(ca.bottom||0);
           this._insTop=top; this._insBot=bot; this._fs=fs;
-          const de=document.documentElement.style;
-          de.setProperty('--tg-top', top+'px'); de.setProperty('--tg-bottom', bot+'px');
-          this._dbgLog('insets top='+top+' bottom='+bot+' fs='+this._fs);
+          if(this._cssTop!==top||this._cssBot!==bot){ /* пишем только при изменении */
+            this._cssTop=top; this._cssBot=bot;
+            const de=document.documentElement.style;
+            de.setProperty('--tg-top', top+'px'); de.setProperty('--tg-bottom', bot+'px');
+            this._dbgLog('insets top='+top+' bottom='+bot+' fs='+fs);
+          }
         }catch(e){} };
         applyInsets();
-        [200,600,1200,2500,4000].forEach(ms=>setTimeout(applyInsets,ms));
+        /* ПОСТОЯННАЯ сверка первые 20с (одноразовые таймеры пропускали момент выхода из
+           fullscreen — CSS-переменные протухали на 80/48px), дальше хватает событий */
+        const insTimer=setInterval(applyInsets, 400);
+        setTimeout(()=>clearInterval(insTimer), 20000);
         if(t.onEvent){ t.onEvent('viewportChanged', ()=>{ setAppH(); applyInsets(); }); t.onEvent('safeAreaChanged', applyInsets); t.onEvent('contentSafeAreaChanged', applyInsets); t.onEvent('fullscreenChanged', applyInsets); }
         try{ if(t.disableVerticalSwipes) t.disableVerticalSwipes(); }catch(e){}
       }catch(e){}
