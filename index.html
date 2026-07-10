@@ -1409,6 +1409,34 @@ class Component extends DCLogic {
     }
     setAppH();
     try{ window.addEventListener('resize', setAppH); window.addEventListener('orientationchange', setAppH); }catch(e){}
+    /* ВРЕМЕННАЯ телеметрия layout: шлём замеры на /api/diag (runtime-логи Vercel),
+       чтобы диагностировать мобильные отступы по реальным цифрам. Удалить после отладки. */
+    const diag=(tag)=>{ try{
+      const t2=this._tg()||{};
+      const root=document.querySelector('.tg-app-root');
+      const inner=root?root.firstElementChild:null;
+      const pr=document.createElement('div');
+      pr.style.cssText='position:fixed;left:-9999px;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px) 0;visibility:hidden';
+      document.body.appendChild(pr); const pcs=getComputedStyle(pr);
+      const dcs=getComputedStyle(document.documentElement);
+      const o={ tag:tag, build:this.BUILD, plat:t2.platform||'-', tgv:t2.version||'-',
+        fs:!!t2.isFullscreen, exp:!!t2.isExpanded,
+        vh:t2.viewportHeight||0, vsh:t2.viewportStableHeight||0,
+        ih:window.innerHeight, vv:(window.visualViewport?Math.round(window.visualViewport.height):0),
+        sh:(screen&&screen.height)||0, dpr:window.devicePixelRatio||1,
+        sa:t2.safeAreaInset||null, ca:t2.contentSafeAreaInset||null,
+        envT:pcs.paddingTop, envB:pcs.paddingBottom,
+        varT:dcs.getPropertyValue('--tg-top').trim(), varB:dcs.getPropertyValue('--tg-bottom').trim(),
+        padT:inner?getComputedStyle(inner).paddingTop:'-',
+        rootTop:root?Math.round(root.getBoundingClientRect().top):-1,
+        rootH:root?Math.round(root.getBoundingClientRect().height):-1,
+        kids:inner?Array.prototype.map.call(inner.children,(c)=>{const r=c.getBoundingClientRect();return Math.round(r.top)+':'+Math.round(r.bottom)+':'+getComputedStyle(c).position;}):[] };
+      pr.remove();
+      const s=JSON.stringify(o);
+      if(navigator.sendBeacon) navigator.sendBeacon('/api/diag', s);
+      else fetch('/api/diag',{method:'POST',body:s,keepalive:true}).catch(()=>{});
+    }catch(e){} };
+    [1200,4500].forEach(ms=>setTimeout(()=>diag('t'+ms),ms));
     if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
     /* наблюдаемость: журнал + окно для #diag */
     this._dbg=this._dbg||[];
