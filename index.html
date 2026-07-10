@@ -1228,7 +1228,7 @@ input{outline:none}
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
 class Component extends DCLogic {
   DEV_CALIBRATION = false; /* dev-флаг: показать пункт «Калибровка» в Кабинете */
-  BUILD = 'v4.7-0711';
+  BUILD = 'v4.8-0711';
   calRef = React.createRef();
   state = {
     screen: 'home',
@@ -1382,9 +1382,7 @@ class Component extends DCLogic {
     if(t){
       try{
         t.ready(); t.expand();
-        /* «компакт чата»: выходим из полноэкранного режима (плавающие «✕ Закрыть» поверх контента),
-           чтобы всегда была сплошная шапка Telegram — верх ей и отдаём. */
-        try{ if(t.isFullscreen && t.exitFullscreen) t.exitFullscreen(); }catch(e){}
+        /* выход из fullscreen делает applyInsets (с лимитом попыток) — см. ниже */
         const th=this._themes()[this.state.theme]||this._themes().amber;
         if(t.setHeaderColor) t.setHeaderColor(th.bg);
         if(t.setBackgroundColor) t.setBackgroundColor(th.bg);
@@ -1393,12 +1391,13 @@ class Component extends DCLogic {
         const applyInsets=()=>{ try{
           const sa=t.safeAreaInset||{}, ca=t.contentSafeAreaInset||{};
           const fs=!!t.isFullscreen;
-          /* настойчивый компакт: при запуске из СПИСКА ЧАТОВ Android включает fullscreen
-             уже ПОСЛЕ старта — выходим из него каждый раз, как заметили (не только на mount) */
-          if(fs && t.exitFullscreen){ try{ t.exitFullscreen(); }catch(e){} }
-          /* компакт-режим: шапка Telegram СНАРУЖИ webview — сверху компенсировать нечего,
-             insets сверху нужны ТОЛЬКО в fullscreen (иначе лишняя дыра ~90px под шапкой). */
-          const top=fs?((sa.top||0)+(ca.top||0)):0, bot=(sa.bottom||0)+(ca.bottom||0);
+          /* fullscreen из списка чатов: Telegram может ВКЛЮЧАТЬ его заново после нашего
+             выхода — не воюем бесконечно, максимум 3 попытки, дальше живём в его режиме */
+          if(fs && t.exitFullscreen && (this._fsExits||0)<3){ this._fsExits=(this._fsExits||0)+1; try{ t.exitFullscreen(); }catch(e){} }
+          /* отступы = ТОЛЬКО фактические insets (без мерцающего флага isFullscreen):
+             компакт → Telegram сообщает 0/0, fullscreen → ровно высоту своих плашек.
+             Значения живые — интервал+события подхватывают смену режима. */
+          const top=(sa.top||0)+(ca.top||0), bot=(sa.bottom||0)+(ca.bottom||0);
           this._insTop=top; this._insBot=bot; this._fs=fs;
           if(this._cssTop!==top||this._cssBot!==bot){ /* пишем только при изменении */
             this._cssTop=top; this._cssBot=bot;
@@ -1446,6 +1445,20 @@ class Component extends DCLogic {
       else fetch('/api/diag',{method:'POST',body:s,keepalive:true}).catch(()=>{});
     }catch(e){} };
     [1200,4500].forEach(ms=>setTimeout(()=>diag('t'+ms),ms));
+    /* серия: каждые 300мс пишем [время|fs|sa.top|ca.top|sa.bottom|ca.bottom|--tg-top] +
+       все события Telegram, одним beacon на 6.5с — видно ФИЛЬМ смены режима, а не кадры */
+    try{
+      const ser=[], evs=[];
+      if(t&&t.onEvent){ ['fullscreenChanged','safeAreaChanged','contentSafeAreaChanged','viewportChanged','activated','deactivated'].forEach(n=>{ try{ t.onEvent(n,()=>evs.push(Math.round(performance.now())+':'+n)); }catch(e){} }); }
+      const samp=setInterval(()=>{ try{
+        const t2=this._tg()||{}, sa=t2.safeAreaInset||{}, ca=t2.contentSafeAreaInset||{};
+        ser.push([Math.round(performance.now()), t2.isFullscreen?1:0, Math.round(sa.top||0), Math.round(ca.top||0), Math.round(sa.bottom||0), Math.round(ca.bottom||0), getComputedStyle(document.documentElement).getPropertyValue('--tg-top').trim()].join('|'));
+      }catch(e){} }, 300);
+      setTimeout(()=>{ clearInterval(samp); try{
+        const s=JSON.stringify({tag:'series', build:this.BUILD, plat:(this._tg()||{}).platform||'-', fsExits:this._fsExits||0, evs:evs, ser:ser});
+        if(navigator.sendBeacon) navigator.sendBeacon('/api/diag', s); else fetch('/api/diag',{method:'POST',body:s,keepalive:true}).catch(()=>{});
+      }catch(e){} }, 6500);
+    }catch(e){}
     if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
     /* наблюдаемость: журнал + окно для #diag */
     this._dbg=this._dbg||[];
