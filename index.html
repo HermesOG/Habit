@@ -1228,7 +1228,7 @@ input{outline:none}
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
 class Component extends DCLogic {
   DEV_CALIBRATION = false; /* dev-флаг: показать пункт «Калибровка» в Кабинете */
-  BUILD = 'v4.5-0710';
+  BUILD = 'v4.6-0711';
   calRef = React.createRef();
   state = {
     screen: 'home',
@@ -1376,7 +1376,9 @@ class Component extends DCLogic {
   _sfx(name, arg){ const S=this.state.settings; if(S&&S.sounds!==false && window.GuardianSfx) window.GuardianSfx.play(name, arg); }
   componentDidMount(){
     const t=this._tg();
-    const setAppH=()=>{ const h=(t&&t.viewportStableHeight)?t.viewportStableHeight:window.innerHeight; if(h) document.documentElement.style.setProperty('--app-h', h+'px'); };
+    /* высота: viewportStableHeight на Android бывает БОЛЬШЕ реально видимой области (низ уезжает
+       за экран) — берём минимум из него и innerHeight, т.е. то, что видно на самом деле. */
+    const setAppH=()=>{ const ih=window.innerHeight||0, vs=(t&&t.viewportStableHeight)||0; const h=(vs&&ih)?Math.min(vs,ih):(vs||ih); this._appH=h; this._innH=ih; if(h) document.documentElement.style.setProperty('--app-h', h+'px'); };
     if(t){
       try{
         t.ready(); t.expand();
@@ -1390,8 +1392,11 @@ class Component extends DCLogic {
            что-то одно из них обычно ненулевое в зависимости от режима/клиента. */
         const applyInsets=()=>{ try{
           const sa=t.safeAreaInset||{}, ca=t.contentSafeAreaInset||{};
-          const top=(sa.top||0)+(ca.top||0), bot=(sa.bottom||0)+(ca.bottom||0);
-          this._insTop=top; this._insBot=bot; this._fs=!!t.isFullscreen;
+          const fs=!!t.isFullscreen;
+          /* компакт-режим: шапка Telegram СНАРУЖИ webview — сверху компенсировать нечего,
+             insets сверху нужны ТОЛЬКО в fullscreen (иначе лишняя дыра ~90px под шапкой). */
+          const top=fs?((sa.top||0)+(ca.top||0)):0, bot=(sa.bottom||0)+(ca.bottom||0);
+          this._insTop=top; this._insBot=bot; this._fs=fs;
           const de=document.documentElement.style;
           de.setProperty('--tg-top', top+'px'); de.setProperty('--tg-bottom', bot+'px');
           this._dbgLog('insets top='+top+' bottom='+bot+' fs='+this._fs);
@@ -2085,7 +2090,7 @@ class Component extends DCLogic {
       themeVars:this._varsOf(THEMES[S.theme]||THEMES.amber),
       showSplash: !S.loaded,
       syncLabel: this._syncLabel(),
-      buildLabel: this.BUILD+' · in '+(this._insTop||0)+'/'+(this._insBot||0)+(this._fs?' FS':''),
+      buildLabel: this.BUILD+' · in '+(this._insTop||0)+'/'+(this._insBot||0)+' · h '+(this._appH||0)+'/'+(this._innH||0)+(this._fs?' FS':''),
       themingVal:S.theming?'on':'off',
       themeToast:S.themeToast,
       applyThemeTap:()=>this.applyTheme(),
