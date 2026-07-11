@@ -8,7 +8,7 @@
 |---|---|
 | `TELEGRAM_BOT_TOKEN` | токен из @BotFather (обязательно) |
 | `TELEGRAM_WEBHOOK_SECRET` | любая случайная строка — защита вебхука (рекомендуется) |
-| `WEBAPP_URL` | адрес Mini App; можно не задавать — возьмётся прод-домен Vercel |
+| `WEBAPP_URL` | адрес Mini App — задать явно `https://habit-sigma-wine.vercel.app`: часть прод-доменов проекта закрыта Vercel Authentication, публичен именно этот алиас |
 | `GREETING_ANIMATION` | file_id или URL гифки приветствия — добавить позже, когда будет ассет |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | память «кто уже заходил» (без них все получают полную историю) |
 
@@ -17,7 +17,7 @@
 ## 2. Привязать webhook (PowerShell, подставить свои значения)
 
 ```powershell
-$t = "СЮДА_ТОКЕН"; $s = "СЮДА_СЕКРЕТ"; $u = "https://ВАШ-ДОМЕН.vercel.app/api/bot"
+$t = "СЮДА_ТОКЕН"; $s = "СЮДА_СЕКРЕТ"; $u = "https://habit-sigma-wine.vercel.app/api/bot"
 Invoke-RestMethod "https://api.telegram.org/bot$t/setWebhook" -Method Post -Body @{
   url = $u; secret_token = $s; drop_pending_updates = "true"
 }
@@ -30,7 +30,7 @@ Invoke-RestMethod "https://api.telegram.org/bot$t/setWebhook" -Method Post -Body
 ```powershell
 # Кнопка меню (слева от поля ввода) открывает Mini App
 Invoke-RestMethod "https://api.telegram.org/bot$t/setChatMenuButton" -Method Post -ContentType "application/json" -Body (@{
-  menu_button = @{ type = "web_app"; text = "Хранитель"; web_app = @{ url = "https://ВАШ-ДОМЕН.vercel.app" } }
+  menu_button = @{ type = "web_app"; text = "Хранитель"; web_app = @{ url = "https://habit-sigma-wine.vercel.app" } }
 } | ConvertTo-Json -Depth 5)
 
 # Команды
