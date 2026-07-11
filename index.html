@@ -1228,7 +1228,7 @@ input{outline:none}
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
 class Component extends DCLogic {
   DEV_CALIBRATION = false; /* dev-флаг: показать пункт «Калибровка» в Кабинете */
-  BUILD = 'v4.8-0711';
+  BUILD = 'v4.9-0711';
   calRef = React.createRef();
   state = {
     screen: 'home',
@@ -1378,40 +1378,50 @@ class Component extends DCLogic {
     const t=this._tg();
     /* высота: viewportStableHeight на Android бывает БОЛЬШЕ реально видимой области (низ уезжает
        за экран) — берём минимум из него и innerHeight, т.е. то, что видно на самом деле. */
-    const setAppH=()=>{ const ih=window.innerHeight||0, vs=(t&&t.viewportStableHeight)||0; const h=(vs&&ih)?Math.min(vs,ih):(vs||ih); this._appH=h; this._innH=ih; if(h) document.documentElement.style.setProperty('--app-h', h+'px'); };
+    /* КЛЮЧЕВОЕ (урок v4.8): window.Telegram.WebApp может быть ПОДМЕНЁН после mount
+       (SDK переинициализируется, мост событий уходит на новый объект, старый замораживает
+       insets/isFullscreen). Поэтому НИКОГДА не держим ссылку — каждый замер читает
+       this._tg() заново, а события перевешиваем при смене объекта. */
+    const setAppH=()=>{ const tw=this._tg(); const ih=window.innerHeight||0, vs=(tw&&tw.viewportStableHeight)||0; const h=(vs&&ih)?Math.min(vs,ih):(vs||ih); this._appH=h; this._innH=ih; if(h) document.documentElement.style.setProperty('--app-h', h+'px'); };
+    const applyInsets=()=>{ try{
+      const tw=this._tg(); if(!tw) return;
+      ensureEvents(tw);
+      const sa=tw.safeAreaInset||{}, ca=tw.contentSafeAreaInset||{};
+      const fs=!!tw.isFullscreen;
+      /* fullscreen из списка чатов: Telegram может включать его заново — не воюем
+         бесконечно, максимум 3 попытки, дальше живём в его режиме с верными отступами */
+      if(fs && tw.exitFullscreen && (this._fsExits||0)<3){ this._fsExits=(this._fsExits||0)+1; try{ tw.exitFullscreen(); }catch(e){} }
+      /* отступы = ТОЛЬКО фактические insets: компакт → 0/0, fullscreen → высота плашек */
+      const top=(sa.top||0)+(ca.top||0), bot=(sa.bottom||0)+(ca.bottom||0);
+      this._insTop=top; this._insBot=bot; this._fs=fs;
+      if(this._cssTop!==top||this._cssBot!==bot){ /* пишем только при изменении */
+        this._cssTop=top; this._cssBot=bot;
+        const de=document.documentElement.style;
+        de.setProperty('--tg-top', top+'px'); de.setProperty('--tg-bottom', bot+'px');
+        this._dbgLog('insets top='+top+' bottom='+bot+' fs='+fs);
+      }
+    }catch(e){} };
+    /* события вешаем на КАЖДЫЙ новый объект WebApp (список уже обработанных — в WeakSet) */
+    this._tgReg=this._tgReg||(typeof WeakSet!=='undefined'?new WeakSet():null);
+    const ensureEvents=(tw)=>{ try{
+      if(!tw||!tw.onEvent||!this._tgReg||this._tgReg.has(tw)) return;
+      this._tgReg.add(tw);
+      tw.onEvent('viewportChanged', ()=>{ setAppH(); applyInsets(); });
+      tw.onEvent('safeAreaChanged', applyInsets);
+      tw.onEvent('contentSafeAreaChanged', applyInsets);
+      tw.onEvent('fullscreenChanged', applyInsets);
+    }catch(e){} };
     if(t){
       try{
         t.ready(); t.expand();
-        /* выход из fullscreen делает applyInsets (с лимитом попыток) — см. ниже */
         const th=this._themes()[this.state.theme]||this._themes().amber;
         if(t.setHeaderColor) t.setHeaderColor(th.bg);
         if(t.setBackgroundColor) t.setBackgroundColor(th.bg);
-        /* safe-area: берём МАКСИМУМ из Telegram-insets (API 8.0) и env() (viewport-fit=cover) —
-           что-то одно из них обычно ненулевое в зависимости от режима/клиента. */
-        const applyInsets=()=>{ try{
-          const sa=t.safeAreaInset||{}, ca=t.contentSafeAreaInset||{};
-          const fs=!!t.isFullscreen;
-          /* fullscreen из списка чатов: Telegram может ВКЛЮЧАТЬ его заново после нашего
-             выхода — не воюем бесконечно, максимум 3 попытки, дальше живём в его режиме */
-          if(fs && t.exitFullscreen && (this._fsExits||0)<3){ this._fsExits=(this._fsExits||0)+1; try{ t.exitFullscreen(); }catch(e){} }
-          /* отступы = ТОЛЬКО фактические insets (без мерцающего флага isFullscreen):
-             компакт → Telegram сообщает 0/0, fullscreen → ровно высоту своих плашек.
-             Значения живые — интервал+события подхватывают смену режима. */
-          const top=(sa.top||0)+(ca.top||0), bot=(sa.bottom||0)+(ca.bottom||0);
-          this._insTop=top; this._insBot=bot; this._fs=fs;
-          if(this._cssTop!==top||this._cssBot!==bot){ /* пишем только при изменении */
-            this._cssTop=top; this._cssBot=bot;
-            const de=document.documentElement.style;
-            de.setProperty('--tg-top', top+'px'); de.setProperty('--tg-bottom', bot+'px');
-            this._dbgLog('insets top='+top+' bottom='+bot+' fs='+fs);
-          }
-        }catch(e){} };
         applyInsets();
-        /* ПОСТОЯННАЯ сверка первые 20с (одноразовые таймеры пропускали момент выхода из
-           fullscreen — CSS-переменные протухали на 80/48px), дальше хватает событий */
+        /* сверка: часто первые 20с (запуск/смена режима), дальше редкий вечный пульс —
+           страховка от потери событий при подмене объекта WebApp */
         const insTimer=setInterval(applyInsets, 400);
-        setTimeout(()=>clearInterval(insTimer), 20000);
-        if(t.onEvent){ t.onEvent('viewportChanged', ()=>{ setAppH(); applyInsets(); }); t.onEvent('safeAreaChanged', applyInsets); t.onEvent('contentSafeAreaChanged', applyInsets); t.onEvent('fullscreenChanged', applyInsets); }
+        setTimeout(()=>{ clearInterval(insTimer); setInterval(()=>{ applyInsets(); setAppH(); }, 2000); }, 20000);
         try{ if(t.disableVerticalSwipes) t.disableVerticalSwipes(); }catch(e){}
       }catch(e){}
     }
