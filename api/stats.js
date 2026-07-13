@@ -3,6 +3,13 @@
 //   /api/stats?key=ТВОЙ_СЕКРЕТ&format=json -> сырой JSON
 //   &days=60                              -> глубина графика/таблицы (по умолчанию 30, максимум 365)
 export default async function handler(req, res) {
+  // CORS: дашборд живёт на отдельном origin (свой Vercel-проект) и читает эти данные.
+  // Доступ всё равно закрыт секретом STATS_KEY, поэтому Allow-Origin: * безопасен.
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') { res.status(204).end(); return; }
+
   const secret = process.env.STATS_KEY;
   const provided = (req.query && req.query.key) || '';
   if (!secret || provided !== secret) { res.status(401).json({ ok: false, error: 'unauthorized' }); return; }
