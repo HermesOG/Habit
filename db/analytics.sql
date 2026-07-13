@@ -46,6 +46,16 @@ as $$
     'total_users', (select count(distinct user_id) from public.dau),
     'active_7d',   (select count(distinct user_id) from public.dau where day >= current_date - 6),
     'active_30d',  (select count(distinct user_id) from public.dau where day >= current_date - 29),
+    'instagram_users', (select count(*)::int from public.user_acq where source = 'instagram'),
+    'by_source', (
+      select coalesce(json_agg(row_to_json(s) order by s.users desc), '[]'::json)
+      from (
+        select source, count(*)::int as users
+        from public.user_acq
+        group by source
+        order by count(*) desc
+      ) s
+    ),
     'daily', (
       select coalesce(json_agg(row_to_json(t) order by t.day desc), '[]'::json)
       from (
@@ -64,3 +74,28 @@ revoke all on function public.record_visit(text, date, text) from public, anon, 
 revoke all on function public.get_stats(integer)            from public, anon, authenticated;
 grant execute on function public.record_visit(text, date, text) to service_role;
 grant execute on function public.get_stats(integer)            to service_role;
+
+-- ── Атрибуция источника перехода (first-touch, одна строка на пользователя) ──
+-- Откуда пришёл пользователь: метка из deep-link (t.me/<bot>?start=<src>) или из
+-- start_param Mini App (?startapp=<src>). Пишется при ПЕРВОМ касании и не перезаписывается.
+create table if not exists public.user_acq (
+  user_id    text primary key,
+  source     text not null default 'direct',
+  first_seen timestamptz not null default now()
+);
+alter table public.user_acq enable row level security;
+revoke all on table public.user_acq from anon, authenticated;
+
+-- Гейт секретом, как у остальных bot_* (см. bot_ok): вызывается из api/bot.js и api/hit.js.
+create or replace function public.record_source(p_user_id text, p_source text, p_secret text)
+returns void
+language plpgsql
+security definer
+set search_path = 'public'
+as $$
+begin
+  if not public.bot_ok(p_secret) then raise exception 'forbidden'; end if;
+  insert into public.user_acq (user_id, source)
+  values (p_user_id, coalesce(nullif(p_source, ''), 'direct'))
+  on conflict (user_id) do nothing;
+end $$;

@@ -82,6 +82,10 @@ async function handleMessage(msg) {
   const text = msg.text || '';
 
   if (text.startsWith('/start')) {
+    // deep-link из ссылки t.me/<bot>?start=<src> приходит как «/start <src>» —
+    // фиксируем источник перехода (first-touch), напр. ?start=instagram.
+    const src = (text.split(/\s+/)[1] || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
+    if (src) await supaRpc('record_source', { p_user_id: String(chatId), p_source: src, p_secret: process.env.NUDGE_SECRET });
     // bot_register возвращает true, если пользователь создан впервые. Заодно (re)включаем
     // напоминания: p_push=true — «Разбудить Хранителя» логично снимает и mute.
     const r = await supaRpc('bot_register', { p_user_id: String(chatId), p_tz: null, p_push: true, p_secret: process.env.NUDGE_SECRET });

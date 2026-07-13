@@ -1475,7 +1475,8 @@ class Component extends DCLogic {
     try{ if(!this._hitSent){
       const _u=(t&&t.initDataUnsafe&&t.initDataUnsafe.user)?t.initDataUnsafe.user:null;
       if(_u&&_u.id){ this._hitSent=true;
-        const _b=JSON.stringify({uid:String(_u.id), platform:(t.platform||null), tz:this._tz()});
+        const _sp=(t.initDataUnsafe&&t.initDataUnsafe.start_param)?String(t.initDataUnsafe.start_param):null;
+        const _b=JSON.stringify({uid:String(_u.id), platform:(t.platform||null), tz:this._tz(), source:_sp});
         if(navigator.sendBeacon) navigator.sendBeacon('/api/hit', new Blob([_b],{type:'application/json'}));
         else fetch('/api/hit',{method:'POST',headers:{'Content-Type':'application/json'},body:_b,keepalive:true}).catch(()=>{});
       }

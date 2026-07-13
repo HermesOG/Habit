@@ -29,9 +29,12 @@ export default async function handler(req, res) {
   if (!uid) { res.status(200).json({ ok: false, reason: 'no-uid' }); return; }
   const platform = data && data.platform ? String(data.platform).slice(0, 32) : null;
   const tz = data && data.tz ? String(data.tz).slice(0, 64) : null;
+  // Источник перехода из start_param Mini App (?startapp=<src>); null → запишется 'direct'.
+  const source = data && data.source ? String(data.source).replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64) : null;
 
-  // Регистрация пользователя бота с поясом (best-effort, не влияет на ответ DAU).
+  // Регистрация пользователя бота с поясом + фиксация источника (best-effort, first-touch).
   await supaRpc('bot_register', { p_user_id: uid, p_tz: tz, p_push: null, p_secret: process.env.NUDGE_SECRET });
+  await supaRpc('record_source', { p_user_id: uid, p_source: source, p_secret: process.env.NUDGE_SECRET });
 
   try {
     const r = await fetch(url.replace(/\/$/, '') + '/rest/v1/rpc/record_visit', {
