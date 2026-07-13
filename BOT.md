@@ -9,7 +9,7 @@
 | `TELEGRAM_BOT_TOKEN` | токен из @BotFather (обязательно) |
 | `TELEGRAM_WEBHOOK_SECRET` | любая случайная строка — защита вебхука (рекомендуется) |
 | `WEBAPP_URL` | адрес Mini App — задать явно `https://habit-sigma-wine.vercel.app`: часть прод-доменов проекта закрыта Vercel Authentication, публичен именно этот алиас |
-| `GREETING_ANIMATION` | file_id или URL гифки приветствия — добавить позже, когда будет ассет |
+| `GREETING_ANIMATION` | ✅ уже задана: `https://habit-sigma-wine.vercel.app/greeting.mp4` (рендер из `uploads/form1_amber_c.png`, скрипт-однодневка; заменить — просто перезаписать значение) |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | память «кто уже заходил» (без них все получают полную историю) |
 
 После добавления переменных — Redeploy, иначе функция их не увидит.
