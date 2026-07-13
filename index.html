@@ -308,7 +308,7 @@ input{outline:none}
 </div>
 <div style="flex:1;min-width:0">
 <div style="display:flex;align-items:center;gap:8px">
-<span style="font-size:15.5px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.name }}</span>
+<span style="flex:1;min-width:0;font-size:15.5px;font-weight:600;line-height:1.3;color:var(--text-primary);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden">{{ g.name }}</span>
 <sc-if value="{{ g.overdue }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px;color:#CF8270;background:rgba(197,107,84,.16);padding:2px 7px;border-radius:999px;white-space:nowrap;flex:none">просрочено</span></sc-if>
 </div>
 <div style="font-size:12.5px;color:var(--text-secondary);margin-top:3px">{{ g.deadlineLabel }}</div>
@@ -437,6 +437,7 @@ input{outline:none}
 <sc-if value="{{ dy.isHottest }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:-3px;right:-4px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:.5px solid var(--border);display:flex;align-items:center;justify-content:center"><i class="ti ti-flame" style="font-size:10px;color:var(--accent-soft)"></i></div></sc-if>
 </div>
 <sc-if value="{{ dy.hasBandDot }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background: {{ dy.bandDot }}"></span></sc-if>
+<sc-if value="{{ dy.hasDots }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;bottom:1px;left:50%;transform:translateX(-50%);display:flex;gap:3px;pointer-events:none"><sc-for list="{{ dy.dots }}" as="dt" hint-placeholder-count="0"><span style="width:4px;height:4px;border-radius:50%;box-shadow:0 0 0 1.5px var(--bg);background: {{ dt.c }}"></span></sc-for></div></sc-if>
 </div>
 </sc-for>
 </div>
@@ -1908,6 +1909,11 @@ class Component extends DCLogic {
         chipStyle: on?('background:color-mix(in srgb,'+c+' 16%,transparent);border:1px solid '+c+';color:var(--text-primary)'):'background:var(--surface);border:1px solid transparent;color:var(--text-mid)',
         onTap:(id=>()=>this.toggleCalGoal(id))(o.g.id) };
     });
+    /* точки задач по дням: шаг цели — цветом цели, одиночная — нейтральная, просроченная — тревожная */
+    const dayDots={};
+    const addDot=(ds,c)=>{ const a=dayDots[ds]||(dayDots[ds]=[]); if(a.length<4) a.push(c); };
+    activeGoalsCal.forEach((g,gi)=>{ if(hlGoal&&g.id!==hlGoal.id) return; g.steps.forEach(st=>{ if(!st.done) addDot(st.date, this._overdue(st.date)>0?'#CF8270':goalColorOf(gi)); }); });
+    if(!hlGoal) S.solo.forEach(t=>{ if(!t.archived&&!t.done) addDot(t.date, this._overdue(t.date)>0?'#CF8270':'var(--text-secondary)'); });
     const weeks=[];
     for(let w=0;w<6;w++){
       const days=[]; let any=false;
@@ -1924,8 +1930,10 @@ class Component extends DCLogic {
           if(st===3) rings.push('0 0 14px var(--accent-a45)');
           if(rings.length) heat+=';box-shadow:'+rings.join(',');
           const numStyle= isToday?'font-weight:700;color:#F3EFE6' : ('font-weight:500;color:'+(st>=2?'var(--bg)':(isFuture?'var(--text-faint)':'var(--text-mid)')));
-          days.push({num:n, empty:false, isToday, isHottest:n===hotDay, heat, numStyle, hasBandDot:!!hlGoal&&(n===hlStartN||n===hlEndN), bandDot:hlColor||'', onTap:(nn=>()=>this.selectDay(dstr(nn)))(n), k:n});
-        } else days.push({num:'', empty:true, isToday:false, isHottest:false, heat:'', numStyle:'color:transparent', hasBandDot:false, bandDot:'', onTap:()=>{}, k:'e'+w+'-'+i});
+          const isBandDot=!!hlGoal&&(n===hlStartN||n===hlEndN);
+          const dots=isBandDot?[]:(dayDots[ds]||[]).map((c,di)=>({c,k:di}));
+          days.push({num:n, empty:false, isToday, isHottest:n===hotDay, heat, numStyle, hasBandDot:isBandDot, bandDot:hlColor||'', hasDots:dots.length>0, dots, onTap:(nn=>()=>this.selectDay(dstr(nn)))(n), k:n});
+        } else days.push({num:'', empty:true, isToday:false, isHottest:false, heat:'', numStyle:'color:transparent', hasBandDot:false, bandDot:'', hasDots:false, dots:[], onTap:()=>{}, k:'e'+w+'-'+i});
       }
       /* фоновая капсула диапазона подсвеченной цели */
       const wf=1-fw+w*7, wl=wf+6;
