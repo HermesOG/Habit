@@ -1,14 +1,15 @@
 // Telegram-бот «Хранитель»: webhook /api/bot.
 // /start впервые — мини-история из трёх сообщений с паузами и «печатает…»;
-// повторный /start — короткое «с возвращением»; любой другой текст — подсказка с кнопкой.
+// повторный /start — короткое «с возвращением» (факт первого захода хранится в Supabase,
+// bot_users); /stop и кнопка «Не напоминать» гасят вечерние напоминания; /start их возвращает.
 //
 // Переменные окружения:
 //   TELEGRAM_BOT_TOKEN        — токен бота (обязателен)
 //   TELEGRAM_WEBHOOK_SECRET   — сверяется с заголовком X-Telegram-Bot-Api-Secret-Token
-//   WEBAPP_URL                — адрес Mini App; по умолчанию прод-домен Vercel
-//   GREETING_ANIMATION        — file_id или URL гифки: первое сообщение станет анимацией
-//   UPSTASH_REDIS_REST_URL,
-//   UPSTASH_REDIS_REST_TOKEN  — память «кто уже заходил»; без них все получают полную историю
+//   WEBAPP_URL                — адрес Mini App
+//   GREETING_ANIMATION        — file_id или URL гифки приветствия
+//   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY — реестр bot_users (см. api/_supa.js)
+import { supaRpc } from './_supa.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const esc = (s) => String(s || '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
@@ -24,30 +25,8 @@ async function tg(method, payload) {
   return data;
 }
 
-async function redis(cmd) {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
-  try {
-    const r = await fetch(`${url}/${cmd.map(encodeURIComponent).join('/')}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await r.json();
-    return data.result;
-  } catch (e) {
-    console.log('REDIS_ERR ' + e.message);
-    return null;
-  }
-}
-
-function webappUrl() {
-  if (process.env.WEBAPP_URL) return process.env.WEBAPP_URL;
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  return null;
-}
-
 function openKeyboard() {
-  const url = webappUrl();
+  const url = process.env.WEBAPP_URL;
   if (!url) return undefined;
   return { inline_keyboard: [[{ text: '🔥 Открыть Хранителя', web_app: { url } }]] };
 }
@@ -96,6 +75,53 @@ async function sendWelcomeBack(chatId, name) {
   });
 }
 
+async function handleMessage(msg) {
+  if (!msg.chat || msg.chat.type !== 'private') return;
+  const chatId = msg.chat.id;
+  const name = (msg.from && msg.from.first_name) || 'путник';
+  const text = msg.text || '';
+
+  if (text.startsWith('/start')) {
+    // bot_register возвращает true, если пользователь создан впервые. Заодно (re)включаем
+    // напоминания: p_push=true — «Разбудить Хранителя» логично снимает и mute.
+    const r = await supaRpc('bot_register', { p_user_id: String(chatId), p_tz: null, p_push: true, p_secret: process.env.NUDGE_SECRET });
+    const isNew = r && r.data === true;
+    if (isNew) await sendStory(chatId, name);
+    else await sendWelcomeBack(chatId, name);
+    return;
+  }
+
+  if (text.startsWith('/stop')) {
+    await supaRpc('bot_set_push', { p_user_id: String(chatId), p_enabled: false, p_secret: process.env.NUDGE_SECRET });
+    await tg('sendMessage', { chat_id: chatId, text: 'Вечерние напоминания притушены. /start вернёт их.' });
+    return;
+  }
+
+  await tg('sendMessage', {
+    chat_id: chatId,
+    text: 'Я живу вон там 👇 Все дела, привычки и искры — внутри.',
+    reply_markup: openKeyboard(),
+  });
+}
+
+async function handleCallback(cb) {
+  const chatId = cb.message && cb.message.chat && cb.message.chat.id;
+  if (cb.data === 'mute' && chatId) {
+    await supaRpc('bot_set_push', { p_user_id: String(chatId), p_enabled: false, p_secret: process.env.NUDGE_SECRET });
+    await tg('answerCallbackQuery', { callback_query_id: cb.id, text: 'Больше не напомню сегодня 🔕 /start вернёт напоминания.', show_alert: false });
+    // Убираем кнопку «Не напоминать», оставляя возможность открыть приложение.
+    const url = process.env.WEBAPP_URL;
+    if (cb.message && url) {
+      await tg('editMessageReplyMarkup', {
+        chat_id: chatId, message_id: cb.message.message_id,
+        reply_markup: { inline_keyboard: [[{ text: '🔥 Сделать шаг', web_app: { url } }]] },
+      });
+    }
+    return;
+  }
+  await tg('answerCallbackQuery', { callback_query_id: cb.id });
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(200).json({ ok: true, bot: 'guardian' });
 
@@ -106,30 +132,10 @@ export default async function handler(req, res) {
 
   try {
     const update = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
-    const msg = update.message;
-    if (!msg || !msg.chat || msg.chat.type !== 'private') return res.status(200).json({ ok: true });
-
-    const chatId = msg.chat.id;
-    const name = (msg.from && msg.from.first_name) || 'путник';
-    const text = msg.text || '';
-
-    if (text.startsWith('/start')) {
-      const seen = await redis(['GET', `seen:${chatId}`]);
-      if (seen) {
-        await sendWelcomeBack(chatId, name);
-      } else {
-        await sendStory(chatId, name);
-        await redis(['SET', `seen:${chatId}`, '1']);
-      }
-    } else {
-      await tg('sendMessage', {
-        chat_id: chatId,
-        text: 'Я живу вон там 👇 Все дела, привычки и искры — внутри.',
-        reply_markup: openKeyboard(),
-      });
-    }
+    if (update.callback_query) await handleCallback(update.callback_query);
+    else if (update.message) await handleMessage(update.message);
   } catch (e) {
-    console.log('BOT_ERR ' + e.message);
+    console.log('BOT_ERR ' + (e && e.message));
   }
   // Всегда 200 — иначе Telegram повторит update и история придёт дважды.
   return res.status(200).json({ ok: true });

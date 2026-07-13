@@ -56,5 +56,33 @@ Redeploy. Первое сообщение истории автоматичес�
 ## Как работает /start
 
 - Первый раз: 3 сообщения с паузами ~1.8 с и «печатает…» (лор → механика → призыв + кнопка «🔥 Открыть Хранителя»).
-- Повторно: короткое «С возвращением, {имя}. Огонь ещё горит 🔥» + кнопка (нужен Upstash, иначе снова полная история).
+- Повторно: короткое «С возвращением, {имя}. Огонь ещё горит 🔥» + кнопка. Факт первого захода хранится в Supabase (`bot_users`).
+- `/stop` — притушить вечерние напоминания; `/start` включает их снова.
 - Любой другой текст: подсказка с кнопкой.
+
+## Вечернее напоминание «искра ослабла»
+
+Если в 20:00 по **местному времени** пользователя за день не было ни одного действия
+(привычка / задача / шаг цели), бот шлёт гифку `nudge.mp4` с текстом-подбадриванием и
+кнопками «🔥 Сделать шаг» + «🔕 Не напоминать».
+
+Как устроено:
+- Приложение шлёт `/api/hit` (заход, регистрирует пояс) и `/api/act` (был шаг сегодня) — см. `index.html`, метод `_actionPing` в `_grantXp`.
+- Данные — в Supabase `public.bot_users` (`tz`, `last_action_day`, `nudged_day`, `push_enabled`).
+  RPC `bot_register / bot_mark_action / bot_set_push / bot_claim_nudges` защищены секретом
+  (`bot_config.nudge_secret` = env `NUDGE_SECRET`), поэтому доступны по публичному anon-ключу.
+- Планировщик — **pg_cron** в Supabase (job `nudge-hourly`, `0 * * * *` UTC) через **pg_net**
+  дёргает `/api/nudge`. `bot_claim_nudges()` атомарно берёт тех, у кого локально 20:xx, нет
+  шага и включены напоминания, и помечает их (антидубль). НЕ зависит от тарифа Vercel.
+- Env: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `NUDGE_SECRET`, `NUDGE_ANIMATION`, `TELEGRAM_BOT_TOKEN`, `WEBAPP_URL`.
+
+Ручной тест (одному сразу, минуя расписание):
+```powershell
+$s="<NUDGE_SECRET>"; Invoke-RestMethod "https://habit-sigma-wine.vercel.app/api/nudge?uid=<chat_id>" -Method Post -Headers @{ "x-nudge-secret"=$s }
+```
+
+Изменить расписание/выключить:
+```sql
+select cron.unschedule('nudge-hourly');           -- выключить
+select * from cron.job;                            -- посмотреть задачи
+```

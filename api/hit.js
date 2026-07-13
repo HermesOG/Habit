@@ -1,6 +1,8 @@
-// Учёт посещаемости (DAU): клиент шлёт сюда {uid, platform} один раз при запуске.
+// Учёт посещаемости (DAU): клиент шлёт сюда {uid, platform, tz} один раз при запуске.
 // Пишем в Supabase через RPC record_visit сервисным ключом — ключ не покидает сервер.
-// Всегда отвечаем 200: это fire-and-forget, клиент не должен ретраить и падать.
+// Заодно регистрируем пользователя бота (bot_register) с его часовым поясом — для вечерних
+// напоминаний. Всегда отвечаем 200: это fire-and-forget, клиент не должен ретраить и падать.
+import { supaRpc } from './_supa.js';
 const TZ = process.env.STATS_TZ || 'UTC';
 
 function localDay() {
@@ -26,6 +28,10 @@ export default async function handler(req, res) {
   const uid = data && data.uid != null ? String(data.uid).slice(0, 64) : '';
   if (!uid) { res.status(200).json({ ok: false, reason: 'no-uid' }); return; }
   const platform = data && data.platform ? String(data.platform).slice(0, 32) : null;
+  const tz = data && data.tz ? String(data.tz).slice(0, 64) : null;
+
+  // Регистрация пользователя бота с поясом (best-effort, не влияет на ответ DAU).
+  await supaRpc('bot_register', { p_user_id: uid, p_tz: tz, p_push: null, p_secret: process.env.NUDGE_SECRET });
 
   try {
     const r = await fetch(url.replace(/\/$/, '') + '/rest/v1/rpc/record_visit', {

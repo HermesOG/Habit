@@ -1475,7 +1475,7 @@ class Component extends DCLogic {
     try{ if(!this._hitSent){
       const _u=(t&&t.initDataUnsafe&&t.initDataUnsafe.user)?t.initDataUnsafe.user:null;
       if(_u&&_u.id){ this._hitSent=true;
-        const _b=JSON.stringify({uid:String(_u.id), platform:(t.platform||null)});
+        const _b=JSON.stringify({uid:String(_u.id), platform:(t.platform||null), tz:this._tz()});
         if(navigator.sendBeacon) navigator.sendBeacon('/api/hit', new Blob([_b],{type:'application/json'}));
         else fetch('/api/hit',{method:'POST',headers:{'Content-Type':'application/json'},body:_b,keepalive:true}).catch(()=>{});
       }
@@ -1631,6 +1631,22 @@ class Component extends DCLogic {
 
   _todayStr(){ const t=this._today(); const p=n=>String(n).padStart(2,'0'); return t.getFullYear()+'-'+p(t.getMonth()+1)+'-'+p(t.getDate()); }
 
+  /* IANA-пояс устройства — для вечернего напоминания в 20:00 по местному времени */
+  _tz(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||null; }catch(e){ return null; } }
+  /* Пинг «сегодня был шаг»: гасит вечернее напоминание. Только для реального юзера Telegram,
+     троттлинг 20с, fire-and-forget — офлайну не мешает. См. /api/act. */
+  _actionPing(){
+    try{
+      const t=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
+      const u=(t&&t.initDataUnsafe&&t.initDataUnsafe.user)?t.initDataUnsafe.user:null;
+      if(!u||!u.id) return;
+      const now=Date.now(); if(this._lastAct&&now-this._lastAct<20000) return; this._lastAct=now;
+      const b=JSON.stringify({uid:String(u.id), tz:this._tz()});
+      if(navigator.sendBeacon) navigator.sendBeacon('/api/act', new Blob([b],{type:'application/json'}));
+      else fetch('/api/act',{method:'POST',headers:{'Content-Type':'application/json'},body:b,keepalive:true}).catch(()=>{});
+    }catch(e){}
+  }
+
   /* Начислить XP (с учётом дневного жара). Возвращает {granted}. */
   _grantXp(id, amount, opts){
     opts=opts||{};
@@ -1650,6 +1666,7 @@ class Component extends DCLogic {
     if(lvNew>lvOld && lvNew>x.maxLevel){ if(opts.silent||this.state.celebrating) st.pendingLevel=lvNew; else { st.leveled={level:lvNew}; this._sfx('levelup'); } }
     this.setState(st);
     if(res.capJustHit){ this.setState({capToast:true}); this._sfx('cap'); clearTimeout(this._capT); this._capT=setTimeout(()=>this.setState({capToast:false}),3000); }
+    this._actionPing(); /* сегодня был шаг → вечернее напоминание не придёт */
     return {granted:res.granted};
   }
 
