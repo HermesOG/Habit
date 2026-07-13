@@ -44,6 +44,8 @@ set search_path = ''
 as $$
   select json_build_object(
     'total_users', (select count(distinct user_id) from public.dau),
+    'active_7d',   (select count(distinct user_id) from public.dau where day >= current_date - 6),
+    'active_30d',  (select count(distinct user_id) from public.dau where day >= current_date - 29),
     'daily', (
       select coalesce(json_agg(row_to_json(t) order by t.day desc), '[]'::json)
       from (
