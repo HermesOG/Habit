@@ -1469,6 +1469,16 @@ class Component extends DCLogic {
         if(navigator.sendBeacon) navigator.sendBeacon('/api/diag', s); else fetch('/api/diag',{method:'POST',body:s,keepalive:true}).catch(()=>{});
       }catch(e){} }, 6500);
     }catch(e){}
+    /* Учёт посещаемости (DAU): один beacon на запуск, только для реального юзера Telegram.
+       Fire-and-forget, офлайну не мешает — если сети нет, просто не уйдёт. См. /api/hit. */
+    try{ if(!this._hitSent){
+      const _u=(t&&t.initDataUnsafe&&t.initDataUnsafe.user)?t.initDataUnsafe.user:null;
+      if(_u&&_u.id){ this._hitSent=true;
+        const _b=JSON.stringify({uid:String(_u.id), platform:(t.platform||null)});
+        if(navigator.sendBeacon) navigator.sendBeacon('/api/hit', new Blob([_b],{type:'application/json'}));
+        else fetch('/api/hit',{method:'POST',headers:{'Content-Type':'application/json'},body:_b,keepalive:true}).catch(()=>{});
+      }
+    } }catch(e){}
     if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
     /* наблюдаемость: журнал + окно для #diag */
     this._dbg=this._dbg||[];
