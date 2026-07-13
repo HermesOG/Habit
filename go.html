@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Открываю «Хранителя» в Telegram…</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{ --bg:#0e0e10; --card:#18181b; --text:#f4f4f5; --muted:#a1a1aa; --accent:#2aabee; --border:rgba(255,255,255,.10); }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--text); min-height:100%;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex; align-items:center; justify-content:center; padding:24px; text-align:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  main{max-width:360px; width:100%}
+  .flame{font-size:56px; line-height:1; margin-bottom:14px}
+  h1{font-size:20px; font-weight:700; margin:0 0 8px; letter-spacing:-.01em}
+  p{color:var(--muted); font-size:14px; margin:0 0 20px; line-height:1.5}
+  .btn{
+    display:block; width:100%; padding:15px 18px; border-radius:13px;
+    background:var(--accent); color:#fff; font-size:16px; font-weight:600;
+    text-decoration:none; border:none; cursor:pointer; margin-bottom:12px;
+  }
+  .btn:active{opacity:.85}
+  .alt{display:inline-block; color:var(--muted); font-size:13px; text-decoration:underline; text-underline-offset:3px}
+  .hint{
+    margin-top:26px; padding:14px 16px; background:var(--card); border:1px solid var(--border);
+    border-radius:12px; color:var(--muted); font-size:12.5px; line-height:1.5; text-align:left;
+  }
+  .hint b{color:var(--text)}
+</style>
+</head>
+<body>
+<main>
+  <div class="flame">🔥</div>
+  <h1>Открываю «Хранителя» в Telegram</h1>
+  <p>Если приложение не открылось само — нажми кнопку ниже.</p>
+  <a id="btn" class="btn" href="#">Открыть в Telegram</a>
+  <a id="alt" class="alt" href="#">Не открывается? Открыть через t.me</a>
+  <div class="hint">
+    Открыл из Instagram и видишь ошибку? Нажми <b>«⋯»</b> вверху справа →
+    <b>«Открыть во внешнем браузере»</b>, затем снова кнопку. Instagram сам плохо
+    передаёт ссылки в приложения — это не ошибка «Хранителя».
+  </div>
+</main>
+<script>
+  (function(){
+    var BOT = "sparky_tasks_bot";
+    // источник из ?to= (буквы/цифры/_/-), по умолчанию instagram
+    var src = (new URLSearchParams(location.search).get("to") || "instagram")
+                .replace(/[^A-Za-z0-9_-]/g, "").slice(0, 64) || "instagram";
+    var tgUrl  = "tg://resolve?domain=" + BOT + "&start=" + src;      // открывает приложение напрямую (минуя t.me/DNS)
+    var webUrl = "https://t.me/" + BOT + "?start=" + src;             // запасной путь для тех, у кого t.me открывается
+
+    var btn = document.getElementById("btn");
+    var alt = document.getElementById("alt");
+    btn.href = tgUrl;
+    alt.href = webUrl;
+
+    // авто-попытка открыть приложение (в браузере Instagram может не сработать — тогда работает кнопка)
+    if (!/[?&]preview/.test(location.search)) {
+      var fell = setTimeout(function(){ location.href = webUrl; }, 1800);
+      // если приложение перехватило переход — вкладка ушла в фон, отменяем запасной путь
+      document.addEventListener("visibilitychange", function(){ if (document.hidden) clearTimeout(fell); });
+      try { location.href = tgUrl; } catch (e) {}
+    }
+  })();
+</script>
+</body>
+</html>
