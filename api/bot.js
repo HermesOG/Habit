@@ -87,8 +87,9 @@ async function handleMessage(msg) {
     const src = (text.split(/\s+/)[1] || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 64);
     if (src) await supaRpc('record_source', { p_user_id: String(chatId), p_source: src, p_secret: process.env.NUDGE_SECRET });
     // bot_register возвращает true, если пользователь создан впервые. Заодно (re)включаем
-    // напоминания: p_push=true — «Разбудить Хранителя» логично снимает и mute.
+    // оба канала напоминаний: «Разбудить Хранителя» логично снимает mute и утром, и вечером.
     const r = await supaRpc('bot_register', { p_user_id: String(chatId), p_tz: null, p_push: true, p_secret: process.env.NUDGE_SECRET });
+    await supaRpc('bot_set_morning', { p_user_id: String(chatId), p_enabled: true, p_secret: process.env.NUDGE_SECRET });
     const isNew = r && r.data === true;
     if (isNew) await sendStory(chatId, name);
     else await sendWelcomeBack(chatId, name);
@@ -97,7 +98,8 @@ async function handleMessage(msg) {
 
   if (text.startsWith('/stop')) {
     await supaRpc('bot_set_push', { p_user_id: String(chatId), p_enabled: false, p_secret: process.env.NUDGE_SECRET });
-    await tg('sendMessage', { chat_id: chatId, text: 'Вечерние напоминания притушены. /start вернёт их.' });
+    await supaRpc('bot_set_morning', { p_user_id: String(chatId), p_enabled: false, p_secret: process.env.NUDGE_SECRET });
+    await tg('sendMessage', { chat_id: chatId, text: 'Напоминания притушены — и утренние, и вечерние. /start вернёт их.' });
     return;
   }
 
@@ -108,17 +110,24 @@ async function handleMessage(msg) {
   });
 }
 
+// Кнопки отключения: mute — вечерние, mute_morning — утренние (раздельно). Гасим свой канал,
+// отвечаем и убираем кнопку mute, оставляя возможность открыть приложение.
+const MUTE = {
+  mute:         { rpc: 'bot_set_push',    toast: 'Вечером больше не напомню 🔕 /start вернёт напоминания.', open: '🔥 Сделать шаг' },
+  mute_morning: { rpc: 'bot_set_morning', toast: 'Утром больше не побеспокою 🔕 /start вернёт напоминания.', open: '🔥 Открыть задачи' },
+};
+
 async function handleCallback(cb) {
   const chatId = cb.message && cb.message.chat && cb.message.chat.id;
-  if (cb.data === 'mute' && chatId) {
-    await supaRpc('bot_set_push', { p_user_id: String(chatId), p_enabled: false, p_secret: process.env.NUDGE_SECRET });
-    await tg('answerCallbackQuery', { callback_query_id: cb.id, text: 'Больше не напомню сегодня 🔕 /start вернёт напоминания.', show_alert: false });
-    // Убираем кнопку «Не напоминать», оставляя возможность открыть приложение.
+  const m = MUTE[cb.data];
+  if (m && chatId) {
+    await supaRpc(m.rpc, { p_user_id: String(chatId), p_enabled: false, p_secret: process.env.NUDGE_SECRET });
+    await tg('answerCallbackQuery', { callback_query_id: cb.id, text: m.toast, show_alert: false });
     const url = process.env.WEBAPP_URL;
     if (cb.message && url) {
       await tg('editMessageReplyMarkup', {
         chat_id: chatId, message_id: cb.message.message_id,
-        reply_markup: { inline_keyboard: [[{ text: '🔥 Сделать шаг', web_app: { url } }]] },
+        reply_markup: { inline_keyboard: [[{ text: m.open, web_app: { url } }]] },
       });
     }
     return;
