@@ -15,10 +15,21 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const EVENING_CAPTION =
   'Искра ослабла, но ещё не погасла.\n' +
   'До конца дня есть время на один маленький шаг — и я снова разгорюсь. 🔥';
-const MORNING_CAPTION =
-  'Доброе утро ☀️\n' +
-  'Загляни в задачи на сегодня — прикинь, что важно успеть, и наметь первый шаг.\n' +
-  'Пусть день будет ярким. Я рядом. 🔥';
+
+// Утренние — бот шлёт случайную из набора, чтобы ритуал не приедался.
+const MORNING_CAPTIONS = [
+  'Доброе утро ☀️\nНовый день — чистый лист. Загляни в задачи и реши, с чего начнёшь.',
+  'С добрым утром 🔥\nЯ уже разжёг огонь. Посмотри, что сегодня важно, — и сделаем день ярким.',
+  'Доброе утро.\nОдин взгляд на список с утра экономит весь день. Что сегодня главное?',
+  'Утро доброе ☀️\nНе хватайся за всё разом. Открой задачи, выбери одну — с неё и начнём.',
+  'Доброе утро!\nДень только начинается — самое время наметить пару дел. Загляни в список.',
+  'С добрым утром.\nСпроси себя: что сегодня действительно важно? Ответ — в твоих задачах. 🔥',
+  'Доброе утро ☀️\nВчера осталось позади. Сегодня ждут новые искры — глянь, что запланировано.',
+  'Утро 🔥\nЯ рядом и готов расти вместе с тобой. Посмотри задачи на сегодня — и вперёд.',
+  'Доброе утро.\nМинутка на список с утра — и день пойдёт по твоему плану, а не наоборот.',
+  'С добрым утром ☀️\nПусть день будет твоим. Начни с малого: открой задачи и выбери первый шаг.',
+];
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 function keyboard(openText, muteText, muteData) {
   const rows = [];
@@ -30,13 +41,13 @@ function keyboard(openText, muteText, muteData) {
 
 const CHANNELS = {
   evening: {
-    caption: EVENING_CAPTION,
+    cap: () => EVENING_CAPTION,
     anim: () => process.env.NUDGE_ANIMATION,
     kb: () => keyboard('🔥 Сделать шаг', '🔕 Не напоминать', 'mute'),
     claim: 'bot_claim_nudges',
   },
   morning: {
-    caption: MORNING_CAPTION,
+    cap: () => pick(MORNING_CAPTIONS),
     anim: () => process.env.MORNING_ANIMATION,
     kb: () => keyboard('🔥 Открыть задачи', '🔕 Не будить по утрам', 'mute_morning'),
     claim: 'bot_claim_morning',
@@ -56,9 +67,10 @@ async function tg(method, payload) {
 
 async function send(chatId, ch) {
   const anim = ch.anim();
+  const caption = ch.cap();
   const reply_markup = ch.kb();
-  if (anim) return tg('sendAnimation', { chat_id: chatId, animation: anim, caption: ch.caption, reply_markup });
-  return tg('sendMessage', { chat_id: chatId, text: ch.caption, reply_markup });
+  if (anim) return tg('sendAnimation', { chat_id: chatId, animation: anim, caption, reply_markup });
+  return tg('sendMessage', { chat_id: chatId, text: caption, reply_markup });
 }
 
 async function runChannel(ch) {
