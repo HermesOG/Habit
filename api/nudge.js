@@ -2,33 +2,18 @@
 // вызов обслуживает оба канала:
 //   • утро (9:00 местного) — «доброе утро, загляни в задачи», всем с включённым утренним;
 //   • вечер (20:00 местного) — «искра ослабла», тем, у кого сегодня не было ни одного шага.
-// claim-функции атомарно выбирают и помечают получателей (антидубль по morning_day/nudged_day).
+// claim-функции атомарно выбирают и помечают получателей (антидубль по morning_day/nudged_day)
+// и отдают язык каждого — тексты уходят на языке пользователя (см. api/_i18n.js).
 //
 // Защита: заголовок x-nudge-secret (или ?secret=) == NUDGE_SECRET.
-// Тест вручную: POST /api/nudge?uid=<id>&kind=morning|evening — одному сразу, минуя расписание.
+// Тест вручную: POST /api/nudge?uid=<id>&kind=morning|evening[&lang=ru|uz|en] — одному сразу.
 //
 // Env: TELEGRAM_BOT_TOKEN, NUDGE_SECRET, WEBAPP_URL, NUDGE_ANIMATION, MORNING_ANIMATION.
 import { supaRpc } from './_supa.js';
+import { t, normLang, morningCaption, appUrl } from './_i18n.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const EVENING_CAPTION =
-  'Искра ослабла, но ещё не погасла.\n' +
-  'До конца дня есть время на один маленький шаг — и я снова разгорюсь. 🔥';
-
-// Утренние — бот шлёт случайную из набора, чтобы ритуал не приедался.
-const MORNING_CAPTIONS = [
-  'Доброе утро ☀️\nНовый день — чистый лист. Загляни в задачи и реши, с чего начнёшь.',
-  'С добрым утром 🔥\nЯ уже разжёг огонь. Посмотри, что сегодня важно, — и сделаем день ярким.',
-  'Доброе утро.\nОдин взгляд на список с утра экономит весь день. Что сегодня главное?',
-  'Утро доброе ☀️\nНе хватайся за всё разом. Открой задачи, выбери одну — с неё и начнём.',
-  'Доброе утро!\nДень только начинается — самое время наметить пару дел. Загляни в список.',
-  'С добрым утром.\nСпроси себя: что сегодня действительно важно? Ответ — в твоих задачах. 🔥',
-  'Доброе утро ☀️\nВчера осталось позади. Сегодня ждут новые искры — глянь, что запланировано.',
-  'Утро 🔥\nЯ рядом и готов расти вместе с тобой. Посмотри задачи на сегодня — и вперёд.',
-  'Доброе утро.\nМинутка на список с утра — и день пойдёт по твоему плану, а не наоборот.',
-  'С добрым утром ☀️\nПусть день будет твоим. Начни с малого: открой задачи и выбери первый шаг.',
-];
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 // В *_ANIMATION можно перечислить несколько URL через запятую — тогда ротируется и гифка.
 const pickUrl = (v) => {
@@ -36,25 +21,25 @@ const pickUrl = (v) => {
   return list.length ? pick(list) : null;
 };
 
-function keyboard(openText, muteText, muteData) {
+function keyboard(lang, openKey, muteKey, muteData) {
   const rows = [];
-  const url = process.env.WEBAPP_URL;
-  if (url) rows.push([{ text: openText, web_app: { url } }]);
-  rows.push([{ text: muteText, callback_data: muteData }]);
+  const url = appUrl(lang);
+  if (url) rows.push([{ text: t(lang, openKey), web_app: { url } }]);
+  rows.push([{ text: t(lang, muteKey), callback_data: muteData }]);
   return { inline_keyboard: rows };
 }
 
 const CHANNELS = {
   evening: {
-    cap: () => EVENING_CAPTION,
+    cap: (lang) => t(lang, 'evening'),
     anim: () => pickUrl(process.env.NUDGE_ANIMATION),
-    kb: () => keyboard('🔥 Сделать шаг', '🔕 Не напоминать', 'mute'),
+    kb: (lang) => keyboard(lang, 'openStep', 'muteEvening', 'mute'),
     claim: 'bot_claim_nudges',
   },
   morning: {
-    cap: () => pick(MORNING_CAPTIONS),
+    cap: (lang) => morningCaption(lang),
     anim: () => pickUrl(process.env.MORNING_ANIMATION),
-    kb: () => keyboard('🔥 Открыть задачи', '🔕 Не будить по утрам', 'mute_morning'),
+    kb: (lang) => keyboard(lang, 'openTasks', 'muteMorning', 'mute_morning'),
     claim: 'bot_claim_morning',
   },
 };
@@ -70,23 +55,28 @@ async function tg(method, payload) {
   return data.ok;
 }
 
-async function send(chatId, ch) {
+async function send(chatId, ch, lang) {
   const anim = ch.anim();
-  const caption = ch.cap();
-  const reply_markup = ch.kb();
+  const caption = ch.cap(lang);
+  const reply_markup = ch.kb(lang);
   if (anim) return tg('sendAnimation', { chat_id: chatId, animation: anim, caption, reply_markup });
   return tg('sendMessage', { chat_id: chatId, text: caption, reply_markup });
 }
 
 async function runChannel(ch) {
   const r = await supaRpc(ch.claim, { p_secret: process.env.NUDGE_SECRET });
-  const targets = Array.isArray(r.data) ? r.data.map(String) : [];
+  const rows = Array.isArray(r.data) ? r.data : [];
   let sent = 0, failed = 0;
-  for (const uid of targets) {
-    if (await send(uid, ch)) sent++; else failed++;
+  for (const row of rows) {
+    // claim отдаёт {uid, ulang}; голую строку поддерживаем на случай, если код
+    // выкатился раньше миграции — тогда просто уходит русский текст, а не «[object Object]».
+    const uid = typeof row === 'string' ? row : String((row && row.uid) || '');
+    const lang = typeof row === 'string' ? 'ru' : normLang(row && row.ulang);
+    if (!uid) { failed++; continue; }
+    if (await send(uid, ch, lang)) sent++; else failed++;
     await sleep(40); // мягкий троттлинг под лимиты Telegram
   }
-  return { targets: targets.length, sent, failed };
+  return { targets: rows.length, sent, failed };
 }
 
 export default async function handler(req, res) {
@@ -99,8 +89,13 @@ export default async function handler(req, res) {
   const forceUid = req.query && req.query.uid ? String(req.query.uid) : null;
   if (forceUid) {
     const ch = CHANNELS[(req.query.kind || 'evening')] || CHANNELS.evening;
-    const ok = await send(forceUid, ch);
-    res.status(200).json({ ok: true, forced: true, kind: ch === CHANNELS.morning ? 'morning' : 'evening', sent: ok ? 1 : 0 });
+    let lang = req.query && req.query.lang ? normLang(req.query.lang) : null;
+    if (!lang) {
+      const lr = await supaRpc('bot_get_lang', { p_user_id: forceUid, p_secret: process.env.NUDGE_SECRET });
+      lang = normLang(lr && lr.data);
+    }
+    const ok = await send(forceUid, ch, lang);
+    res.status(200).json({ ok: true, forced: true, kind: ch === CHANNELS.morning ? 'morning' : 'evening', lang, sent: ok ? 1 : 0 });
     return;
   }
 

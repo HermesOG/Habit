@@ -1,7 +1,10 @@
 // Telegram-бот «Хранитель»: webhook /api/bot.
-// /start впервые — мини-история из трёх сообщений с паузами и «печатает…»;
+// Первый /start — выбор языка, затем мини-история из трёх сообщений с паузами и «печатает…»;
 // повторный /start — короткое «с возвращением» (факт первого захода хранится в Supabase,
 // bot_users); /stop и кнопка «Не напоминать» гасят вечерние напоминания; /start их возвращает.
+//
+// Язык (bot_users.lang) выбирается один раз в боте и передаётся в Mini App через ?lang= —
+// приложение берёт его как значение по умолчанию. Сменить: /lang или настройки приложения.
 //
 // Переменные окружения:
 //   TELEGRAM_BOT_TOKEN        — токен бота (обязателен)
@@ -10,6 +13,7 @@
 //   GREETING_ANIMATION        — file_id или URL гифки приветствия
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY — реестр bot_users (см. api/_supa.js)
 import { supaRpc } from './_supa.js';
+import { t, normLang, LANG_LABELS, LANG_PROMPT, appUrl } from './_i18n.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const esc = (s) => String(s || '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
@@ -25,10 +29,26 @@ async function tg(method, payload) {
   return data;
 }
 
-function openKeyboard() {
-  const url = process.env.WEBAPP_URL;
+function openKeyboard(lang) {
+  const url = appUrl(lang);
   if (!url) return undefined;
-  return { inline_keyboard: [[{ text: '🔥 Открыть Хранителя', web_app: { url } }]] };
+  return { inline_keyboard: [[{ text: t(lang, 'open'), web_app: { url } }]] };
+}
+
+// mode кодируется в callback_data, чтобы после выбора языка знать, что слать дальше:
+// n — новичок (полная история), r — вернувшийся (короткое приветствие), s — просто смена языка.
+function langKeyboard(mode) {
+  return {
+    inline_keyboard: ['ru', 'uz', 'en'].map((c) => [
+      { text: LANG_LABELS[c], callback_data: 'lang:' + c + ':' + mode },
+    ]),
+  };
+}
+
+async function readLang(chatId) {
+  const r = await supaRpc('bot_get_lang', { p_user_id: String(chatId), p_secret: process.env.NUDGE_SECRET });
+  const raw = r && r.data;
+  return typeof raw === 'string' && raw ? normLang(raw) : null; // null — язык ещё не выбран
 }
 
 async function typingPause(chatId, ms) {
@@ -36,11 +56,8 @@ async function typingPause(chatId, ms) {
   await sleep(ms);
 }
 
-async function sendStory(chatId, name) {
-  const hello =
-    `Здравствуй, ${esc(name)}.\n\n` +
-    'Я — Хранитель. Маленький огонёк, который живёт твоими делами. ' +
-    'Пока ты действуешь — я горю. Пока ты растёшь — расту и я.';
+async function sendStory(chatId, name, lang) {
+  const hello = t(lang, 'story1', { name: esc(name || t(lang, 'defaultName')) });
 
   if (process.env.GREETING_ANIMATION) {
     await tg('sendAnimation', { chat_id: chatId, animation: process.env.GREETING_ANIMATION, caption: hello, parse_mode: 'HTML' });
@@ -49,36 +66,30 @@ async function sendStory(chatId, name) {
   }
 
   await typingPause(chatId, 1800);
-  await tg('sendMessage', {
-    chat_id: chatId,
-    parse_mode: 'HTML',
-    text:
-      'Всё просто: выполняешь задачи и привычки → получаешь искры ✨ → я набираю силу и меняю форму.\n\n' +
-      'Серии дней делают искры ярче. Главное — не дать огню погаснуть.',
-  });
+  await tg('sendMessage', { chat_id: chatId, parse_mode: 'HTML', text: t(lang, 'story2') });
 
   await typingPause(chatId, 1800);
   await tg('sendMessage', {
     chat_id: chatId,
     parse_mode: 'HTML',
-    text: 'Зажги первую искру — добавь свою первую привычку. Я жду внутри 👇',
-    reply_markup: openKeyboard(),
+    text: t(lang, 'story3'),
+    reply_markup: openKeyboard(lang),
   });
 }
 
-async function sendWelcomeBack(chatId, name) {
+async function sendWelcomeBack(chatId, name, lang) {
   await tg('sendMessage', {
     chat_id: chatId,
     parse_mode: 'HTML',
-    text: `С возвращением, ${esc(name)}. Огонь ещё горит 🔥`,
-    reply_markup: openKeyboard(),
+    text: t(lang, 'welcomeBack', { name: esc(name || t(lang, 'defaultName')) }),
+    reply_markup: openKeyboard(lang),
   });
 }
 
 async function handleMessage(msg) {
   if (!msg.chat || msg.chat.type !== 'private') return;
   const chatId = msg.chat.id;
-  const name = (msg.from && msg.from.first_name) || 'путник';
+  const name = (msg.from && msg.from.first_name) || '';
   const text = msg.text || '';
 
   if (text.startsWith('/start')) {
@@ -91,43 +102,83 @@ async function handleMessage(msg) {
     const r = await supaRpc('bot_register', { p_user_id: String(chatId), p_tz: null, p_push: true, p_secret: process.env.NUDGE_SECRET });
     await supaRpc('bot_set_morning', { p_user_id: String(chatId), p_enabled: true, p_secret: process.env.NUDGE_SECRET });
     const isNew = r && r.data === true;
-    if (isNew) await sendStory(chatId, name);
-    else await sendWelcomeBack(chatId, name);
+    // Язык ещё не выбран (новичок или пользователь «до» этой фичи) — сперва спрашиваем его,
+    // а историю/приветствие досылаем уже из обработчика выбора, на нужном языке.
+    const lang = await readLang(chatId);
+    if (!lang) {
+      await tg('sendMessage', {
+        chat_id: chatId,
+        text: LANG_PROMPT,
+        reply_markup: langKeyboard(isNew ? 'n' : 'r'),
+      });
+      return;
+    }
+    if (isNew) await sendStory(chatId, name, lang);
+    else await sendWelcomeBack(chatId, name, lang);
+    return;
+  }
+
+  if (text.startsWith('/lang')) {
+    await tg('sendMessage', { chat_id: chatId, text: LANG_PROMPT, reply_markup: langKeyboard('s') });
     return;
   }
 
   if (text.startsWith('/stop')) {
+    const lang = await readLang(chatId);
     await supaRpc('bot_set_push', { p_user_id: String(chatId), p_enabled: false, p_secret: process.env.NUDGE_SECRET });
     await supaRpc('bot_set_morning', { p_user_id: String(chatId), p_enabled: false, p_secret: process.env.NUDGE_SECRET });
-    await tg('sendMessage', { chat_id: chatId, text: 'Напоминания притушены — и утренние, и вечерние. /start вернёт их.' });
+    await tg('sendMessage', { chat_id: chatId, text: t(lang, 'stopped') });
     return;
   }
 
+  const lang = await readLang(chatId);
   await tg('sendMessage', {
     chat_id: chatId,
-    text: 'Я живу вон там 👇 Все дела, привычки и искры — внутри.',
-    reply_markup: openKeyboard(),
+    text: t(lang, 'fallback'),
+    reply_markup: openKeyboard(lang),
   });
 }
 
 // Кнопки отключения: mute — вечерние, mute_morning — утренние (раздельно). Гасим свой канал,
 // отвечаем и убираем кнопку mute, оставляя возможность открыть приложение.
 const MUTE = {
-  mute:         { rpc: 'bot_set_push',    toast: 'Вечером больше не напомню 🔕 /start вернёт напоминания.', open: '🔥 Сделать шаг' },
-  mute_morning: { rpc: 'bot_set_morning', toast: 'Утром больше не побеспокою 🔕 /start вернёт напоминания.', open: '🔥 Открыть задачи' },
+  mute:         { rpc: 'bot_set_push',    toast: 'muteEveningToast', open: 'openStep' },
+  mute_morning: { rpc: 'bot_set_morning', toast: 'muteMorningToast', open: 'openTasks' },
 };
 
 async function handleCallback(cb) {
   const chatId = cb.message && cb.message.chat && cb.message.chat.id;
-  const m = MUTE[cb.data];
-  if (m && chatId) {
+  if (!chatId) { await tg('answerCallbackQuery', { callback_query_id: cb.id }); return; }
+  const data = String(cb.data || '');
+
+  // Выбор языка: сохраняем и досылаем то, ради чего показывали пикер (см. langKeyboard).
+  if (data.indexOf('lang:') === 0) {
+    const parts = data.split(':');
+    const lang = normLang(parts[1]);
+    const mode = parts[2] || 's';
+    await supaRpc('bot_set_lang', { p_user_id: String(chatId), p_lang: lang, p_secret: process.env.NUDGE_SECRET });
+    await tg('answerCallbackQuery', { callback_query_id: cb.id, text: t(lang, 'langSaved') });
+    // Заменяем сообщение-приглашение подтверждением, чтобы кнопки не висели.
+    await tg('editMessageText', {
+      chat_id: chatId, message_id: cb.message.message_id, text: t(lang, 'langSaved'),
+    });
+    const name = (cb.from && cb.from.first_name) || '';
+    if (mode === 'n') await sendStory(chatId, name, lang);
+    else if (mode === 'r') await sendWelcomeBack(chatId, name, lang);
+    else await tg('sendMessage', { chat_id: chatId, text: t(lang, 'langHint'), reply_markup: openKeyboard(lang) });
+    return;
+  }
+
+  const m = MUTE[data];
+  if (m) {
+    const lang = await readLang(chatId);
     await supaRpc(m.rpc, { p_user_id: String(chatId), p_enabled: false, p_secret: process.env.NUDGE_SECRET });
-    await tg('answerCallbackQuery', { callback_query_id: cb.id, text: m.toast, show_alert: false });
-    const url = process.env.WEBAPP_URL;
-    if (cb.message && url) {
+    await tg('answerCallbackQuery', { callback_query_id: cb.id, text: t(lang, m.toast), show_alert: false });
+    const url = appUrl(lang);
+    if (url) {
       await tg('editMessageReplyMarkup', {
         chat_id: chatId, message_id: cb.message.message_id,
-        reply_markup: { inline_keyboard: [[{ text: m.open, web_app: { url } }]] },
+        reply_markup: { inline_keyboard: [[{ text: t(lang, m.open), web_app: { url } }]] },
       });
     }
     return;
