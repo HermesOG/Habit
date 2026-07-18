@@ -30,6 +30,11 @@ const MORNING_CAPTIONS = [
   'С добрым утром ☀️\nПусть день будет твоим. Начни с малого: открой задачи и выбери первый шаг.',
 ];
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+// В *_ANIMATION можно перечислить несколько URL через запятую — тогда ротируется и гифка.
+const pickUrl = (v) => {
+  const list = String(v || '').split(',').map((s) => s.trim()).filter(Boolean);
+  return list.length ? pick(list) : null;
+};
 
 function keyboard(openText, muteText, muteData) {
   const rows = [];
@@ -42,13 +47,13 @@ function keyboard(openText, muteText, muteData) {
 const CHANNELS = {
   evening: {
     cap: () => EVENING_CAPTION,
-    anim: () => process.env.NUDGE_ANIMATION,
+    anim: () => pickUrl(process.env.NUDGE_ANIMATION),
     kb: () => keyboard('🔥 Сделать шаг', '🔕 Не напоминать', 'mute'),
     claim: 'bot_claim_nudges',
   },
   morning: {
     cap: () => pick(MORNING_CAPTIONS),
-    anim: () => process.env.MORNING_ANIMATION,
+    anim: () => pickUrl(process.env.MORNING_ANIMATION),
     kb: () => keyboard('🔥 Открыть задачи', '🔕 Не будить по утрам', 'mute_morning'),
     claim: 'bot_claim_morning',
   },
