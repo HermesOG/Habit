@@ -159,10 +159,10 @@ input{outline:none}
 <div class="tg-app-root">
 <div data-theming="{{ themingVal }}" style="height:100%;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;box-sizing:border-box;padding-top:max(var(--tg-top,0px),env(safe-area-inset-top,0px));font-family:'Golos Text',system-ui,sans-serif;color:var(--text-primary); {{ themeVars }}">
 
-<div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px calc(max(var(--tg-bottom,0px),env(safe-area-inset-bottom,0px)) + 96px)">
+<div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding: {{ scrollPadTop }} 16px calc(max(var(--tg-bottom,0px),env(safe-area-inset-bottom,0px)) + 96px)">
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
-<div style="position:sticky;top:0;z-index:6;margin:0 -16px 18px;padding:0 16px 0;background:var(--bg)">
+<div style="position:sticky;top:0;z-index:6;margin:0 -16px 18px;padding:14px 16px 0;background:var(--bg)">
 
 <div style="display:flex;justify-content:space-between;align-items:center;margin:0 4px 16px">
 <span style="color:var(--text-secondary);font-size:13px;white-space:nowrap">{{ dateLabel }}</span>
@@ -190,11 +190,13 @@ input{outline:none}
 </div>
 </div>
 
+<div style="position:absolute;left:0;right:0;top:100%;height:24px;pointer-events:none;background:linear-gradient(var(--bg),color-mix(in srgb,var(--bg) 72%,transparent) 34%,color-mix(in srgb,var(--bg) 26%,transparent) 64%,rgb(from var(--bg) r g b / 0))"></div>
+
 </div>
 
 <div style="animation:screenIn .35s ease both">
 <div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 12px">
-<span style="font-size:18px;font-weight:600;color:var(--text-primary)">Сегодня</span>
+<span style="font-size:18px;font-weight:600;color:var(--text-primary)">{{ L.today }}</span>
 <span style="font-size:12.5px;color:var(--text-secondary);white-space:nowrap">{{ taskCountLabel }}</span>
 </div>
 
@@ -230,7 +232,7 @@ input{outline:none}
 <div style="font-size:12.5px;margin-top:3px;display:flex;align-items:center;gap:6px">
 <span style="width:8px;height:8px;border-radius:50%;flex:none;background: {{ t.dotColor }}"></span>
 <span style="color: {{ t.dotColor }}">{{ t.dotName }}</span>
-<span style="color:var(--text-faint)">· сегодня</span>
+<span style="color:var(--text-faint)">· {{ L.todayLow }}</span>
 </div>
 </sc-if>
 <sc-if value="{{ t.showStatusSub }}" hint-placeholder-val="{{ true }}">
@@ -247,7 +249,7 @@ input{outline:none}
 </sc-for>
 
 <div style="margin:24px 4px 12px;display:flex;align-items:baseline;justify-content:space-between">
-<span style="font-size:18px;font-weight:600;color:var(--text-primary)">Привычки</span>
+<span style="font-size:18px;font-weight:600;color:var(--text-primary)">{{ L.habitsHeading }}</span>
 <span style="font-size:12.5px;color:var(--text-secondary);white-space:nowrap">{{ habitDoneLabel }}</span>
 </div>
 
@@ -293,7 +295,7 @@ input{outline:none}
 <sc-if value="{{ isTasks }}" hint-placeholder-val="{{ false }}">
 <div style="animation:screenIn .35s ease both">
 <div style="display:flex;align-items:center;margin:0 4px 18px">
-<span style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary)">Все задачи</span>
+<span style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary)">{{ L.allTasks }}</span>
 </div>
 
 <sc-for list="{{ goals }}" as="g" hint-placeholder-count="3">
@@ -309,7 +311,7 @@ input{outline:none}
 <div style="flex:1;min-width:0">
 <div style="display:flex;align-items:center;gap:8px">
 <span style="flex:1;min-width:0;font-size:15.5px;font-weight:600;line-height:1.3;color:var(--text-primary);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden">{{ g.name }}</span>
-<sc-if value="{{ g.overdue }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px;color:#CF8270;background:rgba(197,107,84,.16);padding:2px 7px;border-radius:999px;white-space:nowrap;flex:none">просрочено</span></sc-if>
+<sc-if value="{{ g.overdue }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px;color:#CF8270;background:rgba(197,107,84,.16);padding:2px 7px;border-radius:999px;white-space:nowrap;flex:none">{{ L.overdueLabel }}</span></sc-if>
 </div>
 <div style="font-size:12.5px;color:var(--text-secondary);margin-top:3px">{{ g.deadlineLabel }}</div>
 </div>
@@ -339,7 +341,7 @@ input{outline:none}
 </div>
 </sc-for>
 
-<div style="margin:20px 4px 12px"><span style="font-size:16px;font-weight:600;color:var(--text-mid)">Задачи без цели</span></div>
+<div style="margin:20px 4px 12px"><span style="font-size:16px;font-weight:600;color:var(--text-mid)">{{ L.soloSection }}</span></div>
 <sc-for list="{{ soloTasks }}" as="t" hint-placeholder-count="2">
 <div style="background:var(--surface);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:9px;cursor:pointer" onClick="{{ t.onToggle }}">
 <sc-if value="{{ t.done }}" hint-placeholder-val="{{ false }}">
@@ -359,14 +361,14 @@ input{outline:none}
 
 <div onClick="{{ toggleArch }}" style="margin-top:26px;background:var(--surface);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:11px;cursor:pointer">
 <i class="ti ti-trophy" style="font-size:19px;color:var(--accent-soft);flex:none"></i>
-<span style="flex:1;font-size:14.5px;font-weight:600;color:var(--text-mid)">Все достигнутые задачи</span>
+<span style="flex:1;font-size:14.5px;font-weight:600;color:var(--text-mid)">{{ L.allAchieved }}</span>
 <span style="font-size:12.5px;color:var(--text-faint)">{{ archCount }}</span>
 <i class="ti ti-chevron-down" style="font-size:17px;color:var(--text-faint);transition:transform .3s; {{ archChevron }}"></i>
 </div>
 <sc-if value="{{ archOpen }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:8px;animation:expandIn .3s ease">
 <sc-if value="{{ archEmpty }}" hint-placeholder-val="{{ false }}">
-<div style="text-align:center;color:var(--text-faint);font-size:13px;padding:14px 10px;line-height:1.5">Пока пусто. Достигай целей — герой сложит их сюда как трофеи.</div>
+<div style="text-align:center;color:var(--text-faint);font-size:13px;padding:14px 10px;line-height:1.5">{{ L.archiveEmpty }}</div>
 </sc-if>
 <sc-for list="{{ archived }}" as="ar" hint-placeholder-count="2">
 <div style="background:var(--inset);border-radius:12px;margin-bottom:8px;overflow:hidden">
@@ -465,7 +467,7 @@ input{outline:none}
 </div>
 </sc-if>
 <sc-if value="{{ dayEmpty }}" hint-placeholder-val="{{ false }}">
-<div style="color:var(--text-faint);font-size:13.5px">Тихий день — искр не было</div>
+<div style="color:var(--text-faint);font-size:13.5px">{{ L.quietDay }}</div>
 </sc-if>
 <sc-if value="{{ dayHasGoals }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;padding-top:12px;border-top:.5px solid var(--border)">
@@ -482,15 +484,15 @@ input{outline:none}
 
 <div style="background:var(--surface);border-radius:18px;padding:14px 15px">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
-<span style="font-size:14px;font-weight:600;color:var(--text-primary)">Итоги месяца</span>
+<span style="font-size:14px;font-weight:600;color:var(--text-primary)">{{ L.monthSummary }}</span>
 <div style="display:flex;gap:3px">
 <sc-for list="{{ heatStrip }}" as="hc" hint-placeholder-count="7"><div style="width:13px;height:13px;border-radius:4px; {{ hc.fill }}"></div></sc-for>
 </div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-<div><div style="font-size:16px;font-weight:600;color:var(--accent-soft)">{{ monthHeatLabel }}</div><div style="font-size:11px;color:var(--text-faint);margin-top:2px">Искры за месяц</div></div>
-<div><div style="font-size:16px;font-weight:600;color:var(--text-primary)">{{ monthTasksLabel }}</div><div style="font-size:11px;color:var(--text-faint);margin-top:2px">задач закрыто</div></div>
-<div><div style="font-size:16px;font-weight:600;color:var(--text-primary)">{{ bestStreakLabel }}</div><div style="font-size:11px;color:var(--text-faint);margin-top:2px">лучший стрик</div></div>
+<div><div style="font-size:16px;font-weight:600;color:var(--accent-soft)">{{ monthHeatLabel }}</div><div style="font-size:11px;color:var(--text-faint);margin-top:2px">{{ L.sparksMonth }}</div></div>
+<div><div style="font-size:16px;font-weight:600;color:var(--text-primary)">{{ monthTasksLabel }}</div><div style="font-size:11px;color:var(--text-faint);margin-top:2px">{{ L.tasksClosed }}</div></div>
+<div><div style="font-size:16px;font-weight:600;color:var(--text-primary)">{{ bestStreakLabel }}</div><div style="font-size:11px;color:var(--text-faint);margin-top:2px">{{ L.bestStreakCap }}</div></div>
 </div>
 </div>
 
@@ -500,7 +502,7 @@ input{outline:none}
 <sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
 <div style="animation:screenIn .35s ease both">
 <div style="display:flex;justify-content:space-between;align-items:center;margin:0 4px 18px">
-<span style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary)">Профиль</span>
+<span style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary)">{{ L.profile }}</span>
 </div>
 
 <div style="background:var(--surface);border-radius:20px;padding:24px 18px 20px;display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;overflow:hidden">
@@ -546,7 +548,7 @@ input{outline:none}
 </sc-for>
 </div>
 <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:0 6px">
-<span style="font-size:11.5px;color:var(--text-faint)">Синхронизация: {{ syncLabel }}</span>
+<span style="font-size:11.5px;color:var(--text-faint)">{{ L.syncPrefix }}{{ syncLabel }}</span>
 <span style="font-size:11.5px;color:var(--text-faint)">{{ buildLabel }}</span>
 </div>
 </div>
@@ -556,7 +558,7 @@ input{outline:none}
 <div data-screen-label="Внешний вид" style="animation:screenIn .35s ease both;min-height:100%;display:flex;flex-direction:column">
 <div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
 <div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
-<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Внешний вид</span>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">{{ L.appearance }}</span>
 </div>
 <div style="display:flex;flex-direction:column;gap:12px">
 <sc-for list="{{ themeCards }}" as="tc" hint-placeholder-count="3">
@@ -585,7 +587,7 @@ input{outline:none}
 </sc-for>
 </div>
 <div style="margin-top:auto;padding-top:18px;position:sticky;bottom:96px">
-<button onClick="{{ applyThemeTap }}" style="width:100%;background:var(--accent);border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:15px;border-radius:14px;cursor:pointer;box-shadow:0 6px 18px var(--accent-a27);transition:opacity .2s; {{ applyStyle }}">Применить</button>
+<button onClick="{{ applyThemeTap }}" style="width:100%;background:var(--accent);border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:15px;border-radius:14px;cursor:pointer;box-shadow:0 6px 18px var(--accent-a27);transition:opacity .2s; {{ applyStyle }}">{{ L.apply }}</button>
 </div>
 </div>
 </sc-if>
@@ -594,10 +596,10 @@ input{outline:none}
 <div data-screen-label="Настройки" style="animation:screenIn .35s ease both">
 <div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
 <div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
-<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Настройки</span>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">{{ L.settingsTitle }}</span>
 </div>
 
-<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Общие</div>
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">{{ L.sectionGeneral }}</div>
 <div style="background:var(--surface);border-radius:16px;overflow:hidden;margin-bottom:20px">
 <sc-for list="{{ settingsToggles }}" as="r" hint-placeholder-count="3">
 <div style="display:flex;align-items:center;gap:13px;padding:14px 16px; {{ r.borderStyle }}">
@@ -613,7 +615,7 @@ input{outline:none}
 </sc-for>
 </div>
 
-<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Предпочтения</div>
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">{{ L.sectionPrefs }}</div>
 <div style="background:var(--surface);border-radius:16px;overflow:hidden">
 <sc-for list="{{ settingsRows }}" as="r" hint-placeholder-count="2">
 <div onClick="{{ r.onTap }}" style="display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer; {{ r.borderStyle }}">
@@ -631,21 +633,21 @@ input{outline:none}
 <div data-screen-label="Уведомления" style="animation:screenIn .35s ease both">
 <div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
 <div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
-<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Уведомления</span>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">{{ L.notifTitle }}</span>
 </div>
 
 <div style="background:var(--surface);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:13px;margin-bottom:20px">
 <i class="ti ti-bell" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
 <div style="flex:1;min-width:0">
-<div style="font-size:15px;color:var(--text-mid)">Push-уведомления</div>
-<div style="font-size:12px;color:var(--text-secondary);margin-top:2px">Главный переключатель</div>
+<div style="font-size:15px;color:var(--text-mid)">{{ L.pushTitle }}</div>
+<div style="font-size:12px;color:var(--text-secondary);margin-top:2px">{{ L.pushSub }}</div>
 </div>
 <div onClick="{{ pushToggle.onToggle }}" style="width:44px;height:26px;border-radius:999px;flex:none;cursor:pointer;transition:background .25s;padding:3px;box-sizing:border-box; {{ pushToggle.trackStyle }}">
 <div style="width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .22s cubic-bezier(.3,.9,.3,1); {{ pushToggle.knobStyle }}"></div>
 </div>
 </div>
 
-<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Что присылать</div>
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">{{ L.sectionWhat }}</div>
 <div style="background:var(--surface);border-radius:16px;overflow:hidden">
 <sc-for list="{{ notifRows }}" as="r" hint-placeholder-count="4">
 <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;transition:opacity .25s; {{ r.borderStyle }}; {{ r.dimStyle }}">
@@ -667,10 +669,10 @@ input{outline:none}
 <div data-screen-label="Помощь" style="animation:screenIn .35s ease both">
 <div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
 <div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
-<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Помощь</span>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">{{ L.helpTitle }}</span>
 </div>
 
-<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Частые вопросы</div>
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">{{ L.sectionFaq }}</div>
 <div style="background:var(--surface);border-radius:16px;overflow:hidden;margin-bottom:20px">
 <sc-for list="{{ faqList }}" as="f" hint-placeholder-count="4">
 <div style="{{ f.borderStyle }}">
@@ -685,7 +687,7 @@ input{outline:none}
 </sc-for>
 </div>
 
-<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">Связаться с нами</div>
+<div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">{{ L.sectionContact }}</div>
 <div style="background:var(--surface);border-radius:16px;overflow:hidden">
 <sc-for list="{{ helpRows }}" as="r" hint-placeholder-count="3">
 <div style="display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer; {{ r.borderStyle }}">
@@ -702,7 +704,7 @@ input{outline:none}
 <div data-screen-label="О приложении" style="animation:screenIn .35s ease both">
 <div style="display:flex;align-items:center;gap:11px;margin:0 4px 18px">
 <div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
-<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">О приложении</span>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">{{ L.aboutTitle }}</span>
 </div>
 
 <div style="background:var(--surface);border-radius:20px;padding:26px 20px 22px;display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:20px">
@@ -712,9 +714,9 @@ input{outline:none}
 <dc-import name="CharacterStage" size="96" level="{{ heroLevel }}" theme="{{ themeId }}" hint-size="96px,96px"></dc-import>
 </div>
 </div>
-<div style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Хранитель</div>
-<div style="font-size:13px;color:var(--accent-soft);margin-top:4px">Версия 2.4.0</div>
-<div style="font-size:13.5px;color:var(--text-secondary);line-height:1.55;margin-top:14px;max-width:280px">Спутник продуктивности, который растёт вместе с вами. Выполняйте задачи и привычки — и наблюдайте, как крепнет ваш Хранитель.</div>
+<div style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">{{ L.appName }}</div>
+<div style="font-size:13px;color:var(--accent-soft);margin-top:4px">{{ L.versionLabel }}</div>
+<div style="font-size:13.5px;color:var(--text-secondary);line-height:1.55;margin-top:14px;max-width:280px">{{ L.aboutDesc }}</div>
 </div>
 
 <div style="background:var(--surface);border-radius:16px;overflow:hidden">
@@ -727,7 +729,7 @@ input{outline:none}
 </sc-for>
 </div>
 
-<div style="text-align:center;font-size:12px;color:var(--text-faint);margin-top:22px">Сделано с заботой · 2026</div>
+<div style="text-align:center;font-size:12px;color:var(--text-faint);margin-top:22px">{{ L.madeWith }}</div>
 </div>
 </sc-if>
 
@@ -735,9 +737,9 @@ input{outline:none}
 <div data-screen-label="Путь" style="animation:screenIn .35s ease both">
 <div style="display:flex;align-items:center;gap:11px;margin:0 4px 6px">
 <div onClick="{{ goAccount }}" style="width:34px;height:34px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-chevron-left" style="font-size:19px;color:var(--text-mid)"></i></div>
-<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">Путь Хранителя</span>
+<span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">{{ L.pathTitle }}</span>
 </div>
-<div style="font-size:12.5px;color:var(--text-secondary);margin:0 4px 16px">Каждый уровень приближает следующую форму</div>
+<div style="font-size:12.5px;color:var(--text-secondary);margin:0 4px 16px">{{ L.pathSub }}</div>
 <div style="display:flex;flex-direction:column;gap:11px">
 <sc-for list="{{ milestones }}" as="ms" hint-placeholder-count="7">
 <div onClick="{{ ms.onTap }}" style="border-radius:16px;padding:13px 15px;display:flex;align-items:center;gap:14px;position:relative;transition:border-color .25s; {{ ms.cardStyle }}">
@@ -757,7 +759,7 @@ input{outline:none}
 <div style="flex:1;min-width:0">
 <div style="font-family:'Spectral',serif;font-size:17px;font-weight:600;color: {{ ms.nameColor }}">{{ ms.name }}</div>
 <div style="font-size:12.5px;color:var(--text-secondary);margin-top:3px">{{ ms.sub }}</div>
-<sc-if value="{{ ms.current }}" hint-placeholder-val="{{ false }}"><div style="font-size:11.5px;color:var(--accent-soft);margin-top:5px">Сейчас здесь</div></sc-if>
+<sc-if value="{{ ms.current }}" hint-placeholder-val="{{ false }}"><div style="font-size:11.5px;color:var(--accent-soft);margin-top:5px">{{ L.hereNow }}</div></sc-if>
 </div>
 <sc-if value="{{ ms.anomaly }}" hint-placeholder-val="{{ false }}">
 <span style="position:relative;font-family:'Spectral',serif;font-size:25px;font-weight:600;color:var(--text-faint);flex:none">
@@ -821,7 +823,7 @@ input{outline:none}
 </div>
 <div style="font-size:11.5px;color:var(--text-faint);margin:0 6px 14px;line-height:1.5">Точки задают, где на персонаже живут эффекты. Перетащите точку на арт или выделите её и подвиньте стрелками. Правки хранятся отдельно для каждой формы и темы.</div>
 <div style="display:flex;gap:8px">
-<button onClick="{{ calSave }}" style="flex:2;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer">Сохранить</button>
+<button onClick="{{ calSave }}" style="flex:2;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer">{{ L.save }}</button>
 <button onClick="{{ calReset }}" style="flex:1;background:var(--surface);border:1px solid var(--surface-2);color:var(--text-mid);font-size:14px;padding:14px;border-radius:13px;cursor:pointer">Сбросить</button>
 </div>
 <div onClick="{{ calExport }}" style="text-align:center;padding:12px;color:var(--text-secondary);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Скопировать JSON</div>
@@ -834,42 +836,42 @@ input{outline:none}
 <sc-if value="{{ navFloating }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:0;right:0;bottom:0;padding:0 12px calc(max(var(--tg-bottom,0px),env(safe-area-inset-bottom,0px)) + 14px);pointer-events:none;z-index:20">
 <div style="pointer-events:auto;background:var(--nav-glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:.5px solid var(--border);border-radius:24px;padding:8px 4px;display:flex;align-items:flex-end;justify-content:space-around;box-shadow:0 10px 30px rgba(0,0,0,.4)">
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Сегодня</span></div>
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Все задачи</span></div>
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--accent-soft)" onClick="{{ openCreate }}"><div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));display:flex;align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 4px 12px var(--accent-a27)"><i class="ti ti-plus" style="font-size:24px;color:#fff"></i></div><span style="font-size:9.5px;white-space:nowrap">Создать</span></div>
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navCalColor }}" onClick="{{ goCal }}"><i class="ti ti-calendar" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Календарь</span></div>
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navAccountColor }}" onClick="{{ goAccount }}"><i class="ti ti-user" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">Профиль</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">{{ L.today }}</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">{{ L.allTasks }}</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--accent-soft)" onClick="{{ openCreate }}"><div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));display:flex;align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 4px 12px var(--accent-a27)"><i class="ti ti-plus" style="font-size:24px;color:#fff"></i></div><span style="font-size:9.5px;white-space:nowrap">{{ L.createWord }}</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navCalColor }}" onClick="{{ goCal }}"><i class="ti ti-calendar" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">{{ L.calendarWord }}</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color: {{ navAccountColor }}" onClick="{{ goAccount }}"><i class="ti ti-user" style="font-size:22px"></i><span style="font-size:9.5px;white-space:nowrap">{{ L.profile }}</span></div>
 </div>
 </div>
 </sc-if>
 <sc-if value="{{ navFlat }}" hint-placeholder-val="{{ true }}">
 <div style="position:absolute;left:0;right:0;bottom:0;border-top:.5px solid var(--border);padding:8px 12px calc(max(var(--tg-bottom,0px),env(safe-area-inset-bottom,0px)) + 12px);display:flex;align-items:flex-end;justify-content:space-around;background:var(--nav);z-index:20">
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Сегодня</span></div>
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Все задачи</span></div>
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;color:var(--accent-soft)" onClick="{{ openCreate }}"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));display:flex;align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 4px 12px var(--accent-a27)"><i class="ti ti-plus" style="font-size:25px;color:#fff"></i></div><span style="font-size:10px;white-space:nowrap">Создать</span></div>
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navCalColor }}" onClick="{{ goCal }}"><i class="ti ti-calendar" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Календарь</span></div>
-<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navAccountColor }}" onClick="{{ goAccount }}"><i class="ti ti-user" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">Профиль</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navHomeColor }}" onClick="{{ goHome }}"><i class="ti ti-sun" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">{{ L.today }}</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navTasksColor }}" onClick="{{ goTasks }}"><i class="ti ti-checklist" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">{{ L.allTasks }}</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;color:var(--accent-soft)" onClick="{{ openCreate }}"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));display:flex;align-items:center;justify-content:center;margin-top:-22px;box-shadow:0 4px 12px var(--accent-a27)"><i class="ti ti-plus" style="font-size:25px;color:#fff"></i></div><span style="font-size:10px;white-space:nowrap">{{ L.createWord }}</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navCalColor }}" onClick="{{ goCal }}"><i class="ti ti-calendar" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">{{ L.calendarWord }}</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color: {{ navAccountColor }}" onClick="{{ goAccount }}"><i class="ti ti-user" style="font-size:23px"></i><span style="font-size:10px;white-space:nowrap">{{ L.profile }}</span></div>
 </div>
 </sc-if>
 
 <sc-if value="{{ undo }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:16px;right:16px;bottom:96px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:25">
 <span style="font-size:13.5px;color:var(--text-mid)">{{ undoLabel }}</span>
-<button onClick="{{ onUndo }}" style="background:none;border:none;color:var(--accent-soft);font-size:13.5px;font-weight:600;cursor:pointer;padding:0">Отменить</button>
+<button onClick="{{ onUndo }}" style="background:none;border:none;color:var(--accent-soft);font-size:13.5px;font-weight:600;cursor:pointer;padding:0">{{ L.undoBtn }}</button>
 </div>
 </sc-if>
 
 <sc-if value="{{ themeToast }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:16px;right:16px;bottom:96px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:26">
 <i class="ti ti-palette" style="font-size:17px;color:var(--accent-soft)"></i>
-<span style="font-size:13.5px;color:var(--text-mid)">Тема применена</span>
+<span style="font-size:13.5px;color:var(--text-mid)">{{ L.themeApplied }}</span>
 </div>
 </sc-if>
 
 <sc-if value="{{ pathToast }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:16px;right:16px;bottom:96px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:26">
 <i class="ti ti-flame" style="font-size:17px;color:var(--accent-soft)"></i>
-<span style="font-size:13.5px;color:var(--text-mid)">Что-то дремлет здесь…</span>
+<span style="font-size:13.5px;color:var(--text-mid)">{{ L.somethingSleeps }}</span>
 </div>
 </sc-if>
 
@@ -883,7 +885,7 @@ input{outline:none}
 <sc-if value="{{ capToast }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:16px;right:16px;bottom:152px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:27">
 <i class="ti ti-flame" style="font-size:17px;color:var(--accent-soft)"></i>
-<span style="font-size:13.5px;color:var(--text-mid)">Дух собрал достаточно искр на сегодня</span>
+<span style="font-size:13.5px;color:var(--text-mid)">{{ L.spiritEnough }}</span>
 </div>
 </sc-if>
 
@@ -892,7 +894,7 @@ input{outline:none}
 <div style="position:absolute;left:0;right:0;bottom:0;z-index:36;background:var(--sheet);border-radius:24px 24px 0 0;padding:10px 18px 30px;max-height:90%;overflow-y:auto;box-shadow:0 -14px 40px rgba(0,0,0,.5);animation:sheetIn .34s cubic-bezier(.2,.8,.2,1)">
 <div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px"></div>
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;min-height:30px">
-<sc-if value="{{ ctChosen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ createBack }}" style="display:flex;align-items:center;gap:3px;cursor:pointer;color:var(--text-secondary)"><i class="ti ti-chevron-left" style="font-size:18px"></i><span style="font-size:14px">Назад</span></div></sc-if>
+<sc-if value="{{ ctChosen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ createBack }}" style="display:flex;align-items:center;gap:3px;cursor:pointer;color:var(--text-secondary)"><i class="ti ti-chevron-left" style="font-size:18px"></i><span style="font-size:14px">{{ L.back }}</span></div></sc-if>
 <sc-if value="{{ ctNone }}" hint-placeholder-val="{{ true }}"><span style="font-family:'Spectral',serif;font-size:20px;font-weight:600;color:var(--text-primary)">{{ createTitle }}</span></sc-if>
 <sc-if value="{{ ctChosen }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Spectral',serif;font-size:17px;font-weight:600;color:var(--text-primary)">{{ createTitle }}</span></sc-if>
 <div onClick="{{ closeCreate }}" style="width:30px;height:30px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-x" style="font-size:16px;color:var(--text-secondary)"></i></div>
@@ -902,17 +904,17 @@ input{outline:none}
 <div style="display:flex;flex-direction:column;gap:11px">
 <div onClick="{{ pickGoalType }}" style="background:var(--surface);border-radius:15px;padding:15px;display:flex;align-items:center;gap:14px;cursor:pointer">
 <div style="width:44px;height:44px;border-radius:12px;flex:none;background:rgba(217,144,88,.15);display:flex;align-items:center;justify-content:center"><i class="ti ti-target" style="font-size:23px;color:var(--accent-soft)"></i></div>
-<div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--text-primary)">Цель</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px">Крупная задача с дедлайном и шагами</div></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--text-primary)">{{ L.goalWord }}</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px">{{ L.goalCardDesc }}</div></div>
 <i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint)"></i>
 </div>
 <div onClick="{{ pickTaskType }}" style="background:var(--surface);border-radius:15px;padding:15px;display:flex;align-items:center;gap:14px;cursor:pointer">
 <div style="width:44px;height:44px;border-radius:12px;flex:none;background:rgba(141,168,108,.15);display:flex;align-items:center;justify-content:center"><i class="ti ti-circle-check" style="font-size:23px;color:#A6C27E"></i></div>
-<div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--text-primary)">Задача</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px">Одно конкретное действие с датой</div></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--text-primary)">{{ L.taskWord }}</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px">{{ L.taskCardDesc }}</div></div>
 <i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint)"></i>
 </div>
 <div onClick="{{ pickHabitType }}" style="background:var(--surface);border-radius:15px;padding:15px;display:flex;align-items:center;gap:14px;cursor:pointer">
 <div style="width:44px;height:44px;border-radius:12px;flex:none;background:rgba(79,160,136,.15);display:flex;align-items:center;justify-content:center"><i class="ti ti-flame" style="font-size:23px;color:#5FB39A"></i></div>
-<div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--text-primary)">Привычка</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px">Регулярное действие со стриком</div></div>
+<div style="flex:1"><div style="font-size:16px;font-weight:600;color:var(--text-primary)">{{ L.habitWord }}</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:2px">{{ L.habitCardDesc }}</div></div>
 <i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint)"></i>
 </div>
 </div>
@@ -920,18 +922,18 @@ input{outline:none}
 
 <sc-if value="{{ ctGoal }}" hint-placeholder-val="{{ false }}">
 <div>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Название</label>
-<input value="{{ draftName }}" onChange="{{ onDraftName }}" placeholder="Например, Прочитать «Дюну»" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Цвет</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldName }}</label>
+<input value="{{ draftName }}" onChange="{{ onDraftName }}" placeholder="{{ L.phGoalName }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldColor }}</label>
 <div style="display:flex;gap:12px;margin-bottom:18px">
 <sc-for list="{{ swatches }}" as="sw" hint-placeholder-count="6"><div onClick="{{ sw.onPick }}" style="width:32px;height:32px;border-radius:50%;cursor:pointer;background: {{ sw.color }}; {{ sw.ring }}"></div></sc-for>
 </div>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Дедлайн</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldDeadline }}</label>
 <div style="display:flex;gap:8px;margin-bottom:10px">
 <sc-for list="{{ quickDeadlines }}" as="q" hint-placeholder-count="3"><div onClick="{{ q.onTap }}" style="flex:1;text-align:center;padding:9px;border-radius:10px;font-size:13px;cursor:pointer; {{ q.chipStyle }}">{{ q.label }}</div></sc-for>
 </div>
 <div onClick="{{ openDeadlinePicker }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:13px 14px;font-size:15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:18px"><span style="color: {{ deadlineValColor }}">{{ draftDeadlineLabel }}</span><i class="ti ti-calendar-event" style="font-size:18px;color:var(--accent)"></i></div>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 8px">Шаги</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 8px">{{ L.fldSteps }}</label>
 <sc-if value="{{ hasSteps }}" hint-placeholder-val="{{ false }}">
 <div style="margin-bottom:10px">
 <sc-for list="{{ draftSteps }}" as="st" hint-placeholder-count="0">
@@ -946,11 +948,11 @@ input{outline:none}
 </div>
 </sc-if>
 <div style="display:flex;gap:8px;margin-bottom:10px">
-<input value="{{ draftStepName }}" onChange="{{ onDraftStepName }}" placeholder="Новый шаг" style="flex:1;min-width:0;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:11px 12px;font-size:14px;color:var(--text-primary);color-scheme:dark"/>
+<input value="{{ draftStepName }}" onChange="{{ onDraftStepName }}" placeholder="{{ L.phStep }}" style="flex:1;min-width:0;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:11px 12px;font-size:14px;color:var(--text-primary);color-scheme:dark"/>
 <div onClick="{{ openStepDatePicker }}" style="width:132px;flex:none;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 11px;font-size:13px;color:var(--text-primary);display:flex;align-items:center;justify-content:space-between;gap:6px;cursor:pointer"><span>{{ draftStepDateLabel }}</span><i class="ti ti-calendar-event" style="font-size:15px;color:var(--accent)"></i></div>
 </div>
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<span style="font-size:12.5px;color:var(--text-secondary);flex:none">Сложность шага</span>
+<span style="font-size:12.5px;color:var(--text-secondary);flex:none">{{ L.stepDifficulty }}</span>
 <div style="display:flex;gap:5px;flex:1">
 <sc-for list="{{ stepDiffEmbers }}" as="de" hint-placeholder-count="5">
 <div onClick="{{ de.onTap }}" style="flex:1;height:34px;border-radius:9px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -959,27 +961,27 @@ input{outline:none}
 </sc-for>
 </div>
 </div>
-<div onClick="{{ addStep }}" style="text-align:center;padding:11px;border-radius:11px;border:1px dashed var(--border);color:var(--text-mid);font-size:14px;cursor:pointer;margin-bottom:18px">+ Добавить шаг</div>
-<button onClick="{{ saveGoal }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ saveStyle }}">Создать цель</button>
+<div onClick="{{ addStep }}" style="text-align:center;padding:11px;border-radius:11px;border:1px dashed var(--border);color:var(--text-mid);font-size:14px;cursor:pointer;margin-bottom:18px">{{ L.addStepBtn }}</div>
+<button onClick="{{ saveGoal }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ saveStyle }}">{{ L.createGoalBtn }}</button>
 </div>
 </sc-if>
 
 <sc-if value="{{ ctTask }}" hint-placeholder-val="{{ false }}">
 <div>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Куда добавить</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.attachWhere }}</label>
 <div style="display:flex;gap:4px;background:var(--inset);border:1px solid var(--surface-2);border-radius:12px;padding:4px;margin-bottom:16px">
-<div onClick="{{ setAttachSolo }}" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-size:13.5px;cursor:pointer;transition:all .2s; {{ attachSoloStyle }}">Отдельная</div>
-<div onClick="{{ setAttachGoal }}" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-size:13.5px;cursor:pointer;transition:all .2s; {{ attachGoalStyle }}">К цели</div>
+<div onClick="{{ setAttachSolo }}" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-size:13.5px;cursor:pointer;transition:all .2s; {{ attachSoloStyle }}">{{ L.attachSolo }}</div>
+<div onClick="{{ setAttachGoal }}" style="flex:1;text-align:center;padding:9px;border-radius:9px;font-size:13.5px;cursor:pointer;transition:all .2s; {{ attachGoalStyle }}">{{ L.attachGoal }}</div>
 </div>
 <sc-if value="{{ attachGoal }}" hint-placeholder-val="{{ false }}">
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 8px">Цель</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 8px">{{ L.goalWord }}</label>
 <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
 <sc-for list="{{ goalsForPicker }}" as="gp" hint-placeholder-count="3"><div onClick="{{ gp.onPick }}" style="display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:13px; {{ gp.chipStyle }}"><span style="width:9px;height:9px;border-radius:50%;background: {{ gp.dot }}"></span>{{ gp.name }}</div></sc-for>
 </div>
 </sc-if>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Название</label>
-<input value="{{ draftName }}" onChange="{{ onDraftName }}" placeholder="Например, Позвонить в банк" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Сложность</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldName }}</label>
+<input value="{{ draftName }}" onChange="{{ onDraftName }}" placeholder="{{ L.phTaskName }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldDifficulty }}</label>
 <div style="display:flex;gap:6px;margin-bottom:8px">
 <sc-for list="{{ diffEmbers }}" as="de" hint-placeholder-count="5">
 <div onClick="{{ de.onTap }}" style="flex:1;height:44px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -991,21 +993,21 @@ input{outline:none}
 <span style="font-size:13px;font-weight:500;color:var(--text-primary)">{{ diffLabel }}</span>
 <span style="font-size:13px;color:var(--accent-soft)">{{ diffPreview }}</span>
 </div>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Дата</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldDate }}</label>
 <div onClick="{{ openTaskDatePicker }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:13px 14px;font-size:15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:18px"><span style="color:var(--text-primary)">{{ draftDateLabel }}</span><i class="ti ti-calendar-event" style="font-size:18px;color:var(--accent)"></i></div>
-<button onClick="{{ saveTask }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ saveStyle }}">Создать задачу</button>
+<button onClick="{{ saveTask }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ saveStyle }}">{{ L.createTaskBtn }}</button>
 </div>
 </sc-if>
 
 <sc-if value="{{ ctHabit }}" hint-placeholder-val="{{ false }}">
 <div>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Название</label>
-<input value="{{ draftName }}" onChange="{{ onDraftName }}" placeholder="Например, Стакан воды утром" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Расписание</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldName }}</label>
+<input value="{{ draftName }}" onChange="{{ onDraftName }}" placeholder="{{ L.phHabitName }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldSchedule }}</label>
 <div style="display:flex;gap:4px;background:var(--inset);border:1px solid var(--surface-2);border-radius:12px;padding:4px;margin-bottom:14px">
-<div onClick="{{ setSchedDaily }}" style="flex:1;text-align:center;padding:9px 4px;border-radius:9px;font-size:12.5px;cursor:pointer;transition:all .2s; {{ schedDailyStyle }}">Ежедневно</div>
-<div onClick="{{ setSchedDays }}" style="flex:1;text-align:center;padding:9px 4px;border-radius:9px;font-size:12.5px;cursor:pointer;transition:all .2s; {{ schedDaysStyle }}">По дням</div>
-<div onClick="{{ setSchedCount }}" style="flex:1;text-align:center;padding:9px 4px;border-radius:9px;font-size:12.5px;cursor:pointer;transition:all .2s; {{ schedCountStyle }}">N в неделю</div>
+<div onClick="{{ setSchedDaily }}" style="flex:1;text-align:center;padding:9px 4px;border-radius:9px;font-size:12.5px;cursor:pointer;transition:all .2s; {{ schedDailyStyle }}">{{ L.schedDaily }}</div>
+<div onClick="{{ setSchedDays }}" style="flex:1;text-align:center;padding:9px 4px;border-radius:9px;font-size:12.5px;cursor:pointer;transition:all .2s; {{ schedDaysStyle }}">{{ L.schedDays }}</div>
+<div onClick="{{ setSchedCount }}" style="flex:1;text-align:center;padding:9px 4px;border-radius:9px;font-size:12.5px;cursor:pointer;transition:all .2s; {{ schedCountStyle }}">{{ L.schedCountSeg }}</div>
 </div>
 <sc-if value="{{ schedDays }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;gap:6px;margin-bottom:16px">
@@ -1015,11 +1017,11 @@ input{outline:none}
 <sc-if value="{{ schedCount }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px">
 <div onClick="{{ decCount }}" style="width:38px;height:38px;border-radius:10px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text-mid);cursor:pointer">−</div>
-<span style="font-size:15px;color:var(--text-primary);min-width:96px;text-align:center">{{ countVal }} раз в неделю</span>
+<span style="font-size:15px;color:var(--text-primary);min-width:96px;text-align:center">{{ countVal }} {{ L.perWeek }}</span>
 <div onClick="{{ incCount }}" style="width:38px;height:38px;border-radius:10px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text-mid);cursor:pointer">+</div>
 </div>
 </sc-if>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Сложность</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldDifficulty }}</label>
 <div style="display:flex;gap:6px;margin-bottom:8px">
 <sc-for list="{{ diffEmbers }}" as="de" hint-placeholder-count="5">
 <div onClick="{{ de.onTap }}" style="flex:1;height:44px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -1031,9 +1033,9 @@ input{outline:none}
 <span style="font-size:13px;font-weight:500;color:var(--text-primary)">{{ diffLabel }}</span>
 <span style="font-size:13px;color:var(--accent-soft)">{{ diffPreview }}</span>
 </div>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Когда / контекст (необязательно)</label>
-<input value="{{ draftContext }}" onChange="{{ onDraftContext }}" placeholder="Например, после пробуждения" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:18px;color-scheme:dark"/>
-<button onClick="{{ saveHabit }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ saveStyle }}">Создать привычку</button>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldContext }}</label>
+<input value="{{ draftContext }}" onChange="{{ onDraftContext }}" placeholder="{{ L.phContext }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:18px;color-scheme:dark"/>
+<button onClick="{{ saveHabit }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ saveStyle }}">{{ L.createHabitBtn }}</button>
 </div>
 </sc-if>
 </div>
@@ -1085,8 +1087,8 @@ input{outline:none}
 </div>
 </sc-if>
 <div style="display:flex;gap:8px;margin-top:16px">
-<div onClick="{{ dpToday }}" style="flex:1;text-align:center;padding:11px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);color:var(--accent-soft);font-size:14px;font-weight:500;cursor:pointer">Сегодня</div>
-<div onClick="{{ dpTomorrow }}" style="flex:1;text-align:center;padding:11px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);color:var(--text-mid);font-size:14px;cursor:pointer">Завтра</div>
+<div onClick="{{ dpToday }}" style="flex:1;text-align:center;padding:11px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);color:var(--accent-soft);font-size:14px;font-weight:500;cursor:pointer">{{ L.today }}</div>
+<div onClick="{{ dpTomorrow }}" style="flex:1;text-align:center;padding:11px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);color:var(--text-mid);font-size:14px;cursor:pointer">{{ L.tomorrow }}</div>
 </div>
 </div>
 </sc-if>
@@ -1120,10 +1122,10 @@ input{outline:none}
 </sc-for>
 </div>
 </sc-if>
-<div style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary);margin-top:20px;animation:popIn .5s ease both">Цель достигнута</div>
-<div style="font-size:14px;color:var(--text-secondary);margin-top:6px;max-width:250px">«{{ celebGoalName }}» завершена — герой набирает силу</div>
-<button onClick="{{ dismissCelebrate }}" style="margin-top:24px;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:14px;font-weight:600;padding:12px 28px;border-radius:999px;cursor:pointer">Продолжить</button>
-<button onClick="{{ celebArchive }}" style="margin-top:12px;background:none;border:none;color:var(--text-secondary);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Убрать в достигнутые</button>
+<div style="font-family:'Spectral',serif;font-size:26px;font-weight:600;color:var(--text-primary);margin-top:20px;animation:popIn .5s ease both">{{ L.goalReached }}</div>
+<div style="font-size:14px;color:var(--text-secondary);margin-top:6px;max-width:250px">«{{ celebGoalName }}» {{ L.celebTail }}</div>
+<button onClick="{{ dismissCelebrate }}" style="margin-top:24px;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:14px;font-weight:600;padding:12px 28px;border-radius:999px;cursor:pointer">{{ L.continueBtn }}</button>
+<button onClick="{{ celebArchive }}" style="margin-top:12px;background:none;border:none;color:var(--text-secondary);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">{{ L.moveToAchieved }}</button>
 </div>
 </sc-if>
 
@@ -1135,10 +1137,10 @@ input{outline:none}
 <span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;color:var(--text-primary)">{{ editTitle }}</span>
 <div onClick="{{ closeEdit }}" style="width:30px;height:30px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-x" style="font-size:16px;color:var(--text-secondary)"></i></div>
 </div>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Название</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldName }}</label>
 <input value="{{ editName }}" onChange="{{ onEditName }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
 <sc-if value="{{ editHasDiff }}" hint-placeholder-val="{{ false }}">
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Сложность</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldDifficulty }}</label>
 <div style="display:flex;gap:6px;margin-bottom:8px">
 <sc-for list="{{ editDiffEmbers }}" as="de" hint-placeholder-count="5">
 <div onClick="{{ de.onTap }}" style="flex:1;height:44px;border-radius:11px;background:var(--inset);border:1px solid var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -1152,7 +1154,7 @@ input{outline:none}
 </div>
 </sc-if>
 <sc-if value="{{ editHasColor }}" hint-placeholder-val="{{ false }}">
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Цвет</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldColor }}</label>
 <div style="display:flex;gap:12px;margin-bottom:16px">
 <sc-for list="{{ editSwatches }}" as="sw" hint-placeholder-count="6"><div onClick="{{ sw.onPick }}" style="width:32px;height:32px;border-radius:50%;cursor:pointer;background: {{ sw.color }}; {{ sw.ring }}"></div></sc-for>
 </div>
@@ -1161,7 +1163,7 @@ input{outline:none}
 <label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ editDateCaption }}</label>
 <div onClick="{{ openEditDatePicker }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:13px 14px;font-size:15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:20px"><span style="color:var(--text-primary)">{{ editDateLabel }}</span><i class="ti ti-calendar-event" style="font-size:18px;color:var(--accent)"></i></div>
 </sc-if>
-<button onClick="{{ saveEdit }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ editSaveStyle }}">Сохранить</button>
+<button onClick="{{ saveEdit }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ editSaveStyle }}">{{ L.save }}</button>
 <div onClick="{{ requestDelete }}" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;padding:8px;color:#CF8270;font-size:14px;cursor:pointer"><i class="ti ti-trash" style="font-size:16px"></i><span>{{ editDeleteLabel }}</span></div>
 </div>
 </sc-if>
@@ -1171,12 +1173,29 @@ input{outline:none}
 <div style="position:absolute;left:0;right:0;bottom:0;z-index:34;background:var(--sheet);border-radius:24px 24px 0 0;padding:10px 18px 28px;box-shadow:0 -14px 40px rgba(0,0,0,.5);animation:sheetIn .34s cubic-bezier(.2,.8,.2,1)">
 <div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px"></div>
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-<span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;color:var(--text-primary)">Имя Хранителя</span>
+<span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;color:var(--text-primary)">{{ L.renameTitle }}</span>
 <div onClick="{{ closeRename }}" style="width:30px;height:30px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-x" style="font-size:16px;color:var(--text-secondary)"></i></div>
 </div>
-<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">Имя</label>
+<label style="display:block;font-size:12.5px;color:var(--text-secondary);margin:0 2px 7px">{{ L.fldRename }}</label>
 <input value="{{ renameVal }}" onChange="{{ onRenameChange }}" maxLength="{{ 20 }}" style="width:100%;background:var(--inset);border:1px solid var(--surface-2);border-radius:11px;padding:12px 13px;font-size:15px;color:var(--text-primary);margin-bottom:16px;color-scheme:dark"/>
-<button onClick="{{ saveRename }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ renameSaveStyle }}">Сохранить</button>
+<button onClick="{{ saveRename }}" style="width:100%;background:linear-gradient(135deg,var(--accent-soft),var(--accent-deep));border:none;color:var(--on-accent);font-size:15.5px;font-weight:600;padding:14px;border-radius:13px;cursor:pointer; {{ renameSaveStyle }}">{{ L.save }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ langPickerOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:35;background:rgba(18,18,15,.58)" onClick="{{ closeLangPicker }}"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:36;background:var(--sheet);border-radius:24px 24px 0 0;padding:10px 18px 28px;box-shadow:0 -14px 40px rgba(0,0,0,.5);animation:sheetIn .34s cubic-bezier(.2,.8,.2,1)">
+<div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+<span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;color:var(--text-primary)">{{ langTitle }}</span>
+<div onClick="{{ closeLangPicker }}" style="width:30px;height:30px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><i class="ti ti-x" style="font-size:16px;color:var(--text-secondary)"></i></div>
+</div>
+<sc-for list="{{ langOptions }}" as="lo" hint-placeholder-count="3">
+<div onClick="{{ lo.onTap }}" style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:13px;margin-bottom:8px;cursor:pointer;transition:background .2s; {{ lo.rowStyle }}">
+<span style="flex:1;font-size:15.5px;font-weight:600;color:var(--text-primary)">{{ lo.label }}</span>
+<i class="ti ti-check" style="font-size:19px; {{ lo.checkStyle }}"></i>
+</div>
+</sc-for>
 </div>
 </sc-if>
 
@@ -1186,10 +1205,10 @@ input{outline:none}
 <div style="width:74px;height:74px;border-radius:19px;border:1.5px solid var(--border-strong);background:var(--inset);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
 <dc-import name="CharacterStage" size="56" level="{{ heroLevel }}" theme="{{ themeId }}" hint-size="56px,56px"></dc-import>
 </div>
-<div style="font-family:'Spectral',serif;font-size:18px;font-weight:600;color:var(--text-primary)">Хранитель насторожился</div>
+<div style="font-family:'Spectral',serif;font-size:18px;font-weight:600;color:var(--text-primary)">{{ L.confirmTitle }}</div>
 <div style="font-size:13.5px;color:var(--text-secondary);line-height:1.55;margin:8px 0 18px">{{ confirmText }}</div>
-<button onClick="{{ cancelDelete }}" style="width:100%;background:var(--accent);border:none;color:var(--on-accent);font-size:14.5px;font-weight:600;padding:13px;border-radius:12px;cursor:pointer">Оставить, я справлюсь</button>
-<button onClick="{{ confirmDeleteTap }}" style="width:100%;background:none;border:none;color:#CF8270;font-size:13.5px;padding:13px 0 2px;cursor:pointer">Всё равно удалить</button>
+<button onClick="{{ cancelDelete }}" style="width:100%;background:var(--accent);border:none;color:var(--on-accent);font-size:14.5px;font-weight:600;padding:13px;border-radius:12px;cursor:pointer">{{ L.keepBtn }}</button>
+<button onClick="{{ confirmDeleteTap }}" style="width:100%;background:none;border:none;color:#CF8270;font-size:13.5px;padding:13px 0 2px;cursor:pointer">{{ L.deleteAnyway }}</button>
 </div>
 </div>
 </sc-if>
@@ -1206,8 +1225,8 @@ input{outline:none}
 </div>
 </div>
 <div style="font-family:'Spectral',serif;font-size:13px;color:var(--accent-soft);margin-top:18px;letter-spacing:3px;text-transform:uppercase;white-space:nowrap">{{ leveledCaption }}</div>
-<div style="font-family:'Spectral',serif;font-size:40px;font-weight:600;color:var(--text-primary);margin-top:2px;animation:popIn .5s ease both">Уровень {{ leveledNum }}</div>
-<button onClick="{{ dismissLevel }}" style="margin-top:22px;background:none;border:1px solid var(--accent-soft);color:var(--accent-soft);font-size:14px;font-weight:600;padding:11px 28px;border-radius:999px;cursor:pointer">Дальше</button>
+<div style="font-family:'Spectral',serif;font-size:40px;font-weight:600;color:var(--text-primary);margin-top:2px;animation:popIn .5s ease both">{{ L.levelWord }} {{ leveledNum }}</div>
+<button onClick="{{ dismissLevel }}" style="margin-top:22px;background:none;border:1px solid var(--accent-soft);color:var(--accent-soft);font-size:14px;font-weight:600;padding:11px 28px;border-radius:999px;cursor:pointer">{{ L.nextBtn }}</button>
 </div>
 </sc-if>
 
@@ -1219,7 +1238,7 @@ input{outline:none}
 <dc-import name="CharacterStage" size="90" level="{{ heroLevel }}" theme="{{ themeId }}" hint-size="90px,90px"></dc-import>
 </div>
 </div>
-<div style="font-family:'Spectral',serif;font-size:12px;color:var(--accent-soft);letter-spacing:3px;text-transform:uppercase;margin-top:18px">Хранитель</div>
+<div style="font-family:'Spectral',serif;font-size:12px;color:var(--accent-soft);letter-spacing:3px;text-transform:uppercase;margin-top:18px">{{ L.appName }}</div>
 </div>
 </sc-if>
 
@@ -1227,6 +1246,8 @@ input{outline:none}
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
+const LANGS = [{"code": "ru", "label": "Русский"}, {"code": "uz", "label": "O'zbekcha"}, {"code": "en", "label": "English"}];
+const I18N = {"ru": {"today": "Сегодня", "todayLow": "сегодня", "tomorrow": "Завтра", "done": "Выполнено", "goalReached": "Цель достигнута", "overdueDot": "Просрочено · ", "overdueLabel": "просрочено", "lastDay": "последний день", "taskWord": "Задача", "goalWord": "Цель", "stepWord": "Шаг", "habitWord": "Привычка", "streakWord": "стрик", "daysShort": "дн.", "lvlShort": "ур. ", "levelWord": "Уровень", "calendarWord": "Календарь", "createWord": "Создать", "back": "Назад", "save": "Сохранить", "nextBtn": "Дальше", "habitsHeading": "Привычки", "allTasks": "Все задачи", "soloSection": "Задачи без цели", "allAchieved": "Все достигнутые задачи", "archiveEmpty": "Пока пусто. Достигай целей — герой сложит их сюда как трофеи.", "quietDay": "Тихий день — искр не было", "monthSummary": "Итоги месяца", "sparksMonth": "Искры за месяц", "tasksClosed": "задач закрыто", "bestStreakCap": "лучший стрик", "profile": "Профиль", "appearance": "Внешний вид", "apply": "Применить", "syncPrefix": "Синхронизация: ", "statActiveGoals": "Активные цели", "statStepsDone": "Шагов выполнено", "statBestStreak": "Лучший стрик", "statHabitsToday": "Привычки сегодня", "actHelp": "Помощь и поддержка", "settingsTitle": "Настройки", "sectionGeneral": "Общие", "sectionPrefs": "Предпочтения", "language": "Язык", "firstDayWeek": "Первый день недели", "monday": "Понедельник", "sunday": "Воскресенье", "tglSounds": "Звуковые эффекты", "tglSoundsHint": "Звук при отметке задач", "tglHaptics": "Виброотклик", "tglHapticsHint": "Тактильная отдача", "tglStarfield": "Живой фон", "tglStarfieldHint": "Анимация ауры и частиц", "notifTitle": "Уведомления", "pushTitle": "Push-уведомления", "pushSub": "Главный переключатель", "sectionWhat": "Что присылать", "ntTasks": "Напоминания о задачах", "ntTasksHint": "За час до срока", "ntHabitsHint": "Ежедневное напоминание", "ntAch": "Достижения", "ntAchHint": "Новый уровень Хранителя", "ntWeekly": "Еженедельный отчёт", "ntWeeklyHint": "По понедельникам утром", "helpTitle": "Помощь", "sectionFaq": "Частые вопросы", "sectionContact": "Связаться с нами", "faqQ1": "Кто такой Хранитель?", "faqA1": "Хранитель — ваш спутник, который растёт вместе с вами. Каждая выполненная задача и привычка питает его и поднимает уровень.", "faqQ2": "Как персонаж набирает уровень?", "faqA2": "За задачи и привычки начисляется рост. Когда шкала заполняется до 100%, Хранитель переходит на новый уровень и меняет облик.", "faqQ3": "Чем цель отличается от привычки?", "faqA3": "Цель — это результат с шагами и сроком. Привычка — регулярное действие по расписанию, которое формирует ритм.", "faqQ4": "Сохранятся ли мои данные?", "faqA4": "Все данные хранятся в вашем аккаунте Telegram и синхронизируются между устройствами автоматически.", "hlContact": "Написать в поддержку", "hlChannel": "Наш Telegram-канал", "hlBug": "Сообщить о проблеме", "aboutTitle": "О приложении", "appName": "Хранитель", "versionLabel": "Версия 2.4.0", "aboutDesc": "Спутник продуктивности, который растёт вместе с вами. Выполняйте задачи и привычки — и наблюдайте, как крепнет ваш Хранитель.", "madeWith": "Сделано с заботой · 2026", "pathTitle": "Путь Хранителя", "pathSub": "Каждый уровень приближает следующую форму", "hereNow": "Сейчас здесь", "msSmolder": "Тлеющий", "msKindled": "Зажжённый", "msStrong": "Окрепший", "msBright": "Яркий", "msBlazing": "Пылающий", "themeApplied": "Тема применена", "somethingSleeps": "Что-то дремлет здесь…", "spiritEnough": "Дух собрал достаточно искр на сегодня", "newGoal": "Новая цель", "newTask": "Новая задача", "newHabit": "Новая привычка", "goalCardDesc": "Крупная задача с дедлайном и шагами", "taskCardDesc": "Одно конкретное действие с датой", "habitCardDesc": "Регулярное действие со стриком", "fldName": "Название", "fldColor": "Цвет", "fldDeadline": "Дедлайн", "fldSteps": "Шаги", "fldDifficulty": "Сложность", "fldDate": "Дата", "fldSchedule": "Расписание", "fldContext": "Когда / контекст (необязательно)", "stepDifficulty": "Сложность шага", "addStepBtn": "+ Добавить шаг", "phGoalName": "Например, Прочитать «Дюну»", "phStep": "Новый шаг", "phTaskName": "Например, Позвонить в банк", "phHabitName": "Например, Стакан воды утром", "phContext": "Например, после пробуждения", "createGoalBtn": "Создать цель", "createTaskBtn": "Создать задачу", "createHabitBtn": "Создать привычку", "attachWhere": "Куда добавить", "attachSolo": "Отдельная", "attachGoal": "К цели", "schedDaily": "Ежедневно", "schedDays": "По дням", "schedCountSeg": "N в неделю", "perWeek": "раз в неделю", "qd1w": "1 неделя", "qd2w": "2 недели", "qd1m": "1 месяц", "chooseDate": "Выберите дату", "continueBtn": "Продолжить", "moveToAchieved": "Убрать в достигнутые", "celebTail": "завершена — герой набирает силу", "renameTitle": "Имя Хранителя", "fldRename": "Имя", "confirmTitle": "Хранитель насторожился", "keepBtn": "Оставить, я справлюсь", "deleteAnyway": "Всё равно удалить", "confirmGoal": "Цель «{n}» ещё не достигнута — герой в неё верил. Точно отпускаем?", "confirmStep": "Шаг «{n}» ещё не сделан. Хранитель сделает вид, что не заметил… но точно удаляем?", "confirmHabit": "Привычка «{n}» держит стрик. Точно удаляем?", "confirmTask": "Задача «{n}» ещё не выполнена. Хранитель сделает вид, что не заметил… но точно удаляем?", "editGoal": "Правка цели", "editStep": "Правка шага", "editHabit": "Правка привычки", "editTask": "Правка задачи", "delGoal": "Удалить цель", "delStep": "Удалить шаг", "delHabit": "Удалить привычку", "delTask": "Удалить задачу", "newForm": "Новый облик", "newTitle": "Новый титул", "newLevel": "Новый уровень", "taskChecked": "Задача отмечена · ", "habitChecked": "Привычка отмечена · ", "syncLocal": "Локально (вне Telegram)", "syncNoCloud": "Нет связи с облаком", "syncLoading": "Загрузка…", "syncCloudOk": "Облако ✓", "syncCloudFail": "Облако недоступно — локально", "syncCloudWait": "Облако · ожидание записи", "thAmber": "Янтарь", "thAmberCap": "Тёплая нейтральная, как свеча", "thAzure": "Лазурь", "thAzureCap": "Прохладная и собранная", "thSpark": "Искра", "thSparkCap": "Тёплая и смелая, уголёк в ночи", "abRate": "Оценить приложение", "abTerms": "Условия использования", "abPrivacy": "Политика конфиденциальности", "mFull": ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"], "mGen": ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"], "mShort": ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"], "weekdays": ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"], "weekHeaders": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], "diffNames": ["Мелочь", "Обычная", "Серьёзная", "Сложная", "Вызов"], "pl_days": ["день", "дня", "дней"], "pl_steps": ["шаг", "шага", "шагов"], "pl_sparks": ["искра", "искры", "искр"], "pl_tasks": ["задача", "задачи", "задач"], "undoBtn": "Отменить"}, "uz": {"today": "Bugun", "todayLow": "bugun", "tomorrow": "Ertaga", "done": "Bajarildi", "goalReached": "Maqsadga erishildi", "overdueDot": "Kechikdi · ", "overdueLabel": "kechikdi", "lastDay": "oxirgi kun", "taskWord": "Vazifa", "goalWord": "Maqsad", "stepWord": "Qadam", "habitWord": "Odat", "streakWord": "seriya", "daysShort": "kun", "lvlShort": "daraja ", "levelWord": "Daraja", "calendarWord": "Kalendar", "createWord": "Yaratish", "back": "Orqaga", "save": "Saqlash", "nextBtn": "Keyingi", "habitsHeading": "Odatlar", "allTasks": "Barcha vazifalar", "soloSection": "Maqsadsiz vazifalar", "allAchieved": "Barcha erishilgan vazifalar", "archiveEmpty": "Hozircha bo'sh. Maqsadlarga erish — qahramon ularni bu yerga trofey sifatida yig'adi.", "quietDay": "Sokin kun — uchqun bo'lmadi", "monthSummary": "Oy yakunlari", "sparksMonth": "Oylik uchqunlar", "tasksClosed": "vazifa yopildi", "bestStreakCap": "eng yaxshi seriya", "profile": "Profil", "appearance": "Ko'rinish", "apply": "Qo'llash", "syncPrefix": "Sinxronizatsiya: ", "statActiveGoals": "Faol maqsadlar", "statStepsDone": "Bajarilgan qadamlar", "statBestStreak": "Eng yaxshi seriya", "statHabitsToday": "Bugungi odatlar", "actHelp": "Yordam va qo'llab-quvvatlash", "settingsTitle": "Sozlamalar", "sectionGeneral": "Umumiy", "sectionPrefs": "Afzalliklar", "language": "Til", "firstDayWeek": "Hafta boshi", "monday": "Dushanba", "sunday": "Yakshanba", "tglSounds": "Ovoz effektlari", "tglSoundsHint": "Vazifa belgilaganda ovoz", "tglHaptics": "Tebranish", "tglHapticsHint": "Sezilarli javob", "tglStarfield": "Jonli fon", "tglStarfieldHint": "Aura va zarrachalar animatsiyasi", "notifTitle": "Bildirishnomalar", "pushTitle": "Push-bildirishnomalar", "pushSub": "Asosiy o'tkazgich", "sectionWhat": "Nima yuborilsin", "ntTasks": "Vazifa eslatmalari", "ntTasksHint": "Muddatdan bir soat oldin", "ntHabitsHint": "Kunlik eslatma", "ntAch": "Yutuqlar", "ntAchHint": "Qo'riqchining yangi darajasi", "ntWeekly": "Haftalik hisobot", "ntWeeklyHint": "Dushanba kunlari ertalab", "helpTitle": "Yordam", "sectionFaq": "Ko'p beriladigan savollar", "sectionContact": "Biz bilan bog'lanish", "faqQ1": "Qo'riqchi kim?", "faqA1": "Qo'riqchi — siz bilan birga o'sadigan hamrohingiz. Har bir bajarilgan vazifa va odat uni oziqlantiradi va darajasini oshiradi.", "faqQ2": "Qahramon qanday daraja oladi?", "faqA2": "Vazifa va odatlar uchun o'sish beriladi. Shkala 100% ga to'lganda, Qo'riqchi yangi darajaga o'tadi va qiyofasini o'zgartiradi.", "faqQ3": "Maqsad odatdan nimasi bilan farq qiladi?", "faqA3": "Maqsad — bu qadamlar va muddati bor natija. Odat — jadval bo'yicha ritm shakllantiruvchi muntazam ish.", "faqQ4": "Ma'lumotlarim saqlanadimi?", "faqA4": "Barcha ma'lumotlar Telegram hisobingizda saqlanadi va qurilmalar o'rtasida avtomatik sinxronlanadi.", "hlContact": "Qo'llab-quvvatlashga yozish", "hlChannel": "Telegram kanalimiz", "hlBug": "Muammo haqida xabar berish", "aboutTitle": "Ilova haqida", "appName": "Qo'riqchi", "versionLabel": "Versiya 2.4.0", "aboutDesc": "Siz bilan birga o'sadigan samaradorlik hamrohi. Vazifa va odatlarni bajaring — Qo'riqchingiz qanday kuchayishini kuzating.", "madeWith": "Mehr bilan yaratilgan · 2026", "pathTitle": "Qo'riqchi yo'li", "pathSub": "Har bir daraja keyingi qiyofaga yaqinlashtiradi", "hereNow": "Hozir shu yerda", "msSmolder": "Cho'g'lanayotgan", "msKindled": "Yongan", "msStrong": "Kuchaygan", "msBright": "Yorqin", "msBlazing": "Alangalagan", "themeApplied": "Mavzu qo'llandi", "somethingSleeps": "Bu yerda nimadir mudroq…", "spiritEnough": "Ruh bugungi uchqunlarni yetarlicha yig'di", "newGoal": "Yangi maqsad", "newTask": "Yangi vazifa", "newHabit": "Yangi odat", "goalCardDesc": "Muddati va qadamlari bor yirik vazifa", "taskCardDesc": "Sanasi bor aniq bitta ish", "habitCardDesc": "Seriyali muntazam takrorlanuvchi ish", "fldName": "Nomi", "fldColor": "Rang", "fldDeadline": "Muddat", "fldSteps": "Qadamlar", "fldDifficulty": "Murakkablik", "fldDate": "Sana", "fldSchedule": "Jadval", "fldContext": "Qachon / kontekst (ixtiyoriy)", "stepDifficulty": "Qadam murakkabligi", "addStepBtn": "+ Qadam qo'shish", "phGoalName": "Masalan, «Dyuna»ni o'qish", "phStep": "Yangi qadam", "phTaskName": "Masalan, Bankka qo'ng'iroq qilish", "phHabitName": "Masalan, Ertalab bir stakan suv", "phContext": "Masalan, uyg'ongandan keyin", "createGoalBtn": "Maqsad yaratish", "createTaskBtn": "Vazifa yaratish", "createHabitBtn": "Odat yaratish", "attachWhere": "Qayerga qo'shilsin", "attachSolo": "Alohida", "attachGoal": "Maqsadga", "schedDaily": "Har kuni", "schedDays": "Kunlar bo'yicha", "schedCountSeg": "Haftada N", "perWeek": "marta / hafta", "qd1w": "1 hafta", "qd2w": "2 hafta", "qd1m": "1 oy", "chooseDate": "Sanani tanlang", "continueBtn": "Davom etish", "moveToAchieved": "Erishilganlarga o'tkazish", "celebTail": "yakunlandi — qahramon kuch to'playapti", "renameTitle": "Qo'riqchi nomi", "fldRename": "Ism", "confirmTitle": "Qo'riqchi hushyor tortdi", "keepBtn": "Qolsin, o'zim uddalayman", "deleteAnyway": "Baribir o'chirish", "confirmGoal": "«{n}» maqsadiga hali erishilmadi — qahramon unga ishongandi. Rostdan qo'yib yuboramizmi?", "confirmStep": "«{n}» qadami hali bajarilmadi. Qo'riqchi sezmaganga oladi… lekin rostdan o'chiramizmi?", "confirmHabit": "«{n}» odati seriyani ushlab turibdi. Rostdan o'chiramizmi?", "confirmTask": "«{n}» vazifasi hali bajarilmadi. Qo'riqchi sezmaganga oladi… lekin rostdan o'chiramizmi?", "editGoal": "Maqsadni tahrirlash", "editStep": "Qadamni tahrirlash", "editHabit": "Odatni tahrirlash", "editTask": "Vazifani tahrirlash", "delGoal": "Maqsadni o'chirish", "delStep": "Qadamni o'chirish", "delHabit": "Odatni o'chirish", "delTask": "Vazifani o'chirish", "newForm": "Yangi qiyofa", "newTitle": "Yangi unvon", "newLevel": "Yangi daraja", "taskChecked": "Vazifa belgilandi · ", "habitChecked": "Odat belgilandi · ", "syncLocal": "Mahalliy (Telegramdan tashqari)", "syncNoCloud": "Bulut bilan aloqa yo'q", "syncLoading": "Yuklanmoqda…", "syncCloudOk": "Bulut ✓", "syncCloudFail": "Bulut mavjud emas — mahalliy", "syncCloudWait": "Bulut · yozuv kutilmoqda", "thAmber": "Kahrabo", "thAmberCap": "Iliq, betaraf — sham kabi", "thAzure": "Moviy", "thAzureCap": "Salqin va yig'iq", "thSpark": "Uchqun", "thSparkCap": "Iliq va jasur — tundagi cho'g'", "abRate": "Ilovani baholash", "abTerms": "Foydalanish shartlari", "abPrivacy": "Maxfiylik siyosati", "mFull": ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"], "mGen": ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"], "mShort": ["Yan", "Fev", "Mar", "Apr", "May", "Iyn", "Iyl", "Avg", "Sen", "Okt", "Noy", "Dek"], "weekdays": ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"], "weekHeaders": ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], "diffNames": ["Arzimas", "Oddiy", "Jiddiy", "Murakkab", "Sinov"], "pl_days": ["kun"], "pl_steps": ["qadam"], "pl_sparks": ["uchqun"], "pl_tasks": ["vazifa"], "undoBtn": "Bekor qilish"}, "en": {"today": "Today", "todayLow": "today", "tomorrow": "Tomorrow", "done": "Done", "goalReached": "Goal reached", "overdueDot": "Overdue · ", "overdueLabel": "overdue", "lastDay": "last day", "taskWord": "Task", "goalWord": "Goal", "stepWord": "Step", "habitWord": "Habit", "streakWord": "streak", "daysShort": "d", "lvlShort": "lvl ", "levelWord": "Level", "calendarWord": "Calendar", "createWord": "Create", "back": "Back", "save": "Save", "nextBtn": "Next", "habitsHeading": "Habits", "allTasks": "All tasks", "soloSection": "Standalone tasks", "allAchieved": "All achieved tasks", "archiveEmpty": "Empty for now. Reach your goals — your hero will keep them here as trophies.", "quietDay": "A quiet day — no sparks", "monthSummary": "Month summary", "sparksMonth": "Sparks this month", "tasksClosed": "tasks closed", "bestStreakCap": "best streak", "profile": "Profile", "appearance": "Appearance", "apply": "Apply", "syncPrefix": "Sync: ", "statActiveGoals": "Active goals", "statStepsDone": "Steps done", "statBestStreak": "Best streak", "statHabitsToday": "Habits today", "actHelp": "Help & support", "settingsTitle": "Settings", "sectionGeneral": "General", "sectionPrefs": "Preferences", "language": "Language", "firstDayWeek": "First day of week", "monday": "Monday", "sunday": "Sunday", "tglSounds": "Sound effects", "tglSoundsHint": "Sound when checking tasks", "tglHaptics": "Haptics", "tglHapticsHint": "Tactile feedback", "tglStarfield": "Living background", "tglStarfieldHint": "Aura and particle animation", "notifTitle": "Notifications", "pushTitle": "Push notifications", "pushSub": "Master switch", "sectionWhat": "What to send", "ntTasks": "Task reminders", "ntTasksHint": "An hour before due", "ntHabitsHint": "Daily reminder", "ntAch": "Achievements", "ntAchHint": "The Guardian's new level", "ntWeekly": "Weekly report", "ntWeeklyHint": "Monday mornings", "helpTitle": "Help", "sectionFaq": "FAQ", "sectionContact": "Contact us", "faqQ1": "Who is the Guardian?", "faqA1": "The Guardian is your companion that grows with you. Every completed task and habit feeds it and raises its level.", "faqQ2": "How does the character level up?", "faqA2": "Tasks and habits earn growth. When the bar fills to 100%, the Guardian reaches a new level and changes its form.", "faqQ3": "How is a goal different from a habit?", "faqA3": "A goal is an outcome with steps and a deadline. A habit is a regular scheduled action that builds rhythm.", "faqQ4": "Will my data be saved?", "faqA4": "All data is stored in your Telegram account and syncs across devices automatically.", "hlContact": "Contact support", "hlChannel": "Our Telegram channel", "hlBug": "Report a problem", "aboutTitle": "About", "appName": "Guardian", "versionLabel": "Version 2.4.0", "aboutDesc": "A productivity companion that grows with you. Complete tasks and habits — and watch your Guardian grow stronger.", "madeWith": "Made with care · 2026", "pathTitle": "The Guardian's path", "pathSub": "Each level brings the next form closer", "hereNow": "You are here", "msSmolder": "Smoldering", "msKindled": "Kindled", "msStrong": "Strengthened", "msBright": "Bright", "msBlazing": "Blazing", "themeApplied": "Theme applied", "somethingSleeps": "Something slumbers here…", "spiritEnough": "The spirit has gathered enough sparks for today", "newGoal": "New goal", "newTask": "New task", "newHabit": "New habit", "goalCardDesc": "A big task with a deadline and steps", "taskCardDesc": "One specific action with a date", "habitCardDesc": "A regular action with a streak", "fldName": "Name", "fldColor": "Color", "fldDeadline": "Deadline", "fldSteps": "Steps", "fldDifficulty": "Difficulty", "fldDate": "Date", "fldSchedule": "Schedule", "fldContext": "When / context (optional)", "stepDifficulty": "Step difficulty", "addStepBtn": "+ Add step", "phGoalName": "e.g. Read \"Dune\"", "phStep": "New step", "phTaskName": "e.g. Call the bank", "phHabitName": "e.g. A glass of water in the morning", "phContext": "e.g. after waking up", "createGoalBtn": "Create goal", "createTaskBtn": "Create task", "createHabitBtn": "Create habit", "attachWhere": "Where to add", "attachSolo": "Standalone", "attachGoal": "To a goal", "schedDaily": "Daily", "schedDays": "By days", "schedCountSeg": "N per week", "perWeek": "times per week", "qd1w": "1 week", "qd2w": "2 weeks", "qd1m": "1 month", "chooseDate": "Choose a date", "continueBtn": "Continue", "moveToAchieved": "Move to achieved", "celebTail": "completed — your hero grows stronger", "renameTitle": "Guardian's name", "fldRename": "Name", "confirmTitle": "The Guardian is wary", "keepBtn": "Keep it, I've got this", "deleteAnyway": "Delete anyway", "confirmGoal": "\"{n}\" hasn't been reached yet — your hero believed in it. Really let it go?", "confirmStep": "\"{n}\" isn't done yet. The Guardian will pretend not to notice… but really delete it?", "confirmHabit": "\"{n}\" is holding a streak. Really delete it?", "confirmTask": "\"{n}\" isn't done yet. The Guardian will pretend not to notice… but really delete it?", "editGoal": "Edit goal", "editStep": "Edit step", "editHabit": "Edit habit", "editTask": "Edit task", "delGoal": "Delete goal", "delStep": "Delete step", "delHabit": "Delete habit", "delTask": "Delete task", "newForm": "New form", "newTitle": "New title", "newLevel": "New level", "taskChecked": "Task checked · ", "habitChecked": "Habit checked · ", "syncLocal": "Local (outside Telegram)", "syncNoCloud": "No cloud connection", "syncLoading": "Loading…", "syncCloudOk": "Cloud ✓", "syncCloudFail": "Cloud unavailable — local", "syncCloudWait": "Cloud · awaiting write", "thAmber": "Amber", "thAmberCap": "Warm and neutral, like a candle", "thAzure": "Azure", "thAzureCap": "Cool and composed", "thSpark": "Spark", "thSparkCap": "Warm and bold, an ember in the night", "abRate": "Rate the app", "abTerms": "Terms of use", "abPrivacy": "Privacy policy", "mFull": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "mGen": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "mShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "weekHeaders": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "diffNames": ["Trivial", "Normal", "Serious", "Hard", "Challenge"], "pl_days": ["day", "days"], "pl_steps": ["step", "steps"], "pl_sparks": ["spark", "sparks"], "pl_tasks": ["task", "tasks"], "undoBtn": "Undo"}};
 class Component extends DCLogic {
   DEV_CALIBRATION = false; /* dev-флаг: показать пункт «Калибровка» в Кабинете */
   BUILD = 'v4.9-0711';
@@ -1242,7 +1263,12 @@ class Component extends DCLogic {
     settings: { sounds:true, haptics:true, starfield:true, monday:true },
     notif: { push:true, tasks:true, habits:true, achievements:true, weekly:false },
     faqOpen: null,
-    lang: 'Русский',
+    /* Язык из ?lang= — бот подставляет его в адрес Mini App по выбору на /start.
+       Читаем прямо в инициализаторе, чтобы первый кадр был уже на нужном языке. */
+    lang: (function(){ try{ const l=new URLSearchParams(location.search).get('lang'); return (l==='ru'||l==='uz'||l==='en')?l:'ru'; }catch(e){ return 'ru'; } })(),
+    /* true — язык выбран вручную в настройках приложения; тогда он важнее выбора в боте. */
+    langSet: false,
+    langOpen: false,
     createOpen: false,
     createType: null,
     expanded: null,
@@ -1288,12 +1314,36 @@ class Component extends DCLogic {
   _overdue(s){ return this._diff(this._today(), this._d(s)); }
   _left(s){ return this._diff(this._d(s), this._today()); }
   _pl(n,a,b,c){ const x=n%10,y=n%100; if(x===1&&y!==11)return a; if(x>=2&&x<=4&&!(y>=12&&y<=14))return b; return c; }
-  _fmt(s){ const m=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']; const d=this._d(s); return d.getDate()+' '+m[d.getMonth()]; }
-  _wd(s){ const w=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота']; return w[this._d(s).getDay()]; }
+  _lang(){ let l=this.state.lang; if(l==='Русский') l='ru'; return (l==='ru'||l==='uz'||l==='en')?l:'ru'; }
+  t(k){ const d=I18N[this._lang()]||I18N.ru; return (k in d)?d[k]:(I18N.ru[k]!==undefined?I18N.ru[k]:k); }
+  _langLabel(){ const c=this._lang(); const f=LANGS.find(l=>l.code===c); return f?f.label:'Русский'; }
+  /* Язык «по умолчанию» извне: ?lang= из бота — явный выбор пользователя, применяем всегда.
+     allowLocale разрешает откат на язык интерфейса Telegram — только на ПЕРВОМ запуске,
+     иначе тем, кто давно пользуется приложением, язык сменился бы сам собой. */
+  _seedLang(allowLocale){
+    let l=null;
+    try{ l=new URLSearchParams(location.search).get('lang'); }catch(e){}
+    if(!l && allowLocale){ const tw=this._tg(); const lc=tw&&tw.initDataUnsafe&&tw.initDataUnsafe.user&&tw.initDataUnsafe.user.language_code; if(lc) l=String(lc).slice(0,2); }
+    return (l==='ru'||l==='uz'||l==='en')?l:null;
+  }
+  /* Имя героя переносим на новый язык ТОЛЬКО если оно совпадает с дефолтом одного из
+     языков, т.е. пользователь его не переименовывал. Своё имя не трогаем никогда. */
+  _heroFor(hero, code){
+    const defs=LANGS.map(l=>I18N[l.code].appName);
+    return (hero && defs.indexOf(hero.name)>=0) ? {...hero, name:I18N[code].appName} : hero;
+  }
+  _plu(n,key){ const f=this.t('pl_'+key)||['']; const l=this._lang(); let i=0; if(l==='ru'){ const x=n%10,y=n%100; i=(x===1&&y!==11)?0:((x>=2&&x<=4&&!(y>=12&&y<=14))?1:2); } else if(l==='en'){ i=(Math.abs(n)===1)?0:1; } else { i=0; } return f[i]!==undefined?f[i]:f[0]; }
+  _overdueBy(n){ const l=this._lang(); if(l==='uz') return n+' '+this._plu(n,'days')+' kechikdi'; if(l==='en') return 'Overdue by '+n+' '+this._plu(n,'days'); return 'Просрочено на '+n+' '+this._plu(n,'days'); }
+  _moreDays(n){ const l=this._lang(); if(l==='uz') return 'yana '+n+' '+this._plu(n,'days'); if(l==='en') return n+' '+this._plu(n,'days')+' left'; return 'ещё '+n+' '+this._plu(n,'days'); }
+  _until(ds){ const l=this._lang(); if(l==='uz') return this._fmt(ds)+'gacha'; if(l==='en') return 'Until '+this._fmt(ds); return 'До '+this._fmt(ds); }
+  _growthTo(n){ const l=this._lang(); if(l==='uz') return n+"-darajagacha o'sish"; if(l==='en') return 'Growth to level '+n; return 'Рост до '+n+' уровня'; }
+  _habitDone(a,b){ const l=this._lang(); if(l==='uz') return a+' / '+b+' bajarildi'; if(l==='en') return 'Done '+a+' of '+b; return 'Готово '+a+' из '+b; }
+  _fmt(s){ const m=this.t('mGen'); const d=this._d(s); return d.getDate()+' '+m[d.getMonth()]; }
+  _wd(s){ return this.t('weekdays')[this._d(s).getDay()]; }
   _triage(s){ const o=this._overdue(s);
-    if(o<=0) return {bar:'#8DA86C', sub:'Сегодня', subColor:'#9C977F', tint:'#3C443A'};
-    if(o<=2) return {bar:'#D2A85B', sub:'Просрочено на '+o+' '+this._pl(o,'день','дня','дней'), subColor:'#DAB571', tint:'#45423A'};
-    return {bar:'#C56B54', sub:'Просрочено на '+o+' '+this._pl(o,'день','дня','дней'), subColor:'#CF8270', tint:'#473C39'};
+    if(o<=0) return {bar:'#8DA86C', sub:this.t('today'), subColor:'#9C977F', tint:'#3C443A'};
+    if(o<=2) return {bar:'#D2A85B', sub:this._overdueBy(o), subColor:'#DAB571', tint:'#45423A'};
+    return {bar:'#C56B54', sub:this._overdueBy(o), subColor:'#CF8270', tint:'#473C39'};
   }
   _goalById(id){ return this.state.goals.find(g=>g.id===id); }
   _goalOfStep(id){ return this.state.goals.find(g=>g.steps.some(s=>s.id===id)); }
@@ -1305,9 +1355,9 @@ class Component extends DCLogic {
   go(screen){ this.setState({screen, createOpen:false, sheetOpen:false, selDay:null, calGoal:null}); }
 
   _themes(){ return {
-    amber:{ id:'amber', name:'Янтарь', caption:'Тёплая нейтральная, как свеча', bg:'#3B3C36', surface:'#47483F', surface2:'#52534A', accent:'#D99058', deep:'#B66120', tp:'#ECEBE4', ts:'#A9A89E', cloak:'#4B4C45' },
-    azure:{ id:'azure', name:'Лазурь', caption:'Прохладная и собранная', bg:'#1A2935', surface:'#263643', surface2:'#31424F', accent:'#3EAFD8', deep:'#0E7EA6', tp:'#E3EAF0', ts:'#9AAAB8', cloak:'#20557A' },
-    spark:{ id:'spark', name:'Искра', caption:'Тёплая и смелая, уголёк в ночи', bg:'#2B1F24', surface:'#392B30', surface2:'#45353B', accent:'#DF4B61', deep:'#96384E', tp:'#F2E7EA', ts:'#B39CA4', cloak:'#DF4B61' },
+    amber:{ id:'amber', name:this.t('thAmber'), caption:this.t('thAmberCap'), bg:'#3B3C36', surface:'#47483F', surface2:'#52534A', accent:'#D99058', deep:'#B66120', tp:'#ECEBE4', ts:'#A9A89E', cloak:'#4B4C45' },
+    azure:{ id:'azure', name:this.t('thAzure'), caption:this.t('thAzureCap'), bg:'#1A2935', surface:'#263643', surface2:'#31424F', accent:'#3EAFD8', deep:'#0E7EA6', tp:'#E3EAF0', ts:'#9AAAB8', cloak:'#20557A' },
+    spark:{ id:'spark', name:this.t('thSpark'), caption:this.t('thSparkCap'), bg:'#2B1F24', surface:'#392B30', surface2:'#45353B', accent:'#DF4B61', deep:'#96384E', tp:'#F2E7EA', ts:'#B39CA4', cloak:'#DF4B61' },
   }; }
   _varsOf(t){ return '--bg:'+t.bg+';--surface:'+t.surface+';--surface-2:'+t.surface2+';--accent:'+t.accent+';--accent-deep:'+t.deep+';--text-primary:'+t.tp+';--text-secondary:'+t.ts+';--cloak:'+t.cloak; }
   openAppearance(){ this.setState({screen:'appearance', themeSel:this.state.theme, createOpen:false, sheetOpen:false}); }
@@ -1316,6 +1366,8 @@ class Component extends DCLogic {
   saveRename(){ const v=(this.state.rename||'').trim(); if(!v) return; this.setState(s=>({hero:{...s.hero, name:v}, rename:null})); }
   openSettings(){ this.setState({screen:'settings', createOpen:false, sheetOpen:false}); }
   openNotif(){ this.setState({screen:'notifications', createOpen:false, sheetOpen:false}); }
+  openLangPicker(){ this.setState({langOpen:true, createOpen:false, sheetOpen:false}); }
+  pickLang(code){ this.setState(s=>({lang:code, langSet:true, langOpen:false, hero:this._heroFor(s.hero, code)})); this._sfx('tap'); }
   openHelp(){ this.setState({screen:'help', faqOpen:null, createOpen:false, sheetOpen:false}); }
   openAbout(){ this.setState({screen:'about', createOpen:false, sheetOpen:false}); }
   toggleSetting(k){ this.setState(s=>{ const v=!s.settings[k]; if(k==='sounds'&&window.GuardianSfx){ window.GuardianSfx.setEnabled(v); if(v) window.GuardianSfx.play('toggle', true); } return {settings:{...s.settings,[k]:v}}; }); }
@@ -1492,11 +1544,15 @@ class Component extends DCLogic {
     setTimeout(()=>{ if(!this.state.loaded){ this._dbgLog('таймаут сплэша: UI открыт, запись всё ещё заблокирована'); this.setState({loaded:true}); } }, 4000);
     const flush=()=>this._flush('hide');
     try{
-      document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') flush(); });
+      document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') flush(); else this._rollDay(); });
       window.addEventListener('pagehide', flush);
       window.addEventListener('blur', flush);
+      window.addEventListener('focus', ()=>this._rollDay());
     }catch(e){}
+    /* приложение может пролежать открытым через полночь — проверяем дату сами */
+    this._dayT=setInterval(()=>this._rollDay(), 30000);
   }
+  componentWillUnmount(){ clearInterval(this._dayT); }
   componentDidUpdate(prevProps){ this._scheduleSave(); }
 
   /* ---------- Хранение прогресса: Telegram CloudStorage (чанки ≤4КБ) + localStorage ---------- */
@@ -1504,7 +1560,7 @@ class Component extends DCLogic {
   _inTG(){ const t=this._tg(); return !!(t && t.platform && t.platform!=='unknown'); }
   _cloud(){ const t=this._tg(); return (t && t.CloudStorage) ? t.CloudStorage : null; }
   _dbgLog(m){ try{ (this._dbg=this._dbg||[]).push(new Date().toISOString().slice(11,19)+' '+m); if(this._dbg.length>60) this._dbg.shift(); }catch(e){} }
-  _persistSlice(){ const s=this.state; return { v:2, theme:s.theme, settings:s.settings, notif:s.notif, hero:s.hero, xp:s.xp, xpDays:s.xpDays, goals:s.goals, solo:s.solo, habits:s.habits, lang:s.lang }; }
+  _persistSlice(){ const s=this.state; return { v:2, theme:s.theme, settings:s.settings, notif:s.notif, hero:s.hero, xp:s.xp, xpDays:s.xpDays, goals:s.goals, solo:s.solo, habits:s.habits, lang:s.lang, langSet:s.langSet }; }
   _sliceEmpty(sl){ return (!sl.goals||!sl.goals.length) && (!sl.solo||!sl.solo.length) && (!sl.habits||!sl.habits.length) && (!sl.xp||!sl.xp.total); }
   _scheduleSave(){
     if(!this._canSave) return;
@@ -1531,11 +1587,11 @@ class Component extends DCLogic {
   }
   _setSync(ok){ const prev=this._cloudOk; this._cloudOk=ok; this._syncAt=new Date(); if(prev!==ok){ try{ this.setState(s=>({syncTick:(s.syncTick||0)+1})); }catch(e){} } }
   _syncLabel(){
-    if(!this._inTG()) return 'Локально (вне Telegram)';
-    if(!this._canSave) return this.state.loaded ? 'Нет связи с облаком' : 'Загрузка…';
-    if(this._cloudOk===true){ const d=this._syncAt; const hh=d?(String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')):''; return 'Облако ✓'+(hh?(' · '+hh):''); }
-    if(this._cloudOk===false) return 'Облако недоступно — локально';
-    return 'Облако · ожидание записи';
+    if(!this._inTG()) return this.t('syncLocal');
+    if(!this._canSave) return this.state.loaded ? this.t('syncNoCloud') : this.t('syncLoading');
+    if(this._cloudOk===true){ const d=this._syncAt; const hh=d?(String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')):''; return this.t('syncCloudOk')+(hh?(' · '+hh):''); }
+    if(this._cloudOk===false) return this.t('syncCloudFail');
+    return this.t('syncCloudWait');
   }
   _cloudSave(json){
     const cs=this._cloud(); if(!cs || !this._inTG()){ this._dbgLog('облако: пропуск (нет CloudStorage/не Telegram)'); return; }
@@ -1605,7 +1661,9 @@ class Component extends DCLogic {
     if(!d){
       this._dbgLog('загрузка: данных нет (первый запуск)');
       this._lastSaved=JSON.stringify(this._persistSlice());
-      this.setState({loaded:true});
+      /* Первый запуск: если бот язык не передал — берём язык интерфейса Telegram. */
+      const sd=this._seedLang(true);
+      this.setState(sd?{loaded:true, lang:sd, hero:this._heroFor(this.state.hero, sd)}:{loaded:true});
       return;
     }
     if(!pristine && this._sliceEmpty(d)){
@@ -1613,13 +1671,16 @@ class Component extends DCLogic {
       this.setState({loaded:true});
       return;
     }
-    const patch={loaded:true}; ['theme','settings','notif','hero','xp','xpDays','goals','solo','habits','lang'].forEach(k=>{ if(d[k]!==undefined) patch[k]=d[k]; });
+    const patch={loaded:true}; ['theme','settings','notif','hero','xp','xpDays','goals','solo','habits','lang','langSet'].forEach(k=>{ if(d[k]!==undefined) patch[k]=d[k]; }); if(patch.lang!==undefined && ['ru','uz','en'].indexOf(patch.lang)<0) patch.lang='ru';
+    /* Язык вручную в настройках не выбирали — значит, выбор в боте (?lang=) главнее сохранённого. */
+    if(!patch.langSet){ const sd=this._seedLang(false); if(sd){ patch.lang=sd; patch.hero=this._heroFor(patch.hero||this.state.hero, sd); } }
     this._dbgLog('загрузка: применяю rev='+(d.rev||0)+' целей='+(d.goals||[]).length+' задач='+(d.solo||[]).length+' привычек='+(d.habits||[]).length+' xp='+(d.xp?d.xp.total:0));
     this.setState(patch, ()=>{
       if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
       const _t=this._tg(); if(_t && patch.theme){ const _th=this._themes()[patch.theme]; try{ if(_t.setHeaderColor)_t.setHeaderColor(_th.bg); if(_t.setBackgroundColor)_t.setBackgroundColor(_th.bg); }catch(e){} }
       try{ if(patch.theme) localStorage.setItem('guardian-theme', patch.theme); }catch(e){}
       this._lastSaved=JSON.stringify(this._persistSlice());
+      this._rollDay(); /* данные пришли из вчерашнего дня — снимаем отметки до первой отрисовки списка */
     });
   }
 
@@ -1631,6 +1692,36 @@ class Component extends DCLogic {
   }
 
   _todayStr(){ const t=this._today(); const p=n=>String(n).padStart(2,'0'); return t.getFullYear()+'-'+p(t.getMonth()+1)+'-'+p(t.getDate()); }
+
+  /* ---------- Смена суток ----------
+     Единственное место, где приложение узнаёт, что наступил новый день:
+       • привычки снимаются (doneToday выводится из lastDone, а не живёт сам по себе);
+       • серия рвётся, если между сегодня и последним выполнением больше одного дня;
+       • дневной жар прошлого дня уходит в xpDays — историю тепловой карты календаря.
+     Идемпотентно: если день не сменился, возвращает null и перерисовки не будет. */
+  _rollDay(){
+    const ds=this._todayStr();
+    this.setState(s=>{
+      const patch={};
+      if(s.xp.day && s.xp.day!==ds){
+        if(s.xp.dailyRaw>0) patch.xpDays={...s.xpDays, [s.xp.day]:s.xp.dailyRaw};
+        patch.xp={...s.xp, day:ds, dailyRaw:0};
+      }
+      let changed=false;
+      const habits=s.habits.map(h=>{
+        /* миграция старых записей без lastDone: отмеченную привычку относим ко дню последнего XP */
+        const last=(h.lastDone!==undefined)?h.lastDone:(h.doneToday?(s.xp.day||ds):'');
+        const done=!!last && last===ds;
+        const gap=last?this._diff(this._d(ds), this._d(last)):Infinity;
+        const streak=(gap<=1)?(h.streak||0):0;
+        if(h.lastDone!==undefined && done===!!h.doneToday && streak===(h.streak||0)) return h;
+        changed=true;
+        return {...h, lastDone:last, doneToday:done, streak};
+      });
+      if(changed) patch.habits=habits;
+      return Object.keys(patch).length?patch:null;
+    });
+  }
 
   /* IANA-пояс устройства — для вечернего напоминания в 20:00 по местному времени */
   _tz(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||null; }catch(e){ return null; } }
@@ -1661,8 +1752,10 @@ class Component extends DCLogic {
     const lvNew=XP.levelFromXp(total).level;
     const lvOld=XP.levelFromXp(x.total).level;
     const nx={...x, total, day:ds, dailyRaw:res.rawAfter, maxLevel:Math.max(x.maxLevel, lvNew)};
-    if(!opts.noLog) nx.log={...x.log, [id]:{gain:res.granted, raw:amount}};
+    if(!opts.noLog) nx.log={...x.log, [id]:{gain:res.granted, raw:amount, day:ds}};
     const st={xp:nx, hero:{...this.state.hero, level:lvNew}};
+    /* страховка: если сутки сменились до переката — жар прошлого дня не теряем, а уводим в историю */
+    if(x.day && x.day!==ds && x.dailyRaw>0) st.xpDays={...this.state.xpDays, [x.day]:x.dailyRaw};
     /* Церемония уровня — только если уровень взят впервые (после отката не повторяется) */
     if(lvNew>lvOld && lvNew>x.maxLevel){ if(opts.silent||this.state.celebrating) st.pendingLevel=lvNew; else { st.leveled={level:lvNew}; this._sfx('levelup'); } }
     this.setState(st);
@@ -1676,7 +1769,9 @@ class Component extends DCLogic {
     const XP=window.GuardianXP; const x=this.state.xp; const rec=x.log&&x.log[id]; if(!XP||!rec) return;
     const log={...x.log}; delete log[id];
     const total=Math.max(0, x.total-rec.gain);
-    const dailyRaw=Math.max(0, x.dailyRaw-rec.raw);
+    /* дневной жар уменьшаем только если снимаем отметку того же дня — вчерашний откат сегодня не жжёт */
+    const sameDay=!rec.day || rec.day===this._todayStr();
+    const dailyRaw=sameDay?Math.max(0, x.dailyRaw-rec.raw):x.dailyRaw;
     const lvNew=XP.levelFromXp(total).level;
     this.setState({xp:{...x, total, dailyRaw, log}, hero:{...this.state.hero, level:lvNew}});
   }
@@ -1701,7 +1796,7 @@ class Component extends DCLogic {
         const res=this._grantXp(id, XP?XP.taskXp(diff):10);
         this._spark(id, '+'+res.granted+' ✦', diff===5);
         this._sfx('complete', diff);
-        this.setState({undo:{id, kind:'task', label:'Задача отмечена · +'+res.granted+' ✦'}});
+        this.setState({undo:{id, kind:'task', label:this.t('taskChecked')+'+'+res.granted+' ✦'}});
         const u=id; setTimeout(()=>this.setState(s=>(s.undo&&s.undo.id===u)?{undo:null}:null),4500);
         const g=this._goalOfStep(id);
         if(g && g.steps.every(st=>st.done)) this._celebrate(g.id);
@@ -1711,9 +1806,15 @@ class Component extends DCLogic {
 
   toggleHabit(id){
     const h=this.state.habits.find(x=>x.id===id); if(!h) return;
+    const ds=this._todayStr();
     const willDone=!h.doneToday;
     const newStreak=willDone?h.streak+1:Math.max(0,h.streak-1);
-    this.setState(s=>({habits:s.habits.map(x=>x.id===id?{...x,doneToday:willDone,streak:newStreak}:x)}), ()=>{
+    /* prevDone хранит дату до отметки — чтобы «Отменить» возвращало серию ровно туда, где она была */
+    this.setState(s=>({habits:s.habits.map(x=>x.id===id?{...x,
+      doneToday:willDone, streak:newStreak,
+      lastDone: willDone?ds:(x.prevDone||''),
+      prevDone: willDone?(x.lastDone||''):''
+    }:x)}), ()=>{
       if(willDone){
         const XP=window.GuardianXP;
         const diff=h.difficulty||2;
@@ -1723,7 +1824,7 @@ class Component extends DCLogic {
         const label = (mult>1&&XP) ? ('+'+XP.habitBase(diff)+' ×'+mult) : ('+'+res.granted+' ✦');
         this._spark(id, label, false);
         if(newStreak>0 && newStreak%7===0) this._sfx('streak'); else this._sfx('habit', newStreak);
-        this.setState({undo:{id,kind:'habit',label:'Привычка отмечена · '+label}});
+        this.setState({undo:{id,kind:'habit',label:this.t('habitChecked')+label}});
         const u=id; setTimeout(()=>this.setState(s=>(s.undo&&s.undo.id===u)?{undo:null}:null),4500);
       }
       else { this._revokeXp(id); this.setState({undo:null}); this._sfx('undo'); }
@@ -1795,7 +1896,9 @@ class Component extends DCLogic {
   removeStep(i){ this.setState(s=>({draft:{...s.draft, steps:s.draft.steps.filter((_,x)=>x!==i)}})); }
   saveGoal(){ const d=this.state.draft; if(!d.name.trim()) return; const id='g'+Date.now(); const steps=d.steps.map((st,i)=>({id:id+'s'+i, name:st.name, date:st.date, done:false, difficulty:st.difficulty||2})); this.setState(s=>({goals:[...s.goals,{id,name:d.name,hue:d.hue,deadline:d.deadline||'2026-07-15',steps}], createOpen:false, screen:'tasks', expanded:id})); }
   saveTask(){ const d=this.state.draft; if(!d.name.trim()) return; if(d.attach==='goal'&&d.goalId){ const st={id:'ts'+Date.now(),name:d.name,date:d.date,done:false,difficulty:d.difficulty||2}; this.setState(s=>({goals:s.goals.map(g=>g.id===d.goalId?{...g,steps:[...g.steps,st]}:g), createOpen:false})); } else { this.setState(s=>({solo:[...s.solo,{id:'t'+Date.now(),name:d.name,date:d.date,done:false,difficulty:d.difficulty||2}], createOpen:false})); } }
-  saveHabit(){ const d=this.state.draft; if(!d.name.trim()) return; let sched='Ежедневно'; if(d.schedule==='days'){ const w=['Пн','Вт','Ср','Чт','Пт','Сб','Вс']; sched=(d.days||[]).slice().sort().map(i=>w[i]).join(' · ')||'По дням'; } else if(d.schedule==='count'){ sched=d.count+' '+this._pl(d.count,'раз','раза','раз')+' в неделю'; } this.setState(s=>({habits:[...s.habits,{id:'h'+Date.now(),name:d.name,streak:0,doneToday:false,schedule:sched,context:d.context,difficulty:d.difficulty||2}], createOpen:false})); }
+  /* расписание храним структурно (тип + дни + счёт), а не готовой строкой —
+     иначе подпись «заморозилась» бы на языке момента создания */
+  saveHabit(){ const d=this.state.draft; if(!d.name.trim()) return; this.setState(s=>({habits:[...s.habits,{id:'h'+Date.now(),name:d.name,streak:0,doneToday:false,lastDone:'',prevDone:'',schedule:d.schedule,days:(d.days||[]).slice().sort(),count:d.count,context:d.context,difficulty:d.difficulty||2}], createOpen:false})); }
 
   renderVals(){
     const S=this.state;
@@ -1828,9 +1931,9 @@ class Component extends DCLogic {
         const goal=t.solo?null:this._goalById(t.goalId);
         const isToday=this._overdue(t.date)<=0;
         let showTodayGoal=false, showStatusSub=true, sub=tr.sub, subColor=tr.subColor;
-        if(t.done){ sub='Выполнено'; subColor='#7E8A66'; }
+        if(t.done){ sub=this.t('done'); subColor='#7E8A66'; }
         else if(isToday && goal){ showTodayGoal=true; showStatusSub=false; }
-        else if(isToday){ sub='Сегодня'; subColor='#9C977F'; }
+        else if(isToday){ sub=this.t('today'); subColor='#9C977F'; }
         return {
           id:t.id, title:t.name, done:t.done, notDone:!t.done,
           barColor:tr.bar, sub, subColor, showStatusSub, showTodayGoal,
@@ -1873,7 +1976,7 @@ class Component extends DCLogic {
       return {
         id:g.id, name:g.name, color, tint:this._tint(g.hue),
         progressText:done+'/'+total, dash:(done/total*C).toFixed(1)+' '+C.toFixed(1),
-        deadlineLabel:(done===total&&total>0)?'Цель достигнута':((overdue?'Просрочено · ':'До ')+this._fmt(g.deadline)),
+        deadlineLabel:(done===total&&total>0)?this.t('goalReached'):(overdue?(this.t('overdueDot')+this._fmt(g.deadline)):this._until(g.deadline)),
         overdue, expanded:S.expanded===g.id, onToggleExpand:()=>this.toggleExpand(g.id), steps,
         onEdit:(ev)=>{ev.stopPropagation(); this.openEdit('goal', g.id);},
         onArchive:(ev)=>{ev.stopPropagation(); this.archiveGoal(g.id);},
@@ -1890,12 +1993,12 @@ class Component extends DCLogic {
     }));
 
     const archived=[];
-    S.goals.filter(g=>g.archived).forEach(g=>{ archived.push({ id:g.id, name:g.name, color:this._vivid(g.hue), meta:'Цель · '+g.steps.length+' '+this._pl(g.steps.length,'шаг','шага','шагов')+' · до '+this._fmt(g.deadline), hasSteps:g.steps.length>0, expanded:S.archExp===g.id, chevStyle:S.archExp===g.id?'transform:rotate(180deg)':'', onToggleExp:()=>this.setState(s=>({archExp:s.archExp===g.id?null:g.id})), steps:g.steps.slice().sort((a,b)=>this._d(a.date)-this._d(b.date)).map(st=>({name:st.name, dateLabel:this._fmt(st.date)})), onRestore:(ev)=>{ev.stopPropagation(); this.setState(s=>({goals:s.goals.map(x=>x.id===g.id?{...x,archived:false}:x)}));}, onRemove:(ev)=>{ev.stopPropagation(); this.doDelete('goal', g.id);} }); });
-    S.solo.filter(t=>t.archived).forEach(t=>{ archived.push({ id:t.id, name:t.name, color:'var(--text-faint)', meta:'Задача · '+this._fmt(t.date), hasSteps:false, expanded:false, chevStyle:'', onToggleExp:()=>{}, steps:[], onRestore:(ev)=>{ev.stopPropagation(); this.setState(s=>({solo:s.solo.map(x=>x.id===t.id?{...x,archived:false}:x)}));}, onRemove:(ev)=>{ev.stopPropagation(); this.doDelete('solo', t.id);} }); });
+    S.goals.filter(g=>g.archived).forEach(g=>{ archived.push({ id:g.id, name:g.name, color:this._vivid(g.hue), meta:this.t('goalWord')+' · '+g.steps.length+' '+this._plu(g.steps.length,'steps')+' · '+this._until(g.deadline), hasSteps:g.steps.length>0, expanded:S.archExp===g.id, chevStyle:S.archExp===g.id?'transform:rotate(180deg)':'', onToggleExp:()=>this.setState(s=>({archExp:s.archExp===g.id?null:g.id})), steps:g.steps.slice().sort((a,b)=>this._d(a.date)-this._d(b.date)).map(st=>({name:st.name, dateLabel:this._fmt(st.date)})), onRestore:(ev)=>{ev.stopPropagation(); this.setState(s=>({goals:s.goals.map(x=>x.id===g.id?{...x,archived:false}:x)}));}, onRemove:(ev)=>{ev.stopPropagation(); this.doDelete('goal', g.id);} }); });
+    S.solo.filter(t=>t.archived).forEach(t=>{ archived.push({ id:t.id, name:t.name, color:'var(--text-faint)', meta:this.t('taskWord')+' · '+this._fmt(t.date), hasSteps:false, expanded:false, chevStyle:'', onToggleExp:()=>{}, steps:[], onRestore:(ev)=>{ev.stopPropagation(); this.setState(s=>({solo:s.solo.map(x=>x.id===t.id?{...x,archived:false}:x)}));}, onRemove:(ev)=>{ev.stopPropagation(); this.doDelete('solo', t.id);} }); });
 
     // ---- calendar: тепловая карта жара ----
     const y=S.calYear, m=S.calMonth;
-    const monthLabel=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'][m]+' '+y;
+    const monthLabel=this.t('mFull')[m]+' '+y;
     const dim=new Date(y,m+1,0).getDate();
     let fw=new Date(y,m,1).getDay(); fw=(fw+6)%7;
     const pad=n=>String(n).padStart(2,'0');
@@ -1980,11 +2083,11 @@ class Component extends DCLogic {
     /* панель выбранного дня */
     const selHeat=(selD>today)?0:heatOf(selDay);
     const dayRaw=[];
-    S.solo.filter(t=>!t.archived).forEach(t=>{ if(t.date===selDay) dayRaw.push({name:t.name, done:t.done, ringColor:'var(--text-faint)', sub:'Задача', diff:t.difficulty||2}); });
+    S.solo.filter(t=>!t.archived).forEach(t=>{ if(t.date===selDay) dayRaw.push({name:t.name, done:t.done, ringColor:'var(--text-faint)', sub:this.t('taskWord'), diff:t.difficulty||2}); });
     activeGoalsCal.forEach((g,gi)=>g.steps.forEach(s=>{ if(s.date===selDay) dayRaw.push({name:s.name, done:s.done, ringColor:goalColorOf(gi), sub:g.name, diff:s.difficulty||2}); }));
-    if(selDay===todayStr) S.habits.forEach(h=>dayRaw.push({name:h.name, done:h.doneToday, ringColor:'var(--text-faint)', sub:'Привычка · стрик '+h.streak, diff:h.difficulty||2}));
+    if(selDay===todayStr) S.habits.forEach(h=>dayRaw.push({name:h.name, done:h.doneToday, ringColor:'var(--text-faint)', sub:this.t('habitWord')+' · '+this.t('streakWord')+' '+h.streak, diff:h.difficulty||2}));
     const dayItems=dayRaw.map((it,i)=>({ ...it, k:i, notDone:!it.done, hasSub:!!it.sub, showDiff:it.diff>=3, diffIcons:Array.from({length:it.diff},(_,ii)=>({k:ii})), titleStyle: it.done?'text-decoration:line-through;color:var(--text-faint)':'color:var(--text-primary)' }));
-    const dayGoals=activeGoalsCal.map((g,gi)=>({g,gi})).filter(o=>{ const r=goalRange(o.g); return r.start<=selD&&selD<=r.end; }).map(o=>{ const dl=this._diff(this._d(o.g.deadline), selD); return { k:o.g.id, name:o.g.name, color:goalColorOf(o.gi), leftLabel: dl<=0?'последний день':'ещё '+dl+' '+this._pl(dl,'день','дня','дней') }; });
+    const dayGoals=activeGoalsCal.map((g,gi)=>({g,gi})).filter(o=>{ const r=goalRange(o.g); return r.start<=selD&&selD<=r.end; }).map(o=>{ const dl=this._diff(this._d(o.g.deadline), selD); return { k:o.g.id, name:o.g.name, color:goalColorOf(o.gi), leftLabel: dl<=0?this.t('lastDay'):this._moreDays(dl) }; });
     const dayLabel=this._wd(selDay)+', '+this._fmt(selDay);
 
     /* итоги месяца */
@@ -2002,61 +2105,61 @@ class Component extends DCLogic {
     let stepsDone=0; S.goals.forEach(g=>g.steps.forEach(s=>{if(s.done)stepsDone++;})); S.solo.forEach(t=>{if(t.done)stepsDone++;});
     const bestStreak=S.habits.reduce((m,h)=>Math.max(m,h.streak),0);
     const accountStats=[
-      {icon:'ti-target', label:'Активные цели', value:String(activeGoals)},
-      {icon:'ti-checks', label:'Шагов выполнено', value:String(stepsDone)},
-      {icon:'ti-flame', label:'Лучший стрик', value:bestStreak+' дн.'},
-      {icon:'ti-calendar-check', label:'Привычки сегодня', value:habitDone+'/'+S.habits.length},
+      {icon:'ti-target', label:this.t('statActiveGoals'), value:String(activeGoals)},
+      {icon:'ti-checks', label:this.t('statStepsDone'), value:String(stepsDone)},
+      {icon:'ti-flame', label:this.t('statBestStreak'), value:bestStreak+' '+this.t('daysShort')},
+      {icon:'ti-calendar-check', label:this.t('statHabitsToday'), value:habitDone+'/'+S.habits.length},
     ];
     const accountActions=[
-      {icon:'ti-flame', label:'Путь Хранителя', onTap:()=>this.go('path')},
-      {icon:'ti-palette', label:'Внешний вид', onTap:()=>this.openAppearance()},
+      {icon:'ti-flame', label:this.t('pathTitle'), onTap:()=>this.go('path')},
+      {icon:'ti-palette', label:this.t('appearance'), onTap:()=>this.openAppearance()},
       ...(this.DEV_CALIBRATION?[{icon:'ti-adjustments-alt', label:'Калибровка', onTap:()=>this.openCalib()}]:[]),
-      {icon:'ti-settings', label:'Настройки', onTap:()=>this.openSettings()},
-      {icon:'ti-bell', label:'Уведомления', onTap:()=>this.openNotif()},
-      {icon:'ti-help-circle', label:'Помощь и поддержка', onTap:()=>this.openHelp()},
-      {icon:'ti-info-circle', label:'О приложении', onTap:()=>this.openAbout()},
+      {icon:'ti-settings', label:this.t('settingsTitle'), onTap:()=>this.openSettings()},
+      {icon:'ti-bell', label:this.t('notifTitle'), onTap:()=>this.openNotif()},
+      {icon:'ti-help-circle', label:this.t('actHelp'), onTap:()=>this.openHelp()},
+      {icon:'ti-info-circle', label:this.t('aboutTitle'), onTap:()=>this.openAbout()},
     ].map((a,i)=>({...a, onTap:a.onTap||(()=>{}), borderStyle: i===0?'':'border-top:.5px solid var(--border)'}));
 
     const tgl=(on)=>({ trackStyle: on?'background:var(--accent)':'background:var(--inset)', knobStyle: on?'transform:translateX(18px)':'transform:translateX(0)' });
     const settingsToggles=[
-      {key:'sounds', icon:'ti-volume', label:'Звуковые эффекты', hint:'Звук при отметке задач'},
-      {key:'haptics', icon:'ti-device-mobile', label:'Виброотклик', hint:'Тактильная отдача'},
-      {key:'starfield', icon:'ti-sparkles', label:'Живой фон', hint:'Анимация ауры и частиц'},
+      {key:'sounds', icon:'ti-volume', label:this.t('tglSounds'), hint:this.t('tglSoundsHint')},
+      {key:'haptics', icon:'ti-device-mobile', label:this.t('tglHaptics'), hint:this.t('tglHapticsHint')},
+      {key:'starfield', icon:'ti-sparkles', label:this.t('tglStarfield'), hint:this.t('tglStarfieldHint')},
     ].map((r,i)=>({...r, ...tgl(S.settings[r.key]), onToggle:()=>this.toggleSetting(r.key), borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
     const settingsRows=[
-      {icon:'ti-language', label:'Язык', value:S.lang, onTap:()=>{}},
-      {icon:'ti-calendar', label:'Первый день недели', value:S.settings.monday?'Понедельник':'Воскресенье', onTap:()=>this.toggleSetting('monday')},
+      {icon:'ti-language', label:this.t('language'), value:this._langLabel(), onTap:()=>this.openLangPicker()},
+      {icon:'ti-calendar', label:this.t('firstDayWeek'), value:S.settings.monday?this.t('monday'):this.t('sunday'), onTap:()=>this.toggleSetting('monday')},
     ].map((r,i)=>({...r, borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
 
     const notifRows=[
-      {key:'tasks', icon:'ti-checklist', label:'Напоминания о задачах', hint:'За час до срока'},
-      {key:'habits', icon:'ti-repeat', label:'Привычки', hint:'Ежедневное напоминание'},
-      {key:'achievements', icon:'ti-trophy', label:'Достижения', hint:'Новый уровень Хранителя'},
-      {key:'weekly', icon:'ti-mail', label:'Еженедельный отчёт', hint:'По понедельникам утром'},
+      {key:'tasks', icon:'ti-checklist', label:this.t('ntTasks'), hint:this.t('ntTasksHint')},
+      {key:'habits', icon:'ti-repeat', label:this.t('habitsHeading'), hint:this.t('ntHabitsHint')},
+      {key:'achievements', icon:'ti-trophy', label:this.t('ntAch'), hint:this.t('ntAchHint')},
+      {key:'weekly', icon:'ti-mail', label:this.t('ntWeekly'), hint:this.t('ntWeeklyHint')},
     ].map((r,i)=>({...r, ...tgl(S.notif.push && S.notif[r.key]), onToggle:()=>{ if(S.notif.push) this.toggleNotif(r.key); }, borderStyle:i===0?'':'border-top:.5px solid var(--border)', dimStyle:S.notif.push?'':'opacity:.4;pointer-events:none'}));
     const pushToggle={ ...tgl(S.notif.push), onToggle:()=>this.toggleNotif('push') };
 
     const faqList=[
-      {q:'Кто такой Хранитель?', a:'Хранитель — ваш спутник, который растёт вместе с вами. Каждая выполненная задача и привычка питает его и поднимает уровень.'},
-      {q:'Как персонаж набирает уровень?', a:'За задачи и привычки начисляется рост. Когда шкала заполняется до 100%, Хранитель переходит на новый уровень и меняет облик.'},
-      {q:'Чем цель отличается от привычки?', a:'Цель — это результат с шагами и сроком. Привычка — регулярное действие по расписанию, которое формирует ритм.'},
-      {q:'Сохранятся ли мои данные?', a:'Все данные хранятся в вашем аккаунте Telegram и синхронизируются между устройствами автоматически.'},
+      {q:this.t('faqQ1'), a:this.t('faqA1')},
+      {q:this.t('faqQ2'), a:this.t('faqA2')},
+      {q:this.t('faqQ3'), a:this.t('faqA3')},
+      {q:this.t('faqQ4'), a:this.t('faqA4')},
     ].map((f,i)=>({...f, open:S.faqOpen===i, onTap:()=>this.toggleFaq(i), rot:S.faqOpen===i?'transform:rotate(180deg)':'', bodyStyle:S.faqOpen===i?'max-height:240px;opacity:1':'max-height:0;opacity:0', borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
     const helpRows=[
-      {icon:'ti-message-circle', label:'Написать в поддержку'},
-      {icon:'ti-brand-telegram', label:'Наш Telegram-канал'},
-      {icon:'ti-bug', label:'Сообщить о проблеме'},
+      {icon:'ti-message-circle', label:this.t('hlContact')},
+      {icon:'ti-brand-telegram', label:this.t('hlChannel')},
+      {icon:'ti-bug', label:this.t('hlBug')},
     ].map((r,i)=>({...r, borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
     const aboutRows=[
-      {icon:'ti-star', label:'Оценить приложение'},
-      {icon:'ti-file-text', label:'Условия использования'},
-      {icon:'ti-shield-lock', label:'Политика конфиденциальности'},
+      {icon:'ti-star', label:this.t('abRate')},
+      {icon:'ti-file-text', label:this.t('abTerms')},
+      {icon:'ti-shield-lock', label:this.t('abPrivacy')},
     ].map((r,i)=>({...r, borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
 
     // ---- create draft ----
     const d=S.draft;
     /* Пикер сложности: 5 угольков, подпись и живой предпросмотр искр */
-    const dNames=['Мелочь','Обычная','Серьёзная','Сложная','Вызов'];
+    const dNames=this.t('diffNames');
     const dv=Math.max(1,Math.min(5,d.difficulty||2));
     const diffEmbers=[1,2,3,4,5].map(n=>({
       k:n,
@@ -2066,12 +2169,12 @@ class Component extends DCLogic {
     }));
     const prevXp=S.createType==='habit'?(XP?XP.habitBase(dv):8):(XP?XP.taskXp(dv):10);
     const diffLabel=dNames[dv-1];
-    const diffPreview='+'+prevXp+' '+this._pl(prevXp,'искра','искры','искр');
+    const diffPreview='+'+prevXp+' '+this._plu(prevXp,'sparks');
     const segOn='background:var(--accent);color:var(--on-accent);font-weight:600', segOff='background:transparent;color:var(--text-secondary)';
     const swatches=[55,190,25,140,275,340].map(h=>({hue:h, color:this._vivid(h), sel:d.hue===h, ring:d.hue===h?'box-shadow:0 0 0 2px var(--sheet),0 0 0 4px var(--text-primary)':'', onPick:(hh=>()=>this.setDraft({hue:hh}))(h)}));
     const goalsForPicker=S.goals.map(g=>({id:g.id, name:g.name, dot:this._vivid(g.hue), chipStyle: d.goalId===g.id?'border:1.5px solid '+this._vivid(g.hue)+';background:var(--accent-a13);color:var(--text-primary)':'border:1.5px solid var(--surface-2);background:var(--inset);color:var(--text-mid)', onPick:(id=>()=>this.setDraft({goalId:id}))(g.id)}));
-    const quickDeadlines=[{l:'1 неделя',n:7},{l:'2 недели',n:14},{l:'1 месяц',n:30}].map(q=>{ const t=this._today(); const x=new Date(t.getTime()+q.n*86400000); const s=x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate()); return {label:q.l, chipStyle:d.deadline===s?'background:var(--accent);color:var(--on-accent)':'background:var(--inset);color:var(--text-mid)', onTap:(ss=>()=>this.setDraft({deadline:ss}))(s)}; });
-    const weekdayChips=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map((w,i)=>({label:w, chipStyle:(d.days||[]).includes(i)?'background:var(--accent);color:var(--on-accent);border-color:var(--accent)':'background:var(--inset);color:var(--text-mid);border-color:var(--surface-2)', onTap:(ii=>()=>{ const cur=this.state.draft.days||[]; const nx=cur.includes(ii)?cur.filter(x=>x!==ii):[...cur,ii]; this.setDraft({days:nx}); })(i)}));
+    const quickDeadlines=[{l:this.t('qd1w'),n:7},{l:this.t('qd2w'),n:14},{l:this.t('qd1m'),n:30}].map(q=>{ const t=this._today(); const x=new Date(t.getTime()+q.n*86400000); const s=x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate()); return {label:q.l, chipStyle:d.deadline===s?'background:var(--accent);color:var(--on-accent)':'background:var(--inset);color:var(--text-mid)', onTap:(ss=>()=>this.setDraft({deadline:ss}))(s)}; });
+    const weekdayChips=this.t('weekHeaders').map((w,i)=>({label:w, chipStyle:(d.days||[]).includes(i)?'background:var(--accent);color:var(--on-accent);border-color:var(--accent)':'background:var(--inset);color:var(--text-mid);border-color:var(--surface-2)', onTap:(ii=>()=>{ const cur=this.state.draft.days||[]; const nx=cur.includes(ii)?cur.filter(x=>x!==ii):[...cur,ii]; this.setDraft({days:nx}); })(i)}));
 
     // ---- date picker ----
     const dp=S.datePicker;
@@ -2083,7 +2186,7 @@ class Component extends DCLogic {
       let fw2=new Date(yy,mm,1).getDay(); fw2=(fw2+6)%7;
       const curVal = dp.field==='editDate' ? ((S.edit&&S.edit.date)||'') : (dp.field==='deadline'?d.deadline : (dp.field==='stepDate'?d.stepDate : d.date));
       const tt=this._today(); const todayStr=fmt(tt.getFullYear(),tt.getMonth(),tt.getDate());
-      dpMonthLabel=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'][mm]+' '+yy;
+      dpMonthLabel=this.t('mFull')[mm]+' '+yy;
       const start=new Date(yy,mm,1-fw2);
       for(let w=0;w<6;w++){ const days=[];
         for(let i=0;i<7;i++){
@@ -2094,11 +2197,11 @@ class Component extends DCLogic {
         }
         dpWeeks.push({days, k:w});
       }
-      dpMonths=['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'].map((nm,i)=>({name:nm, chipStyle: i===mm?'background:var(--accent);color:var(--on-accent);font-weight:600':'background:var(--inset);color:var(--text-mid)', onTap:(mi=>()=>this.dpPickMonth(mi))(i)}));
+      dpMonths=this.t('mShort').map((nm,i)=>({name:nm, chipStyle: i===mm?'background:var(--accent);color:var(--on-accent);font-weight:600':'background:var(--inset);color:var(--text-mid)', onTap:(mi=>()=>this.dpPickMonth(mi))(i)}));
     }
 
     // ---- Путь Хранителя ----
-    const MS=[{lvl:1,name:'Тлеющий'},{lvl:5,name:'Зажжённый'},{lvl:10,name:'Окрепший'},{lvl:20,name:'Яркий'},{lvl:29,name:'???',anomaly:true},{lvl:40,name:'Пылающий'},{lvl:50,name:'Хранитель'}];
+    const MS=[{lvl:1,name:this.t('msSmolder')},{lvl:5,name:this.t('msKindled')},{lvl:10,name:this.t('msStrong')},{lvl:20,name:this.t('msBright')},{lvl:29,name:'???',anomaly:true},{lvl:40,name:this.t('msBlazing')},{lvl:50,name:this.t('appName')}];
     let curMs=1; MS.forEach(m=>{ if(!m.anomaly && hero.level>=m.lvl) curMs=m.lvl; });
     const milestones=MS.map(m=>{
       const achieved=hero.level>=m.lvl;
@@ -2108,7 +2211,7 @@ class Component extends DCLogic {
         current, showLock:!achieved && !m.anomaly, still:!current,
         stageLevel: current?hero.level:m.lvl,
         stageWrapStyle: achieved?'':'filter:brightness(0);opacity:.5',
-        sub:'Уровень '+m.lvl,
+        sub:this.t('levelWord')+' '+m.lvl,
         nameColor: m.anomaly?'var(--text-secondary)':(achieved?'var(--text-primary)':'var(--text-mid)'),
         numColor: achieved?'var(--accent-soft)':'var(--text-faint)',
         cardStyle: current?'border:1.5px solid var(--accent);background:var(--surface)':(m.anomaly?'border:1.5px solid transparent;background:color-mix(in srgb,var(--surface) 45%,#0B0B09);cursor:pointer':'border:1.5px solid transparent;background:var(--surface)'),
@@ -2146,7 +2249,7 @@ class Component extends DCLogic {
     }
 
     const leveledKind = S.leveled ? ([10,20,40,50].indexOf(S.leveled.level)>=0?'form':([5,29].indexOf(S.leveled.level)>=0?'title':'none')) : 'none';
-    const leveledCaption = leveledKind==='form' ? 'Новый облик' : (leveledKind==='title' ? 'Новый титул' : 'Новый уровень');
+    const leveledCaption = leveledKind==='form' ? this.t('newForm') : (leveledKind==='title' ? this.t('newTitle') : this.t('newLevel'));
 
     // ---- celebration ----
     const celG=S.celebrating?this._goalById(S.celebrating):null;
@@ -2156,6 +2259,9 @@ class Component extends DCLogic {
     return {
       // screen
       isHome:S.screen==='home', isTasks:S.screen==='tasks', isCal:S.screen==='calendar',
+      /* На главной верхний отступ отдан липкой шапке: иначе она упирается в свой containing block
+         и прилипает на 14px ниже верха — в эту щель видно проезжающий контент. */
+      scrollPadTop:S.screen==='home'?'0':'14px',
       navHomeColor:S.screen==='home'?'var(--accent-soft)':'var(--text-faint)',
       navTasksColor:S.screen==='tasks'?'var(--accent-soft)':'var(--text-faint)',
       navCalColor:S.screen==='calendar'?'var(--accent-soft)':'var(--text-faint)',
@@ -2192,16 +2298,16 @@ class Component extends DCLogic {
       applyThemeTap:()=>this.applyTheme(),
       applyStyle:(S.themeSel===S.theme)?'opacity:.4;pointer-events:none':'',
       // hero
-      heroName:hero.name, heroLevelLabel:'ур. '+hero.level,
-      growthLabel:'Рост до '+(hero.level+1)+' уровня', growthPctLabel:Math.round(lv.progress*100)+'%', growthWidth:Math.round(lv.progress*100)+'%',
+      heroName:hero.name, heroLevelLabel:this.t('lvlShort')+hero.level,
+      growthLabel:this._growthTo(hero.level+1), growthPctLabel:Math.round(lv.progress*100)+'%', growthWidth:Math.round(lv.progress*100)+'%',
       dateLabel:(()=>{ const _ts=this._todayStr(); return this._wd(_ts)+', '+this._fmt(_ts); })(),
-      taskCountLabel: todayTasks.length+' '+this._pl(todayTasks.length,'задача','задачи','задач'),
+      taskCountLabel: todayTasks.length+' '+this._plu(todayTasks.length,'tasks'),
       todayTasks,
-      habitDoneLabel:'Готово '+habitDone+' из '+S.habits.length, todayHabits,
+      habitDoneLabel:this._habitDone(habitDone,S.habits.length), todayHabits,
       // tasks screen
       goals:goalsView, soloTasks:soloView, hasSolo:soloView.length>0,
       // calendar
-      monthLabel, weeks, weekHeaders:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+      monthLabel, weeks, weekHeaders:this.t('weekHeaders'),
       prevMonth:()=>this.prevMonth(), nextMonth:()=>this.nextMonth(),
       dayLabel, dayItems, dayHasItems:dayItems.length>0, dayEmpty:dayItems.length===0,
       dayXpLabel: selHeat>0?('+'+selHeat+' ✦'):'0 ✦',
@@ -2209,10 +2315,10 @@ class Component extends DCLogic {
       dayGoals, dayHasGoals:dayGoals.length>0,
       calChips, hasCalChips:calChips.length>0,
       monthHeatLabel:monthHeat+' ✦', monthTasksLabel:String(monthTasksDone),
-      bestStreakLabel:bestStreakCal+' дн.', heatStrip,
+      bestStreakLabel:bestStreakCal+' '+this.t('daysShort'), heatStrip,
       // create
       createOpen:S.createOpen, ctNone:S.createType===null, ctChosen:S.createType!==null, ctGoal:S.createType==='goal', ctTask:S.createType==='task', ctHabit:S.createType==='habit',
-      createTitle: S.createType===null?'Создать':(S.createType==='goal'?'Новая цель':(S.createType==='task'?'Новая задача':'Новая привычка')),
+      createTitle: S.createType===null?this.t('createWord'):(S.createType==='goal'?this.t('newGoal'):(S.createType==='task'?this.t('newTask'):this.t('newHabit'))),
       pickGoalType:()=>this.pickType('goal'), pickTaskType:()=>this.pickType('task'), pickHabitType:()=>this.pickType('habit'),
       createBack:()=>this.setState({createType:null}), closeCreate:()=>this.setState({createOpen:false}),
       draftName:d.name, onDraftName:e=>this.setDraft({name:e.target.value}),
@@ -2221,12 +2327,12 @@ class Component extends DCLogic {
       draftDate:d.date, onDraftDate:e=>this.setDraft({date:e.target.value}),
       draftStepName:d.stepName, onDraftStepName:e=>this.setDraft({stepName:e.target.value}),
       draftStepDate:d.stepDate, onDraftStepDate:e=>this.setDraft({stepDate:e.target.value}),
-      draftDeadlineLabel: d.deadline ? (this._fmt(d.deadline)+' '+this._d(d.deadline).getFullYear()) : 'Выберите дату',
+      draftDeadlineLabel: d.deadline ? (this._fmt(d.deadline)+' '+this._d(d.deadline).getFullYear()) : this.t('chooseDate'),
       deadlineValColor: d.deadline ? 'var(--text-primary)' : 'var(--text-faint)',
       draftDateLabel: this._fmt(d.date)+' '+this._d(d.date).getFullYear(),
       draftStepDateLabel: this._fmt(d.stepDate),
       openDeadlinePicker:()=>this.openDatePicker('deadline'), openTaskDatePicker:()=>this.openDatePicker('date'), openStepDatePicker:()=>this.openDatePicker('stepDate'),
-      datePickerOpen:!!dp, dpMonthLabel, dpWeeks, dpWeekHeaders:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+      datePickerOpen:!!dp, dpMonthLabel, dpWeeks, dpWeekHeaders:this.t('weekHeaders'),
       dpShowDays, dpMonthList, dpYear, dpMonths,
       dpPrev:()=>this.dpPrev(), dpNext:()=>this.dpNext(), closeDatePicker:()=>this.closeDatePicker(),
       dpToggleMonths:()=>this.dpToggleMonths(), dpPrevYear:()=>this.dpPrevYear(), dpNextYear:()=>this.dpNextYear(),
@@ -2252,7 +2358,7 @@ class Component extends DCLogic {
       canSave:!!d.name.trim(),
       // edit & archive
       editOpen:!!S.edit,
-      editTitle: S.edit ? (S.edit.kind==='goal'?'Правка цели':(S.edit.kind==='step'?'Правка шага':(S.edit.kind==='habit'?'Правка привычки':'Правка задачи'))) : '',
+      editTitle: S.edit ? (S.edit.kind==='goal'?this.t('editGoal'):(S.edit.kind==='step'?this.t('editStep'):(S.edit.kind==='habit'?this.t('editHabit'):this.t('editTask')))) : '',
       editHasDiff: !!S.edit && S.edit.kind!=='goal',
       editHasDate: !!S.edit && S.edit.kind!=='habit',
       editDiffEmbers:[1,2,3,4,5].map(n=>{ const ev2=S.edit?Math.max(1,Math.min(5,S.edit.difficulty||2)):2; return { k:n,
@@ -2260,19 +2366,19 @@ class Component extends DCLogic {
         glow: n<=ev2?'text-shadow:0 0 9px var(--accent-a45)':'opacity:.55',
         onTap:(nn=>()=>this.setEdit({difficulty:nn}))(n) }; }),
       editDiffLabel: S.edit?dNames[Math.max(1,Math.min(5,S.edit.difficulty||2))-1]:'',
-      editDiffPreview: S.edit?('+'+(S.edit.kind==='habit'?(XP?XP.habitBase(S.edit.difficulty||2):8):(XP?XP.taskXp(S.edit.difficulty||2):10))+' '+this._pl((S.edit.kind==='habit'?(XP?XP.habitBase(S.edit.difficulty||2):8):(XP?XP.taskXp(S.edit.difficulty||2):10)),'искра','искры','искр')):'',
+      editDiffPreview: S.edit?('+'+(S.edit.kind==='habit'?(XP?XP.habitBase(S.edit.difficulty||2):8):(XP?XP.taskXp(S.edit.difficulty||2):10))+' '+this._plu((S.edit.kind==='habit'?(XP?XP.habitBase(S.edit.difficulty||2):8):(XP?XP.taskXp(S.edit.difficulty||2):10)),'sparks')):'',
       editName: S.edit?S.edit.name:'', onEditName:e=>this.setEdit({name:e.target.value}),
       editHasColor: !!S.edit && S.edit.kind==='goal',
-      editDateCaption: (S.edit&&S.edit.kind==='goal')?'Дедлайн':'Дата',
-      editDateLabel: (S.edit&&S.edit.date) ? (this._fmt(S.edit.date)+' '+this._d(S.edit.date).getFullYear()) : 'Выберите дату',
+      editDateCaption: (S.edit&&S.edit.kind==='goal')?this.t('fldDeadline'):this.t('fldDate'),
+      editDateLabel: (S.edit&&S.edit.date) ? (this._fmt(S.edit.date)+' '+this._d(S.edit.date).getFullYear()) : this.t('chooseDate'),
       editSwatches:[55,190,25,140,275,340].map(h=>({color:this._vivid(h), ring:(S.edit&&S.edit.hue===h)?'box-shadow:0 0 0 2px var(--sheet),0 0 0 4px var(--text-primary)':'', onPick:(hh=>()=>this.setEdit({hue:hh}))(h)})),
       openEditDatePicker:()=>this.openDatePicker('editDate'),
       saveEdit:()=>this.saveEdit(), closeEdit:()=>this.closeEdit(),
       editSaveStyle:(S.edit&&S.edit.name.trim())?'':'opacity:.4;pointer-events:none',
       requestDelete:()=>this.requestDelete(),
-      editDeleteLabel: S.edit ? (S.edit.kind==='goal'?'Удалить цель':(S.edit.kind==='step'?'Удалить шаг':(S.edit.kind==='habit'?'Удалить привычку':'Удалить задачу'))) : '',
+      editDeleteLabel: S.edit ? (S.edit.kind==='goal'?this.t('delGoal'):(S.edit.kind==='step'?this.t('delStep'):(S.edit.kind==='habit'?this.t('delHabit'):this.t('delTask')))) : '',
       confirmOpen:!!S.confirm,
-      confirmText: S.confirm ? (S.confirm.kind==='goal' ? 'Цель «'+S.confirm.name+'» ещё не достигнута — герой в неё верил. Точно отпускаем?' : (S.confirm.kind==='step' ? 'Шаг «'+S.confirm.name+'» ещё не сделан. Хранитель сделает вид, что не заметил… но точно удаляем?' : (S.confirm.kind==='habit' ? 'Привычка «'+S.confirm.name+'» держит стрик. Точно удаляем?' : 'Задача «'+S.confirm.name+'» ещё не выполнена. Хранитель сделает вид, что не заметил… но точно удаляем?'))) : '',
+      confirmText: S.confirm ? this.t('confirm'+(S.confirm.kind==='goal'?'Goal':(S.confirm.kind==='step'?'Step':(S.confirm.kind==='habit'?'Habit':'Task')))).replace('{n}', S.confirm.name) : '',
       cancelDelete:()=>this.setState({confirm:null}),
       confirmDeleteTap:()=>{ const c=this.state.confirm; if(c) this.doDelete(c.kind, c.id); },
       stopProp:(ev)=>ev.stopPropagation(),
@@ -2286,6 +2392,9 @@ class Component extends DCLogic {
       dismissCelebrate:()=>this.dismissCelebrate(),
       celebArchive:(ev)=>{ev.stopPropagation(); this.celebArchive();},
       leveled:!!S.leveled, leveledNum:S.leveled?S.leveled.level:0, leveledCaption, dismissLevel:()=>this.dismissLevel(),
+      langPickerOpen:!!S.langOpen, langTitle:this.t('language'), closeLangPicker:()=>this.setState({langOpen:false}),
+      langOptions: LANGS.map(l=>{ const on=this._lang()===l.code; return { label:l.label, onTap:(cc=>()=>this.pickLang(cc))(l.code), rowStyle:on?'background:var(--accent-a13);border:1px solid var(--accent)':'background:var(--inset);border:1px solid var(--surface-2)', checkStyle:on?'color:var(--accent-soft)':'opacity:0' }; }),
+      L: I18N[this._lang()],
     };
   }
 }
