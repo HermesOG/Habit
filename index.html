@@ -1435,7 +1435,17 @@ class Component extends DCLogic {
        (SDK переинициализируется, мост событий уходит на новый объект, старый замораживает
        insets/isFullscreen). Поэтому НИКОГДА не держим ссылку — каждый замер читает
        this._tg() заново, а события перевешиваем при смене объекта. */
-    const setAppH=()=>{ const tw=this._tg(); const ih=window.innerHeight||0, vs=(tw&&tw.viewportStableHeight)||0; const h=(vs&&ih)?Math.min(vs,ih):(vs||ih); this._appH=h; this._innH=ih; if(h) document.documentElement.style.setProperty('--app-h', h+'px'); };
+    /* КЛЮЧЕВОЕ (урок v4.9): после «свернул → развернул» Telegram оставляет viewportStableHeight
+       ЗАНИЖЕННЫМ (событие о возврате ушло в подменённый объект). Тогда min() навсегда фиксирует
+       схлопнутую высоту — на экране остаётся только нижний бар, лечится лишь перезаходом.
+       Поэтому: min нужен ТОЛЬКО против завышенного vs. Если vs заметно МЕНЬШЕ innerHeight —
+       это залипшее значение, ему не верим и меряем по innerHeight. */
+    const setAppH=()=>{ const tw=this._tg(); const ih=window.innerHeight||0, vs=(tw&&tw.viewportStableHeight)||0;
+      const vsДоверяем = vs>0 && ih>0 && vs>=ih*0.6;
+      const h = vsДоверяем ? Math.min(vs,ih) : (ih||vs);
+      this._appH=h; this._innH=ih; if(h) document.documentElement.style.setProperty('--app-h', h+'px'); };
+    /* наружу — чтобы перемерять при возврате в приложение (см. _remeasure) */
+    this._setAppH=setAppH;
     const applyInsets=()=>{ try{
       const tw=this._tg(); if(!tw) return;
       ensureEvents(tw);
@@ -1454,12 +1464,15 @@ class Component extends DCLogic {
         this._dbgLog('insets top='+top+' bottom='+bot+' fs='+fs);
       }
     }catch(e){} };
+    this._applyInsets=applyInsets;
     /* события вешаем на КАЖДЫЙ новый объект WebApp (список уже обработанных — в WeakSet) */
     this._tgReg=this._tgReg||(typeof WeakSet!=='undefined'?new WeakSet():null);
     const ensureEvents=(tw)=>{ try{
       if(!tw||!tw.onEvent||!this._tgReg||this._tgReg.has(tw)) return;
       this._tgReg.add(tw);
       tw.onEvent('viewportChanged', ()=>{ setAppH(); applyInsets(); });
+      /* возврат из свёрнутого состояния — вьюпорт надо перемерить, иначе останется схлопнутым */
+      tw.onEvent('activated', ()=>this._remeasure());
       tw.onEvent('safeAreaChanged', applyInsets);
       tw.onEvent('contentSafeAreaChanged', applyInsets);
       tw.onEvent('fullscreenChanged', applyInsets);
@@ -1473,13 +1486,16 @@ class Component extends DCLogic {
         applyInsets();
         /* сверка: часто первые 20с (запуск/смена режима), дальше редкий вечный пульс —
            страховка от потери событий при подмене объекта WebApp */
-        const insTimer=setInterval(applyInsets, 400);
+        const insTimer=setInterval(()=>{ applyInsets(); setAppH(); }, 400);
         setTimeout(()=>{ clearInterval(insTimer); setInterval(()=>{ applyInsets(); setAppH(); }, 2000); }, 20000);
         try{ if(t.disableVerticalSwipes) t.disableVerticalSwipes(); }catch(e){}
       }catch(e){}
     }
     setAppH();
-    try{ window.addEventListener('resize', setAppH); window.addEventListener('orientationchange', setAppH); }catch(e){}
+    try{ window.addEventListener('resize', setAppH); window.addEventListener('orientationchange', setAppH);
+      /* visualViewport ловит изменения размера WebView, которые обычный resize иногда пропускает (Android) */
+      if(window.visualViewport) window.visualViewport.addEventListener('resize', setAppH);
+    }catch(e){}
     /* ВРЕМЕННАЯ телеметрия layout: шлём замеры на /api/diag (runtime-логи Vercel),
        чтобы диагностировать мобильные отступы по реальным цифрам. Удалить после отладки. */
     const diag=(tag)=>{ try{
@@ -1544,13 +1560,29 @@ class Component extends DCLogic {
     setTimeout(()=>{ if(!this.state.loaded){ this._dbgLog('таймаут сплэша: UI открыт, запись всё ещё заблокирована'); this.setState({loaded:true}); } }, 4000);
     const flush=()=>this._flush('hide');
     try{
-      document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') flush(); else this._rollDay(); });
+      document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') flush(); else { this._rollDay(); this._remeasure(); } });
       window.addEventListener('pagehide', flush);
       window.addEventListener('blur', flush);
-      window.addEventListener('focus', ()=>this._rollDay());
+      window.addEventListener('focus', ()=>{ this._rollDay(); this._remeasure(); });
     }catch(e){}
     /* приложение может пролежать открытым через полночь — проверяем дату сами */
     this._dayT=setInterval(()=>this._rollDay(), 30000);
+  }
+  /* Возврат в приложение (развернули из свёрнутого, вернулись на вкладку).
+     Вьюпорт «доезжает» анимацией, поэтому меряем не один раз, а серией — иначе поймаем
+     промежуточный кадр анимации и зафиксируем его как высоту экрана. */
+  _remeasure(){
+    const f=()=>{ try{
+      const tw=this._tg();
+      /* expand() — официальный запрос полной высоты. Нужен, если Telegram оставил сам WebView
+         схлопнутым (тогда и innerHeight занижен, и одной формулы мало): заставляем вернуть высоту.
+         Зовём безусловно: при возврате isExpanded иногда врёт «true» при схлопнутом вьюпорте,
+         а на уже развёрнутом окне expand() — безвредный no-op. */
+      if(tw && tw.expand) tw.expand();
+      if(this._setAppH) this._setAppH();
+      if(this._applyInsets) this._applyInsets();
+    }catch(e){} };
+    f(); [120,300,600,1000].forEach(ms=>setTimeout(f,ms));
   }
   componentWillUnmount(){ clearInterval(this._dayT); }
   componentDidUpdate(prevProps){ this._scheduleSave(); }
