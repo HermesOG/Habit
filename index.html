@@ -1609,6 +1609,10 @@ class Component extends DCLogic {
     if(!changed && this._cloudOk!==false) return;
     /* ИНВАРИАНТ II: пустое состояние никогда не затирает известное непустое */
     if(this._sawData && this._sliceEmpty(slice)){ this._dbgLog('ОТКАЗ записи: пустое поверх непустого ('+(src||'?')+')'); return; }
+    /* ИНВАРИАНТ IIб (второй рубеж): пустое состояние уходит в хранилище ТОЛЬКО если мы
+       положительно убедились, что там и так пусто. Без этого любой сбой чтения превращался
+       в «первый запуск» и стирал задачи. */
+    if(this._sliceEmpty(slice) && !this._cloudEmpty){ this._dbgLog('ОТКАЗ записи: пусто, а пустота хранилища НЕ подтверждена ('+(src||'?')+')'); return; }
     if(changed) this._rev=(this._rev||0)+1;
     this._lastSaved=json;
     if(!this._sliceEmpty(slice)) this._sawData=true;
@@ -1652,7 +1656,10 @@ class Component extends DCLogic {
          без ответа (доказано на устройстве: ранний вызов молчит, поздние работают).
          Поэтому: повторяем попытки, пока облако не ответит. */
       const self=this; let settled=false;
-      const localFallback=()=>{ if(!settled){ settled=true; cb(self._parseState(local)); } };
+      /* КРИТИЧНО: «облако не ответило» и «в облаке пусто» — РАЗНЫЕ вещи. Если их путать,
+         молчание облака выглядит как первый запуск, и пустое состояние затирает данные.
+         Поэтому вторым аргументом отдаём, ответило ли хранилище на самом деле. */
+      const localFallback=()=>{ if(!settled){ settled=true; cb(self._parseState(local), false); } };
       let attempt=0;
       const tryLoad=()=>{
         if(settled) return;
@@ -1666,14 +1673,24 @@ class Component extends DCLogic {
             const cnt=parseInt(n,10);
             self._dbgLog('чтение: gsN='+(err?'ОШИБКА':((n===''||n==null)?'нет':n))+' (попытка '+attempt+')');
             if(err){ localFallback(); return; }
-            if(!cnt){ settled=true; cb(self._parseState(local)); return; }
+            if(!cnt){ settled=true; self._cloudEmpty=true; cb(self._parseState(local), true); return; }
             const parts=new Array(cnt); let got=0, failed=false;
             for(let i=0;i<cnt;i++){
               cs.getItem('gs'+i, (e2,val)=>{
                 if(settled||failed) return;
                 if(e2){ failed=true; self._dbgLog('чтение: gs'+i+' ОШИБКА'); localFallback(); return; }
                 parts[i]=val||''; got++;
-                if(got===cnt){ settled=true; self._gsN=cnt; const j=parts.join(''); self._dbgLog('чтение: облако len='+j.length+' (попытка '+attempt+')'); cb(self._parseState(j) || self._parseState(local)); }
+                if(got===cnt){ settled=true; self._gsN=cnt; const j=parts.join(''); self._dbgLog('чтение: облако len='+j.length+' (попытка '+attempt+')');
+                  const cloudSt=self._parseState(j), localSt=self._parseState(local);
+                  /* СПАСЕНИЕ: в облаке пусто, а на устройстве данные есть — значит облако
+                     затёрли (старый баг ложного «первого запуска»). Берём устройство и
+                     возвращаем данные в облако, а не наоборот. */
+                  if(cloudSt && self._sliceEmpty(cloudSt) && localSt && !self._sliceEmpty(localSt)){
+                    self._dbgLog('ВОССТАНОВЛЕНИЕ: облако пусто, на устройстве данные есть — берём устройство');
+                    self._recovered=true;
+                    cb(localSt, true); return;
+                  }
+                  cb(cloudSt || localSt, true); }
               });
             }
           });
@@ -1683,10 +1700,23 @@ class Component extends DCLogic {
       tryLoad();
       return;
     }
-    cb(this._parseState(local));
+    /* Вне Telegram облака нет вовсе: localStorage — единственное хранилище, писать безопасно. */
+    this._cloudEmpty=true;
+    cb(this._parseState(local), true);
   }
-  _applyLoaded(d){
+  _applyLoaded(d, cloudAnswered){
     const pristine = JSON.stringify(this._persistSlice())===this._initialSlice;
+    /* ИНВАРИАНТ I: запись разрешена ТОЛЬКО если хранилище реально ответило на чтение.
+       Молчание облака (таймаут/ошибка) больше НЕ считается «первым запуском»: иначе сеялка
+       языка меняла сохраняемое состояние, срабатывал flush — и пустота затирала задачи. */
+    if(cloudAnswered===false){
+      this._dbgLog('загрузка: хранилище не ответило — запись ЗАБЛОКИРОВАНА, данные не трогаем');
+      this._canSave=false;
+      const localPatch={loaded:true};
+      if(d){ ['theme','settings','notif','hero','xp','xpDays','goals','solo','habits','lang','langSet'].forEach(k=>{ if(d[k]!==undefined) localPatch[k]=d[k]; }); }
+      this.setState(localPatch);
+      return;
+    }
     this._canSave=true; /* хранилище ОТВЕТИЛО — с этого момента запись разрешена */
     if(d && !this._sliceEmpty(d)) this._sawData=true;
     this._rev=(d&&d.rev)||0;
@@ -1713,6 +1743,9 @@ class Component extends DCLogic {
       try{ if(patch.theme) localStorage.setItem('guardian-theme', patch.theme); }catch(e){}
       this._lastSaved=JSON.stringify(this._persistSlice());
       this._rollDay(); /* данные пришли из вчерашнего дня — снимаем отметки до первой отрисовки списка */
+      /* Спасли данные с устройства — сразу возвращаем их в облако, не ждём действия пользователя:
+         иначе на другом устройстве по-прежнему будет пусто. */
+      if(this._recovered){ this._recovered=false; this._lastSaved=null; this._flush('восстановление'); }
     });
   }
 
