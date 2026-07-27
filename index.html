@@ -1822,6 +1822,40 @@ class Component extends DCLogic {
        • серия рвётся, если между сегодня и последним выполнением больше одного дня;
        • дневной жар прошлого дня уходит в xpDays — историю тепловой карты календаря.
      Идемпотентно: если день не сменился, возвращает null и перерисовки не будет. */
+  /* ---------- Уборка чеков на возврат XP ----------
+     xp.log — не журнал прогресса, а ЧЕК: сколько реально начислено за пункт (с учётом
+     дневного капа), чтобы снятие галочки вычло ровно столько же. Источник истины — xp.total.
+     Воспользоваться чеком можно, только пока пункт существует И всё ещё отмечен; всё
+     остальное — мусор: удалённые задачи, снятые отметки, вчерашние привычки. Раньше он
+     не чистился никогда: ~56 байт на отметку, за год ~80КБ и два десятка лишних чанков,
+     а чанки пишутся ПОСЛЕДОВАТЕЛЬНО под сторожем на 4с — то есть лог тихо разрушал синк.
+
+     БЕЗОПАСНО ПО ПОСТРОЕНИЮ: _revokeXp без чека просто выходит, xp.total не трогая.
+     Потерянный чек может лишь не вернуть XP при откате, но никогда не отнимет прогресс. */
+  XP_LOG_CAP = 500;
+  _liveXpIds(s){
+    const live={};
+    (s.solo||[]).forEach(t=>{ if(t.done) live[t.id]=1; });
+    (s.goals||[]).forEach(g=>(g.steps||[]).forEach(st=>{ if(st.done) live[st.id]=1; }));
+    (s.habits||[]).forEach(h=>{ if(h.doneToday) live[h.id]=1; });
+    return live;
+  }
+  /* Возвращает новый log или null, если чистить нечего (тогда состояние не трогаем вовсе). */
+  _pruneXpLog(s, habits){
+    const log=s.xp&&s.xp.log; if(!log) return null;
+    const keys=Object.keys(log); if(!keys.length) return null;
+    const live=this._liveXpIds(habits?{...s, habits}:s);
+    let kept=keys.filter(k=>live[k]);
+    /* запасной рубеж: даже живых чеков не держим сверх разумного — отбрасываем самые старые.
+       Тоже безопасно: см. свойство выше. Записи без day (старый формат) уходят первыми. */
+    if(kept.length>this.XP_LOG_CAP){
+      kept=kept.sort((a,b)=>String(log[a].day||'').localeCompare(String(log[b].day||''))).slice(-this.XP_LOG_CAP);
+    }
+    if(kept.length===keys.length) return null;
+    const next={}; kept.forEach(k=>{ next[k]=log[k]; });
+    return next;
+  }
+
   _rollDay(){
     const ds=this._todayStr();
     this.setState(s=>{
@@ -1841,6 +1875,10 @@ class Component extends DCLogic {
         return {...h, lastDone:last, doneToday:done, streak};
       });
       if(changed) patch.habits=habits;
+      /* Чистим чеки по достижимости — считаем по УЖЕ перекатанным привычкам, чтобы
+         вчерашние отметки ушли в тот же проход. xp.total при этом не меняется ни на единицу. */
+      const prunedLog=this._pruneXpLog(s, changed?habits:s.habits);
+      if(prunedLog){ const baseXp=patch.xp||s.xp; patch.xp={...baseXp, log:prunedLog}; }
       return Object.keys(patch).length?patch:null;
     });
   }
