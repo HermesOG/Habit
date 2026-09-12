@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Условия использования — Хранитель</title>
+<style>
+  :root{
+    --bg:#3B3C36;
+    --surface:#47483F;
+    --accent:#D99058;
+    --text:#ECEBE4;
+    --text2:#A9A89E;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg)}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);
+    line-height:1.6;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 0 48px}
+  .langbar{
+    display:flex;
+    gap:8px;
+    padding:18px 20px 0;
+    position:sticky;
+    top:0;
+    background:var(--bg);
+    z-index:1;
+  }
+  .langbar button{
+    font:inherit;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.02em;
+    padding:7px 16px;
+    border-radius:999px;
+    border:1px solid #5c5d52;
+    background:transparent;
+    color:var(--text2);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .langbar button[aria-pressed="true"]{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#2c2d28;
+  }
+  article.doc{padding:14px 20px 0}
+  h1{font-size:25px;line-height:1.28;margin:14px 0 8px;color:var(--text);font-weight:700}
+  .lead{color:var(--text2);font-size:14.5px;line-height:1.65;margin:0 0 30px}
+  h2{font-size:17px;line-height:1.4;margin:30px 0 10px;color:var(--accent);font-weight:700}
+  p{font-size:15px;line-height:1.65;margin:0 0 14px}
+  ul{margin:0 0 14px;padding-left:22px}
+  li{font-size:15px;line-height:1.6;margin:0 0 9px}
+  li:last-child{margin-bottom:0}
+  .card{background:var(--surface);border-radius:14px;padding:4px 18px 4px;margin:0 0 16px}
+  .card ul{margin:14px 0}
+  .foot{margin:40px 20px 0;padding-top:20px;border-top:1px solid #52534a}
+  .foot a.crosslink{color:var(--accent);text-decoration:none;font-weight:600;font-size:14.5px}
+  .foot a.crosslink:hover{text-decoration:underline}
+  .verline{color:var(--text2);font-size:12px;margin:12px 0 0}
+  strong{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="langbar" role="group" aria-label="Язык · Til · Language">
+    <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+    <button type="button" data-lang="uz" aria-pressed="false">UZ</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+
+  <article class="doc" data-doc-lang="ru">
+    <h1>Условия использования</h1>
+    <p class="lead">Эти условия действуют между вами и ботом <strong>«Хранитель»</strong> (<strong>@sparky_tasks_bot</strong>) — трекером задач, привычек и целей с персонажем, который растёт от ваших выполненных дел. Открывая мини-приложение или запуская бота, вы соглашаетесь с условиями ниже. Действуют с 12 сентября 2026 года.</p>
+
+    <h2>О сервисе</h2>
+    <p>«Хранитель» — сервис для личной продуктивности: список задач, привычки со стриками, цели с шагами и персонаж, который меняет форму по мере вашего прогресса. Работает как Telegram Mini App и как телеграм-бот, который присылает напоминания.</p>
+
+    <h2>Стоимость</h2>
+    <p>На данный момент все функции бота и приложения бесплатны. Разработчик может в будущем добавить платные возможности — если это произойдёт, условия будут обновлены заранее, до того как это как-либо коснётся вас.</p>
+
+    <h2>Персонаж и очки</h2>
+    <p>Хранитель, его уровни, искры (очки опыта) и любые внутренние достижения существуют только внутри сервиса. У них нет денежной стоимости: их нельзя купить, продать или обменять на деньги либо на что-то за пределами приложения. Это часть механики мотивации, а не финансовый актив.</p>
+
+    <h2>Сервис «как есть»</h2>
+    <p>Сервис предоставляется «как есть» и «по мере доступности», без каких-либо гарантий. Мы стараемся, чтобы напоминания приходили вовремя, а данные не терялись, но не гарантируем бесперебойную работу, отсутствие ошибок или сохранность данных при сбоях на стороне Telegram, Vercel или Supabase.</p>
+
+    <h2>Что нельзя делать</h2>
+    <div class="card"><ul>
+      <li>рассылать спам или использовать бота для нежелательных сообщений;</li>
+      <li>автоматизировать взаимодействие с ботом — боты, скрипты, массовые запросы;</li>
+      <li>искусственно накручивать серии, искры, статистику посещений или реферальную программу;</li>
+      <li>пытаться нарушить работу сервиса или получить доступ к чужим данным.</li>
+    </ul></div>
+    <p>При нарушении этих правил доступ к боту может быть ограничен без предупреждения.</p>
+
+    <h2>Изменения механики</h2>
+    <p>Разработчик может в любой момент изменять игровую механику — формулы начисления искр, количество уровней, облики персонажа, расписание и текст напоминаний, реферальные бонусы и любые другие функции, — а также добавлять и убирать их. Такие изменения не дают права на компенсацию: искры и уровни — не собственность пользователя, а часть механики мотивации, которая может развиваться.</p>
+
+    <h2>Контакты</h2>
+    <p>Вопросы по этим условиям — {{CONTACT}}.</p>
+
+    <div class="foot">
+      <a class="crosslink" href="privacy.html">Политика конфиденциальности →</a>
+      <p class="verline">Версия документа: 12 сентября 2026</p>
+    </div>
+  </article>
+
+  <article class="doc" data-doc-lang="uz" hidden>
+    <h1>Foydalanish shartlari</h1>
+    <p class="lead">Ushbu shartlar siz bilan <strong>«Qo'riqchi»</strong> boti (<strong>@sparky_tasks_bot</strong>) — bajarilgan ishlaringiz hisobidan o'sadigan qahramonga ega vazifalar, odatlar va maqsadlar trekeri — o'rtasida amal qiladi. Mini-ilovani ochish yoki botni ishga tushirish orqali siz quyidagi shartlarga rozilik bildirasiz. Shartlar 2026-yil 12-sentabrdan amalda.</p>
+
+    <h2>Xizmat haqida</h2>
+    <p>«Qo'riqchi» — shaxsiy samaradorlik uchun xizmat: vazifalar ro'yxati, seriyali odatlar, qadamli maqsadlar va sizning yutuqlaringiz asosida qiyofasini o'zgartiradigan qahramon. Telegram Mini App va eslatmalar yuboruvchi Telegram bot sifatida ishlaydi.</p>
+
+    <h2>Narxi</h2>
+    <p>Hozirgi vaqtda bot va ilovaning barcha funksiyalari bepul. Ishlab chiquvchi kelajakda pullik imkoniyatlar qo'shishi mumkin — bunday holatda shartlar sizga biror ta'sir qilishidan oldin yangilanadi.</p>
+
+    <h2>Qahramon va ochkolar</h2>
+    <p>Qo'riqchi, uning darajalari, uchqunlar (tajriba ochkolari) va istalgan ichki yutuqlar faqat xizmat ichida mavjud. Ularning pul qiymati yo'q: ularni sotib olib bo'lmaydi, sotib bo'lmaydi, pulga yoki ilovadan tashqaridagi boshqa narsaga almashtirib bo'lmaydi. Bu motivatsiya mexanikasining bir qismi, moliyaviy aktiv emas.</p>
+
+    <h2>«Bor holicha» taqdim etiladi</h2>
+    <p>Xizmat hech qanday kafolatlarsiz, «bor holicha» va «mavjud bo'lgan tarzda» taqdim etiladi. Biz eslatmalar o'z vaqtida kelishiga va ma'lumotlar yo'qolmasligiga harakat qilamiz, ammo Telegram, Vercel yoki Supabase tomonidagi uzilishlarda uzluksiz ishlashni, xatolar yo'qligini yoki ma'lumotlar saqlanishini kafolatlamaymiz.</p>
+
+    <h2>Nima qilish mumkin emas</h2>
+    <div class="card"><ul>
+      <li>spam tarqatish yoki botdan istalmagan xabarlar uchun foydalanish;</li>
+      <li>bot bilan muloqotni avtomatlashtirish — botlar, skriptlar, ommaviy so'rovlar;</li>
+      <li>seriyalarni, uchqunlarni, tashrif statistikasini yoki referal dasturini sun'iy ravishda oshirish;</li>
+      <li>xizmat ishini buzishga yoki boshqalarning ma'lumotlariga kirishga urinish.</li>
+    </ul></div>
+    <p>Ushbu qoidalar buzilganda botga kirish ogohlantirishsiz cheklanishi mumkin.</p>
+
+    <h2>Mexanikaga o'zgartirishlar</h2>
+    <p>Ishlab chiquvchi istalgan vaqtda o'yin mexanikasini — uchqun hisoblash formulalarini, darajalar sonini, qahramon qiyofalarini, eslatmalar jadvali va matnini, referal bonuslarini va boshqa istalgan funksiyalarni — o'zgartirishi, qo'shishi yoki olib tashlashi mumkin. Bunday o'zgarishlar kompensatsiya huquqini bermaydi: uchqunlar va darajalar foydalanuvchi mulki emas, balki rivojlanishi mumkin bo'lgan motivatsiya mexanikasining bir qismidir.</p>
+
+    <h2>Aloqa</h2>
+    <p>Ushbu shartlar bo'yicha savollar — {{CONTACT}}.</p>
+
+    <div class="foot">
+      <a class="crosslink" href="privacy.html">Maxfiylik siyosati →</a>
+      <p class="verline">Hujjat versiyasi: 2026-yil 12-sentabr</p>
+    </div>
+  </article>
+
+  <article class="doc" data-doc-lang="en" hidden>
+    <h1>Terms of Use</h1>
+    <p class="lead">These terms are between you and the <strong>Guardian</strong> bot (<strong>@sparky_tasks_bot</strong>) — a tracker for tasks, habits, and goals featuring a character that grows from the things you get done. By opening the Mini App or starting the bot, you agree to the terms below. Effective from September 12, 2026.</p>
+
+    <h2>About the service</h2>
+    <p>Guardian is a personal-productivity service: a task list, streak-based habits, goals with steps, and a character that changes form as you make progress. It runs as a Telegram Mini App plus a Telegram bot that sends reminders.</p>
+
+    <h2>Cost</h2>
+    <p>At the moment, every feature of the bot and the app is free. The developer may introduce paid features in the future — if that happens, these terms will be updated before it affects you in any way.</p>
+
+    <h2>The character and points</h2>
+    <p>The Guardian, its levels, sparks (experience points), and any in-app achievements exist only inside the service. They have no monetary value: they cannot be bought, sold, or exchanged for money or for anything outside the app. They're part of the motivation mechanic, not a financial asset.</p>
+
+    <h2>Provided "as is"</h2>
+    <p>The service is provided "as is" and "as available," without warranties of any kind. We try to keep reminders on time and data intact, but we don't guarantee uninterrupted operation, freedom from bugs, or that data will survive outages on Telegram's, Vercel's, or Supabase's side.</p>
+
+    <h2>What you may not do</h2>
+    <div class="card"><ul>
+      <li>send spam or use the bot for unwanted messages;</li>
+      <li>automate interaction with the bot — bots, scripts, bulk requests;</li>
+      <li>artificially inflate streaks, sparks, visit statistics, or the referral program;</li>
+      <li>attempt to disrupt the service or access other people's data.</li>
+    </ul></div>
+    <p>Breaking these rules may get your access to the bot restricted without warning.</p>
+
+    <h2>Changes to the mechanics</h2>
+    <p>The developer may change the game mechanics at any time — spark formulas, the number of levels, character forms, the reminder schedule and wording, referral bonuses, and any other features — and may add or remove them. Such changes don't entitle you to compensation: sparks and levels aren't user property, they're part of a motivation mechanic that's free to evolve.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about these terms — {{CONTACT}}.</p>
+
+    <div class="foot">
+      <a class="crosslink" href="privacy.html">Privacy policy →</a>
+      <p class="verline">Document version: September 12, 2026</p>
+    </div>
+  </article>
+</div>
+
+<script>
+(function(){
+  var LANGS=['ru','uz','en'];
+  var TITLES={
+    ru:'Условия использования — Хранитель',
+    uz:"Foydalanish shartlari — Qo'riqchi",
+    en:'Terms of Use — Guardian'
+  };
+  var CROSS='privacy.html';
+  var KEY='khranitel_doc_lang';
+
+  function paramLang(){
+    try{
+      var p=new URLSearchParams(window.location.search).get('lang');
+      if(p && LANGS.indexOf(p)>-1) return p;
+    }catch(e){}
+    return null;
+  }
+  function storedLang(){
+    try{
+      var s=window.localStorage.getItem(KEY);
+      if(s && LANGS.indexOf(s)>-1) return s;
+    }catch(e){}
+    return null;
+  }
+  function saveLang(lang){
+    try{ window.localStorage.setItem(KEY, lang); }catch(e){}
+  }
+  function setLang(lang, persist){
+    if(LANGS.indexOf(lang)===-1) lang='ru';
+    for(var i=0;i<LANGS.length;i++){
+      var l=LANGS[i];
+      var art=document.querySelector('article[data-doc-lang="'+l+'"]');
+      if(art) art.hidden=(l!==lang);
+      var btn=document.querySelector('button[data-lang="'+l+'"]');
+      if(btn) btn.setAttribute('aria-pressed', l===lang?'true':'false');
+    }
+    document.documentElement.setAttribute('lang', lang);
+    if(TITLES[lang]) document.title=TITLES[lang];
+    var links=document.querySelectorAll('a.crosslink');
+    for(var j=0;j<links.length;j++) links[j].setAttribute('href', CROSS+'?lang='+lang);
+    if(persist) saveLang(lang);
+  }
+  function init(){
+    var fromUrl=paramLang();
+    var fromStore=storedLang();
+    var lang=fromUrl || fromStore || 'ru';
+    setLang(lang, !!(fromUrl || fromStore));
+    for(var i=0;i<LANGS.length;i++){
+      (function(l){
+        var btn=document.querySelector('button[data-lang="'+l+'"]');
+        if(btn) btn.addEventListener('click', function(){ setLang(l, true); });
+      })(LANGS[i]);
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>

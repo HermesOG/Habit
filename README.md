@@ -1,54 +1,68 @@
-# Хранитель — Telegram Web App
+# Хранитель — Telegram Mini App
 
-Оффлайн‑сборка геймифицированного трекера задач / привычек / целей.
-У пользователя есть персонаж «Хранитель огня», который растёт по уровням от начисляемого
-XP («искры»). Экспортировано из Claude Design и переведено на локальные зависимости
-(без CDN) — работает полностью офлайн и грузится быстрее.
+Трекер задач / привычек / целей с персонажем «Хранителем огня», который растёт от искр (XP)
+за выполненные дела. Данные пользователя живут только у него: Telegram CloudStorage (в Telegram)
+или localStorage (в браузере). Сервер нужен боту (напоминания) и владельцу (аналитика);
+без него приложение полностью работоспособно.
 
-## Запуск
+## Запуск локально
 
-Это статический сайт без сборки. Любой статический сервер:
+Статический сайт без сборки:
 
 ```bash
 python -m http.server 5599
 # открыть http://localhost:5599/
 ```
 
-Или просто открыть `index.html` в браузере.
+Серверные функции (`api/`) локально не запускаются — только на Vercel. Вне Telegram все
+обращения к ним тихо пропускаются.
 
 ## Структура
 
 ```
-index.html                       точка входа (UI, состояние — класс Component)
-support.js                       рантайм Design Component (загрузка React/Babel из vendor/)
-xp-engine.js                     GuardianXP — математика XP/уровней/дневного капа
+index.html                       весь UI и состояние (класс Component на рантайме Design Component)
+support.js                       рантайм DC: компиляция шаблонов {{ }} / <sc-if> / <sc-for> в React
+xp-engine.js                     GuardianXP — XP, стрик-множитель, дневной кап, кривая уровней
 sfx-engine.js                    GuardianSfx — синтез звука на Web Audio
-character-config.standalone.js   GuardianCharConfig — формы/якоря/эффекты персонажа
-CharacterStage.dc.html           рендер персонажа (PNG формы + эффекты по якорям)
-ios-frame.jsx                    бутафорский корпус iPhone для превью
-uploads/                         PNG форм персонажа (form1..5 × amber/azure/spark, _c)
-vendor/                          локальные зависимости (офлайн):
-  react.production.min.js        React 18.3.1
-  react-dom.production.min.js    ReactDOM 18.3.1
-  babel.min.js                   @babel/standalone 7.29.0
-  fonts.css + fonts/             Golos Text + Spectral (вкл. кириллицу)
-  tabler-icons.min.css + fonts/  Tabler Icons 3.24.0
-LOGIC.md                         полное описание логики приложения
-reference/                       оригинал 1:1 из Claude Design (онлайн‑бандл) + исходные PNG
+character-config.standalone.js   формы/якоря/эффекты персонажа
+CharacterStage.dc.html           рендер персонажа (WebP формы + эффекты по якорям)
+uploads/                         formN_theme_c.webp (приложение) и share_formN_theme.jpg (карточки шеринга)
+vendor/                          React 18.3.1, Golos Text + Spectral, icons.css (45 иконок Tabler как mask-image),
+                                 telegram-web-app.js (Bot API 8+: shareMessage)
+privacy.html, terms.html         политика конфиденциальности и условия (ru/uz/en)
+go.html                          редирект для входа из Instagram (/go)
+api/                             Vercel serverless: бот, напоминания, аналитика, настройки, шеринг
+db/migrations/                   схема Supabase (см. db/README.md)
+tools/                           build-icons.mjs, make-images.py, stage-sql.mjs
+STAGING.md                       тестовый стенд: как поднять и как переносить на прод
+BOT.md                           бот: команды, вебхук, напоминания
+LOGIC.md                         логика приложения
 ```
 
-## Что изменено при переносе на офлайн
+## Сервер (`api/`)
 
-- `support.js`: ссылки на `unpkg.com` (React / ReactDOM / Babel) заменены на локальные
-  `vendor/…`; SRI‑хэши отключены (файлы отдаются с того же origin).
-- `index.html`: `<link>` на Google Fonts и Tabler CDN заменены на локальные `vendor/…`.
-- Пути к движкам и `uploads/` выровнены под плоскую структуру (без `../`).
+Все вызовы из приложения идут с подписанным `initData`; сервер проверяет подпись по токену бота
+(`api/_auth.js`) и берёт личность только оттуда.
 
-Поведение приложения — 1:1 с версией из Claude Design. Полный оригинальный бандл
-сохранён в `reference/`.
+| Эндпоинт | Кто зовёт | Что делает |
+|---|---|---|
+| `POST /api/hit` | приложение при запуске | регистрация, источник/реферал, визит (dau), событие `open`; отдаёт имя бота и бонус за друзей |
+| `POST /api/act` | приложение при отметке / смене списка | «сегодня был шаг» + сводка привычек для адресных напоминаний |
+| `POST /api/event` | приложение | события воронки (`habit_created`, `check`, `level_up`, `share_sent`…) |
+| `POST /api/prefs` | экран «Уведомления» | утро/вечер вкл-выкл и час |
+| `POST /api/share` | «Поделиться Хранителем» | готовит inline-сообщение для `WebApp.shareMessage` |
+| `POST /api/bot` | Telegram (webhook) | /start, /lang, /stop, /privacy, /delete, /help; кнопки |
+| `POST /api/nudge` | pg_cron ежечасно | утренние и вечерние напоминания по сводке |
+| `GET /api/stats` | владелец | дашборд: DAU, воронка, источники (`x-stats-key`) |
 
-## Заметки
+Переменные окружения — `.env.example`.
 
-- JSX компилируется в браузере через `@babel/standalone` (как в оригинале). Быстрее, чем
-  раньше, за счёт отсутствия сетевых запросов к CDN, но всё ещё транспилируется на клиенте.
-- Демо‑дата зашита как `2026-06-12`, данные демо встроены (см. `LOGIC.md`, разд. 8 и 9).
+## Вес первого экрана
+
+Раньше ~2,1 МБ (Babel 605 КБ, шрифт иконок 878 КБ, PNG формы). Теперь Babel не нужен
+(компилировался только превью-каркас iPhone, удалён), иконки — 19 КБ CSS, формы — WebP по 20–50 КБ.
+
+## Кривая уровней
+
+`need(n)`: уровни 1–9 — 10, 15, 20, 25, 30, 40, 45, 50, 55 XP (10-й уровень и вторая форма за 290 XP,
+примерно неделя обычного темпа); с 10-го — `round(8·n^1.2/5)·5`. Константы — в `xp-engine.js`.

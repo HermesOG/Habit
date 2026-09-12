@@ -38,8 +38,22 @@
     };
   }
 
-  /* Кривая уровней: стоимость перехода n → n+1 */
-  function need(n) { return Math.round(10 * Math.pow(n, 1.2) / 5) * 5; }
+  /* Кривая уровней: стоимость перехода n → n+1.
+     Первая неделя — главное окно удержания, а форма персонажа меняется на 10-м уровне.
+     Старая кривая (10·n^1.2, до 10-го уровня 645 XP) давала первую смену формы на 15-й день
+     при обычном темпе 45 XP/день — позже, чем уходил медианный пользователь. Теперь:
+       • уровни 1–9: 10,15,20,25,30,40,45,50,55 → 10-й уровень за 290 XP (≈ неделя),
+         5-й (свечи, титул «Зажжённый») — за 70 XP (≈ 2-й день);
+       • с 10-го уровня — прежняя формула ×0.8: дальние формы остаются дорогими
+         (20-й ≈ 2 месяца, 50-й ≈ год при том же темпе).
+     Уровень всегда выводится из xp.total, поэтому старые пользователи просто поднимутся выше. */
+  var EARLY = [10, 15, 20, 25, 30, 40, 45, 50, 55];
+  function need(n) {
+    if (n < 10) return EARLY[Math.max(1, n) - 1];
+    return Math.round(8 * Math.pow(n, 1.2) / 5) * 5;
+  }
+  /* Суммарный XP, нужный, чтобы достичь уровня lvl (для прогнозов на экране «Путь») */
+  function totalFor(lvl) { var s = 0; for (var i = 1; i < lvl; i++) s += need(i); return s; }
 
   /* Из суммарного XP — уровень и прогресс внутри уровня */
   function levelFromXp(total) {
@@ -52,6 +66,6 @@
   window.GuardianXP = {
     TASK_XP: TASK_XP, HABIT_XP: HABIT_XP, DAILY_CAP: DAILY_CAP,
     taskXp: taskXp, habitBase: habitBase, streakMult: streakMult, habitXp: habitXp,
-    applyCap: applyCap, need: need, levelFromXp: levelFromXp
+    applyCap: applyCap, need: need, totalFor: totalFor, levelFromXp: levelFromXp
   };
 })();

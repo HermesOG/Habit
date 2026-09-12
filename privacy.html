@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Политика конфиденциальности — Хранитель</title>
+<style>
+  :root{
+    --bg:#3B3C36;
+    --surface:#47483F;
+    --accent:#D99058;
+    --text:#ECEBE4;
+    --text2:#A9A89E;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg)}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);
+    line-height:1.6;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 0 48px}
+  .langbar{
+    display:flex;
+    gap:8px;
+    padding:18px 20px 0;
+    position:sticky;
+    top:0;
+    background:var(--bg);
+    z-index:1;
+  }
+  .langbar button{
+    font:inherit;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.02em;
+    padding:7px 16px;
+    border-radius:999px;
+    border:1px solid #5c5d52;
+    background:transparent;
+    color:var(--text2);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .langbar button[aria-pressed="true"]{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#2c2d28;
+  }
+  article.doc{padding:14px 20px 0}
+  h1{font-size:25px;line-height:1.28;margin:14px 0 8px;color:var(--text);font-weight:700}
+  .lead{color:var(--text2);font-size:14.5px;line-height:1.65;margin:0 0 30px}
+  h2{font-size:17px;line-height:1.4;margin:30px 0 10px;color:var(--accent);font-weight:700}
+  p{font-size:15px;line-height:1.65;margin:0 0 14px}
+  ul{margin:0 0 14px;padding-left:22px}
+  li{font-size:15px;line-height:1.6;margin:0 0 9px}
+  li:last-child{margin-bottom:0}
+  .card{background:var(--surface);border-radius:14px;padding:4px 18px 4px;margin:0 0 16px}
+  .card ul{margin:14px 0}
+  .foot{margin:40px 20px 0;padding-top:20px;border-top:1px solid #52534a}
+  .foot a.crosslink{color:var(--accent);text-decoration:none;font-weight:600;font-size:14.5px}
+  .foot a.crosslink:hover{text-decoration:underline}
+  .verline{color:var(--text2);font-size:12px;margin:12px 0 0}
+  strong{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="langbar" role="group" aria-label="Язык · Til · Language">
+    <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+    <button type="button" data-lang="uz" aria-pressed="false">UZ</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+
+  <article class="doc" data-doc-lang="ru">
+    <h1>Политика конфиденциальности</h1>
+    <p class="lead"><strong>«Хранитель»</strong> — Telegram Mini App и бот-помощник (<strong>@sparky_tasks_bot</strong>): трекер задач, привычек и целей с персонажем, который растёт от ваших выполненных дел. Здесь честно и по делу написано, какие данные сохраняются при использовании бота и приложения, зачем это нужно и как этим управлять. Действует с 12 сентября 2026 года.</p>
+
+    <h2>Что хранится в приложении</h2>
+    <p>Задачи, привычки, цели, очки опыта (искры), настройки и выбранный язык хранятся на вашем устройстве и в Telegram CloudStorage — облачном хранилище вашего личного Telegram-аккаунта. Данные синхронизируются между вашими устройствами силами самого Telegram, а у разработчика приложения доступа к ним нет: ни к списку дел, ни к их содержимому. Мы физически не можем их прочитать.</p>
+
+    <h2>Что хранится на сервере</h2>
+    <p>Отдельно от приложения работает бот-помощник — он присылает напоминания и ведёт простую статистику. Для этого на сервере (база данных Supabase, дата-центр в Японии; серверные функции на Vercel, США) хранится:</p>
+    <div class="card"><ul>
+      <li>числовой Telegram ID — чтобы бот знал, кому писать;</li>
+      <li>выбранный язык интерфейса;</li>
+      <li>часовой пояс — определяется при первом заходе, чтобы напоминания приходили именно по вашему местному времени;</li>
+      <li>дни, когда вы открывали приложение или отмечали дело — без содержания задач, только сам факт «сегодня что-то произошло»;</li>
+      <li>краткая сводка для напоминаний: названия ваших привычек, длина серии по каждой и отмечены ли они сегодня, дни расписания, а также уровень Хранителя и число задач на сегодня — ровно то, что нужно, чтобы текст напоминания был по делу, а не общей фразой;</li>
+      <li>ваши настройки напоминаний — включены ли утренние и вечерние уведомления и в какое время их присылать (по умолчанию 9:00 и 20:00, время можно изменить в настройках приложения);</li>
+      <li>источник перехода — как вы попали к боту: метка кампании (например, «instagram»), либо, если это была ссылка-приглашение друга, — отметка об этом и числовой Telegram ID пригласившего (нужно, чтобы начислить бонусные искры вам и другу);</li>
+      <li>техническая статистика посещений — даты и число открытий приложения, тип платформы Telegram (iOS, Android или Web).</li>
+    </ul></div>
+
+    <h2>Что мы не собираем</h2>
+    <p>Мы не запрашиваем и не сохраняем номер телефона, геолокацию, контакты из телефонной книги и содержание переписки. Имя, которое Telegram передаёт для приветствия («Привет, Имя»), используется только в тексте одного сообщения бота и нигде не сохраняется.</p>
+
+    <h2>Зачем это нужно</h2>
+    <p>Все данные из раздела «на сервере» служат трём целям: доставить напоминание в нужное время по вашему часовому поясу, посчитать общую статистику использования сервиса и обеспечить работу реферальной программы — начисление бонусных искр за приглашённых друзей.</p>
+
+    <h2>Кому передаются данные</h2>
+    <p>Никому, кроме инфраструктурных провайдеров, без которых сервис технически не может работать: Telegram (доставка сообщений), Vercel (серверная часть) и Supabase (база данных). Рекламы в боте и приложении нет, данные никому не продаются и не передаются.</p>
+
+    <h2>Сроки хранения</h2>
+    <p>Серверные данные хранятся, пока вы пользуетесь ботом. Если вы не открывали бота и приложение 12 месяцев подряд, запись о вас удаляется автоматически.</p>
+
+    <h2>Ваши права</h2>
+    <p>Отключить напоминания — команда <strong>/stop</strong> боту (возвращаются командой <strong>/start</strong>). Посмотреть короткую версию этого документа прямо в Telegram — команда <strong>/privacy</strong>. Полностью и без возможности восстановления удалить все серверные данные — команда <strong>/delete</strong> и подтверждение кнопкой: числовой ID, язык, часовой пояс, сводка для напоминаний, статистика и история переходов стираются. Данные внутри самого приложения (задачи, привычки, цели, искры) хранятся отдельно и удаляются на вашей стороне: через Telegram → Настройки → Данные и память, либо удалением бота из списка чатов. Вопросы о данных — {{CONTACT}}.</p>
+
+    <h2>Дети</h2>
+    <p>Сервис не предназначен для лиц младше 13 лет. Если вам меньше 13, пожалуйста, не пользуйтесь ботом.</p>
+
+    <h2>Изменения политики</h2>
+    <p>Мы можем обновлять этот документ по мере развития сервиса. Актуальная дата версии всегда указана внизу страницы.</p>
+
+    <div class="foot">
+      <a class="crosslink" href="terms.html">Условия использования →</a>
+      <p class="verline">Версия документа: 12 сентября 2026</p>
+    </div>
+  </article>
+
+  <article class="doc" data-doc-lang="uz" hidden>
+    <h1>Maxfiylik siyosati</h1>
+    <p class="lead"><strong>«Qo'riqchi»</strong> — Telegram mini-ilovasi va yordamchi bot (<strong>@sparky_tasks_bot</strong>): bajarilgan ishlar hisobidan o'sadigan qahramonga ega vazifalar, odatlar va maqsadlar trekeri. Bu yerda bot va ilovadan foydalanganda qanday ma'lumotlar saqlanishi, bu nima uchun kerakligi va ularni qanday boshqarish mumkinligi aniq va ochiq yozilgan. Hujjat 2026-yil 12-sentabrdan amalda.</p>
+
+    <h2>Ilovada nima saqlanadi</h2>
+    <p>Vazifalar, odatlar, maqsadlar, tajriba ochkolari (uchqunlar), sozlamalar va tanlangan til — qurilmangizda va Telegram CloudStorage'da, ya'ni shaxsiy Telegram hisobingizning bulutli xotirasida saqlanadi. Ma'lumotlar Telegramning o'zi orqali qurilmalaringiz o'rtasida sinxronlanadi, ammo ilova ishlab chiquvchisining ularga kirish imkoni yo'q — na vazifalar ro'yxatiga, na ularning mazmuniga. Biz ularni jismonan o'qiy olmaymiz.</p>
+
+    <h2>Serverda nima saqlanadi</h2>
+    <p>Ilovadan alohida yordamchi bot ishlaydi — u eslatmalar yuboradi va oddiy statistika yuritadi. Shuning uchun serverda (Supabase ma'lumotlar bazasi, Yaponiyadagi data-markaz; Vercel server funksiyalari, AQSH) quyidagilar saqlanadi:</p>
+    <div class="card"><ul>
+      <li>raqamli Telegram ID — bot kimga yozishni bilishi uchun;</li>
+      <li>interfeys tili;</li>
+      <li>vaqt mintaqasi — birinchi kirishda aniqlanadi, eslatmalar aynan sizning mahalliy vaqtingizda kelishi uchun;</li>
+      <li>ilovani ochgan yoki biror ishni belgilagan kunlar — vazifa mazmunisiz, faqat «bugun nimadir bo'ldi» degan fakt;</li>
+      <li>eslatmalar uchun qisqa xulosa: odatlaringiz nomlari, har birining seriya uzunligi va bugun belgilanganmi, jadval kunlari, shuningdek Qo'riqchi darajasi va bugungi vazifalar soni — eslatma matni umumiy iboradan ko'ra mazmunli bo'lishi uchun zarur bo'lgani qadar;</li>
+      <li>eslatmalar sozlamalaringiz — ertalabki va kechki bildirishnomalar yoqilganmi va ular qaysi vaqtda kelishi kerak (odatda 9:00 va 20:00, vaqtni ilova sozlamalarida o'zgartirish mumkin);</li>
+      <li>o'tish manbai — botga qanday kelganingiz: kampaniya belgisi (masalan, «instagram»), yoki, agar bu do'stingizning taklif havolasi bo'lsa, — shu haqda belgi va taklif qilgan foydalanuvchining raqamli Telegram ID'si (sizga va do'stingizga bonus uchqunlar berish uchun kerak);</li>
+      <li>tashriflar bo'yicha texnik statistika — ilovani ochgan sanalar va soni, Telegram platformasi turi (iOS, Android yoki Web).</li>
+    </ul></div>
+
+    <h2>Nimalarni to'plamaymiz</h2>
+    <p>Biz telefon raqamini, geolokatsiyani, telefon kitobidagi kontaktlarni va yozishmalar mazmunini so'ramaymiz va saqlamaymiz. Telegram salomlashish uchun uzatadigan ism («Salom, Ism») faqat bitta bot xabari matnida ishlatiladi va hech qayerda saqlanmaydi.</p>
+
+    <h2>Bu nima uchun kerak</h2>
+    <p>«Serverda» bo'limidagi barcha ma'lumotlar uchta maqsadga xizmat qiladi: eslatmani vaqt mintaqangizga mos vaqtda yetkazish, xizmatdan foydalanish statistikasini hisoblash va referal dasturining ishlashini ta'minlash — taklif qilingan do'stlar uchun bonus uchqunlar berish.</p>
+
+    <h2>Ma'lumotlar kimga uzatiladi</h2>
+    <p>Xizmat texnik jihatdan ishlashi uchun zarur bo'lgan infratuzilma provayderlaridan boshqa hech kimga: Telegram (xabar yetkazish), Vercel (server qismi) va Supabase (ma'lumotlar bazasi). Botda va ilovada reklama yo'q, ma'lumotlar hech kimga sotilmaydi va uzatilmaydi.</p>
+
+    <h2>Saqlash muddati</h2>
+    <p>Server ma'lumotlari siz botdan foydalanayotgan davrda saqlanadi. Agar 12 oy davomida botni va ilovani ochmagan bo'lsangiz, sizning haqingizdagi yozuv avtomatik o'chiriladi.</p>
+
+    <h2>Sizning huquqlaringiz</h2>
+    <p>Eslatmalarni o'chirish — botga <strong>/stop</strong> buyrug'i (<strong>/start</strong> bilan qaytadi). Ushbu hujjatning qisqa versiyasini to'g'ridan-to'g'ri Telegramda ko'rish — <strong>/privacy</strong> buyrug'i. Barcha server ma'lumotlarini butunlay va qaytarib bo'lmaydigan tarzda o'chirish — <strong>/delete</strong> buyrug'i va tugma bilan tasdiqlash: raqamli ID, til, vaqt mintaqasi, eslatmalar uchun xulosa, statistika va o'tish tarixi o'chiriladi. Ilovaning o'zidagi ma'lumotlar (vazifalar, odatlar, maqsadlar, uchqunlar) alohida saqlanadi va o'zingiz tomonidan o'chiriladi: Telegram → Sozlamalar → Ma'lumotlar va xotira orqali, yoki botni chatlar ro'yxatidan o'chirish orqali. Ma'lumotlar bo'yicha savollar — {{CONTACT}}.</p>
+
+    <h2>Bolalar</h2>
+    <p>Xizmat 13 yoshdan kichik shaxslar uchun mo'ljallanmagan. Agar sizga 13 yoshdan kam bo'lsa, iltimos, botdan foydalanmang.</p>
+
+    <h2>Siyosatga o'zgartirishlar</h2>
+    <p>Xizmat rivojlanishi bilan ushbu hujjatni yangilashimiz mumkin. Joriy versiya sanasi doim sahifa pastida ko'rsatiladi.</p>
+
+    <div class="foot">
+      <a class="crosslink" href="terms.html">Foydalanish shartlari →</a>
+      <p class="verline">Hujjat versiyasi: 2026-yil 12-sentabr</p>
+    </div>
+  </article>
+
+  <article class="doc" data-doc-lang="en" hidden>
+    <h1>Privacy Policy</h1>
+    <p class="lead"><strong>Guardian</strong> is a Telegram Mini App and helper bot (<strong>@sparky_tasks_bot</strong>): a tracker for tasks, habits, and goals, with a character that grows from the things you get done. This page lays out, plainly and specifically, what data is stored when you use the bot and the app, why it's needed, and how to manage it. Effective from September 12, 2026.</p>
+
+    <h2>What's stored in the app</h2>
+    <p>Tasks, habits, goals, experience points (sparks), settings, and your chosen language are stored on your device and in Telegram CloudStorage — the cloud storage tied to your personal Telegram account. Telegram itself syncs this data across your devices, but the app's developer has no access to any of it — not your list of tasks, not their content. We are physically unable to read it.</p>
+
+    <h2>What's stored on the server</h2>
+    <p>A separate helper bot sends reminders and keeps light usage statistics. To do that, the server (a Supabase database hosted in Japan; Vercel server functions hosted in the US) stores:</p>
+    <div class="card"><ul>
+      <li>your numeric Telegram ID — so the bot knows who to message;</li>
+      <li>your interface language;</li>
+      <li>your time zone — detected on your first visit, so reminders land at your own local time;</li>
+      <li>days on which you opened the app or checked something off — no task content, just the fact that "something happened today";</li>
+      <li>a short summary for reminders: your habit names, each one's streak length and whether it's checked off today, its schedule days, plus your Guardian's level and today's task count — exactly enough to make a reminder specific instead of generic;</li>
+      <li>your reminder settings — whether morning and evening notifications are on, and what time they're sent (9:00 and 20:00 by default; adjustable in the app's settings);</li>
+      <li>your referral source — how you found the bot: a campaign tag (e.g. "instagram"), or, if it was a friend's invite link, a note of that plus the numeric Telegram ID of the friend who invited you (needed to credit bonus sparks to both of you);</li>
+      <li>technical visit statistics — dates and number of app opens, and the Telegram platform type (iOS, Android, or Web).</li>
+    </ul></div>
+
+    <h2>What we don't collect</h2>
+    <p>We do not request or store your phone number, location, contacts from your phone book, or the content of your messages. The name Telegram passes along for the greeting ("Hi, Name") is used only in that one bot message and is never saved anywhere.</p>
+
+    <h2>Why we need this</h2>
+    <p>Everything under "stored on the server" serves three purposes: delivering your reminder at the right time in your own time zone, calculating overall usage statistics for the service, and running the referral program — crediting bonus sparks for friends you've invited.</p>
+
+    <h2>Who we share data with</h2>
+    <p>No one, other than the infrastructure providers the service technically cannot run without: Telegram (message delivery), Vercel (backend), and Supabase (database). There are no ads in the bot or the app, and we never sell or share data with anyone.</p>
+
+    <h2>How long we keep it</h2>
+    <p>Server-side data is kept for as long as you use the bot. If you haven't opened the bot or the app for 12 months in a row, your record is deleted automatically.</p>
+
+    <h2>Your rights</h2>
+    <p>Turn off reminders — send <strong>/stop</strong> to the bot (bring them back with <strong>/start</strong>). See a short version of this document right inside Telegram — send <strong>/privacy</strong>. Permanently and irreversibly delete all your server-side data — send <strong>/delete</strong> and confirm with the button: your numeric ID, language, time zone, reminder summary, statistics, and referral history are all erased. Data inside the app itself (tasks, habits, goals, sparks) is stored separately and deleted on your side: via Telegram → Settings → Data and Storage, or by deleting the bot from your chat list. Questions about your data — {{CONTACT}}.</p>
+
+    <h2>Children</h2>
+    <p>This service is not intended for anyone under the age of 13. If you're under 13, please don't use the bot.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>We may update this document as the service evolves. The current version date is always shown at the bottom of the page.</p>
+
+    <div class="foot">
+      <a class="crosslink" href="terms.html">Terms of use →</a>
+      <p class="verline">Document version: September 12, 2026</p>
+    </div>
+  </article>
+</div>
+
+<script>
+(function(){
+  var LANGS=['ru','uz','en'];
+  var TITLES={
+    ru:'Политика конфиденциальности — Хранитель',
+    uz:"Maxfiylik siyosati — Qo'riqchi",
+    en:'Privacy Policy — Guardian'
+  };
+  var CROSS='terms.html';
+  var KEY='khranitel_doc_lang';
+
+  function paramLang(){
+    try{
+      var p=new URLSearchParams(window.location.search).get('lang');
+      if(p && LANGS.indexOf(p)>-1) return p;
+    }catch(e){}
+    return null;
+  }
+  function storedLang(){
+    try{
+      var s=window.localStorage.getItem(KEY);
+      if(s && LANGS.indexOf(s)>-1) return s;
+    }catch(e){}
+    return null;
+  }
+  function saveLang(lang){
+    try{ window.localStorage.setItem(KEY, lang); }catch(e){}
+  }
+  function setLang(lang, persist){
+    if(LANGS.indexOf(lang)===-1) lang='ru';
+    for(var i=0;i<LANGS.length;i++){
+      var l=LANGS[i];
+      var art=document.querySelector('article[data-doc-lang="'+l+'"]');
+      if(art) art.hidden=(l!==lang);
+      var btn=document.querySelector('button[data-lang="'+l+'"]');
+      if(btn) btn.setAttribute('aria-pressed', l===lang?'true':'false');
+    }
+    document.documentElement.setAttribute('lang', lang);
+    if(TITLES[lang]) document.title=TITLES[lang];
+    var links=document.querySelectorAll('a.crosslink');
+    for(var j=0;j<links.length;j++) links[j].setAttribute('href', CROSS+'?lang='+lang);
+    if(persist) saveLang(lang);
+  }
+  function init(){
+    var fromUrl=paramLang();
+    var fromStore=storedLang();
+    var lang=fromUrl || fromStore || 'ru';
+    setLang(lang, !!(fromUrl || fromStore));
+    for(var i=0;i<LANGS.length;i++){
+      (function(l){
+        var btn=document.querySelector('button[data-lang="'+l+'"]');
+        if(btn) btn.addEventListener('click', function(){ setLang(l, true); });
+      })(LANGS[i]);
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>

@@ -7,28 +7,28 @@
   var R = window.__resources || {};
   var ASSETS = {
     amber: {
-      form1: R.form1_amber || 'uploads/form1_amber_c.png',
-      form2: R.form2_amber || 'uploads/form2_amber_c.png',
-      form3: R.form3_amber || 'uploads/form3_amber_c.png',
+      form1: R.form1_amber || 'uploads/form1_amber_c.webp',
+      form2: R.form2_amber || 'uploads/form2_amber_c.webp',
+      form3: R.form3_amber || 'uploads/form3_amber_c.webp',
       form3a: null, /* слот аномалии 29 — если появится PNG, заменит рисованную трещину */
-      form4: R.form4_amber || 'uploads/form4_amber_c.png',
-      form5: R.form5_amber || 'uploads/form5_amber_c.png'
+      form4: R.form4_amber || 'uploads/form4_amber_c.webp',
+      form5: R.form5_amber || 'uploads/form5_amber_c.webp'
     },
     azure: {
-      form1: R.form1_azure || 'uploads/form1_azure_c.png',
-      form2: R.form2_azure || 'uploads/form2_azure_c.png',
-      form3: R.form3_azure || 'uploads/form3_azure_c.png',
+      form1: R.form1_azure || 'uploads/form1_azure_c.webp',
+      form2: R.form2_azure || 'uploads/form2_azure_c.webp',
+      form3: R.form3_azure || 'uploads/form3_azure_c.webp',
       form3a: null,
-      form4: R.form4_azure || 'uploads/form4_azure_c.png',
-      form5: R.form5_azure || 'uploads/form5_azure_c.png'
+      form4: R.form4_azure || 'uploads/form4_azure_c.webp',
+      form5: R.form5_azure || 'uploads/form5_azure_c.webp'
     },
     spark: {
-      form1: R.form1_spark || 'uploads/form1_spark_c.png',
-      form2: R.form2_spark || 'uploads/form2_spark_c.png',
-      form3: R.form3_spark || 'uploads/form3_spark_c.png',
+      form1: R.form1_spark || 'uploads/form1_spark_c.webp',
+      form2: R.form2_spark || 'uploads/form2_spark_c.webp',
+      form3: R.form3_spark || 'uploads/form3_spark_c.webp',
       form3a: null,
-      form4: R.form4_spark || 'uploads/form4_spark_c.png',
-      form5: R.form5_spark || 'uploads/form5_spark_c.png'
+      form4: R.form4_spark || 'uploads/form4_spark_c.webp',
+      form5: R.form5_spark || 'uploads/form5_spark_c.webp'
     }
   };
 

@@ -1,4 +1,8 @@
-# Keep the deploy lean — these stay in git but aren't served
+# Не уезжает в деплой (в git остаётся)
 reference/
-LOGIC.md
+db/
+tools/
+docs/
+*.md
 .claude/
+.env*

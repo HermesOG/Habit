@@ -11,29 +11,27 @@
 </svg>
 </template>
 <meta name="ext-resource-dependency" content="./CharacterStage.dc.html" data-resource-id="charStage" />
-<meta name="ext-resource-dependency" content="./ios-frame.jsx" data-resource-id="iosFrame" />
-<meta name="ext-resource-dependency" content="uploads/form1_amber_c.png" data-resource-id="form1_amber" />
-<meta name="ext-resource-dependency" content="uploads/form2_amber_c.png" data-resource-id="form2_amber" />
-<meta name="ext-resource-dependency" content="uploads/form3_amber_c.png" data-resource-id="form3_amber" />
-<meta name="ext-resource-dependency" content="uploads/form4_amber_c.png" data-resource-id="form4_amber" />
-<meta name="ext-resource-dependency" content="uploads/form5_amber_c.png" data-resource-id="form5_amber" />
-<meta name="ext-resource-dependency" content="uploads/form1_azure_c.png" data-resource-id="form1_azure" />
-<meta name="ext-resource-dependency" content="uploads/form2_azure_c.png" data-resource-id="form2_azure" />
-<meta name="ext-resource-dependency" content="uploads/form3_azure_c.png" data-resource-id="form3_azure" />
-<meta name="ext-resource-dependency" content="uploads/form4_azure_c.png" data-resource-id="form4_azure" />
-<meta name="ext-resource-dependency" content="uploads/form5_azure_c.png" data-resource-id="form5_azure" />
-<meta name="ext-resource-dependency" content="uploads/form1_spark_c.png" data-resource-id="form1_spark" />
-<meta name="ext-resource-dependency" content="uploads/form2_spark_c.png" data-resource-id="form2_spark" />
-<meta name="ext-resource-dependency" content="uploads/form3_spark_c.png" data-resource-id="form3_spark" />
-<meta name="ext-resource-dependency" content="uploads/form4_spark_c.png" data-resource-id="form4_spark" />
-<meta name="ext-resource-dependency" content="uploads/form5_spark_c.png" data-resource-id="form5_spark" />
+<meta name="ext-resource-dependency" content="uploads/form1_amber_c.webp" data-resource-id="form1_amber" />
+<meta name="ext-resource-dependency" content="uploads/form2_amber_c.webp" data-resource-id="form2_amber" />
+<meta name="ext-resource-dependency" content="uploads/form3_amber_c.webp" data-resource-id="form3_amber" />
+<meta name="ext-resource-dependency" content="uploads/form4_amber_c.webp" data-resource-id="form4_amber" />
+<meta name="ext-resource-dependency" content="uploads/form5_amber_c.webp" data-resource-id="form5_amber" />
+<meta name="ext-resource-dependency" content="uploads/form1_azure_c.webp" data-resource-id="form1_azure" />
+<meta name="ext-resource-dependency" content="uploads/form2_azure_c.webp" data-resource-id="form2_azure" />
+<meta name="ext-resource-dependency" content="uploads/form3_azure_c.webp" data-resource-id="form3_azure" />
+<meta name="ext-resource-dependency" content="uploads/form4_azure_c.webp" data-resource-id="form4_azure" />
+<meta name="ext-resource-dependency" content="uploads/form5_azure_c.webp" data-resource-id="form5_azure" />
+<meta name="ext-resource-dependency" content="uploads/form1_spark_c.webp" data-resource-id="form1_spark" />
+<meta name="ext-resource-dependency" content="uploads/form2_spark_c.webp" data-resource-id="form2_spark" />
+<meta name="ext-resource-dependency" content="uploads/form3_spark_c.webp" data-resource-id="form3_spark" />
+<meta name="ext-resource-dependency" content="uploads/form4_spark_c.webp" data-resource-id="form4_spark" />
+<meta name="ext-resource-dependency" content="uploads/form5_spark_c.webp" data-resource-id="form5_spark" />
 <script>
 (function(){
   if(!window.fetch) return;
   var rf = window.fetch.bind(window);
   function keyOf(u){
     if (u.indexOf('CharacterStage.dc.html') !== -1) return 'charStage';
-    if (u.indexOf('ios-frame.jsx') !== -1) return 'iosFrame';
     return null;
   }
   window.fetch = function(input, init){
@@ -41,6 +39,9 @@
     var k = keyOf(String(u));
     var res = k && window.__resources && window.__resources[k];
     if (res) return rf(res, init);
+    /* Vercel (cleanUrls) отвечает на *.html редиректом 308 — просим сразу чистый адрес;
+       локальный python-сервер отдаёт .html как есть */
+    if (k === 'charStage' && location.protocol === 'https:') input = String(u).replace(/CharacterStage\.dc\.html$/, 'CharacterStage.dc');
     var p = rf(input, init);
     if (u && String(u) === location.href && p && p.catch) p = p.catch(function(){ return new Response('', {status:200}); });
     return p;
@@ -55,7 +56,7 @@
 
 
 <link href="vendor/fonts.css" rel="stylesheet">
-<link rel="stylesheet" href="vendor/tabler-icons.min.css">
+<link rel="stylesheet" href="vendor/icons.css">
 <script src="vendor/telegram-web-app.js"></script>
 <style>
   html,body{margin:0;padding:0;background:#16171a}
@@ -309,6 +310,12 @@ input{outline:none}
 <i class="ti {{ emptyIcon }}" style="font-size:24px;color:var(--accent-soft)"></i>
 <div style="font-size:14.5px;font-weight:500;color:var(--text-mid)">{{ emptyTitle }}</div>
 <div style="font-size:12.5px;color:var(--text-faint);line-height:1.45;max-width:230px">{{ emptySub }}</div>
+<sc-if value="{{ firstRun }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ startFirstHabit }}" style="margin-top:8px;background:var(--accent);color:var(--on-accent);border-radius:12px;padding:12px 18px;font-size:14px;font-weight:600;cursor:pointer">{{ L.firstHabitBtn }}</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+<sc-for list="{{ starterHabits }}" as="sh" hint-placeholder-count="3"><div onClick="{{ sh.onTap }}" style="padding:7px 11px;border-radius:999px;background:var(--inset);color:var(--text-mid);font-size:12.5px;cursor:pointer">{{ sh.name }}</div></sc-for>
+</div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -685,10 +692,42 @@ input{outline:none}
 <span style="font-family:'Spectral',serif;font-size:24px;font-weight:600;color:var(--text-primary)">{{ L.notifTitle }}</span>
 </div>
 
+<sc-if value="{{ prefsUnavailable }}" hint-placeholder-val="{{ false }}">
 <div style="background:var(--surface);border-radius:16px;padding:16px;display:flex;gap:13px;align-items:flex-start">
 <i class="ti ti-bell" style="font-size:20px;color:var(--accent-soft);flex:none;margin-top:1px"></i>
-<div style="font-size:13.5px;color:var(--text-secondary);line-height:1.55">{{ L.ntExplain }}</div>
+<div style="font-size:13.5px;color:var(--text-secondary);line-height:1.55">{{ prefsMsg }}</div>
 </div>
+</sc-if>
+<sc-if value="{{ prefsLoading }}" hint-placeholder-val="{{ false }}">
+<div style="text-align:center;padding:24px;color:var(--text-faint);font-size:13px">{{ L.syncLoading }}</div>
+</sc-if>
+<sc-if value="{{ prefsReady }}" hint-placeholder-val="{{ true }}">
+<div style="background:var(--surface);border-radius:16px;overflow:hidden;margin-bottom:12px">
+<sc-for list="{{ notifToggles }}" as="r" hint-placeholder-count="2">
+<div style="{{ r.borderStyle }}">
+<div style="display:flex;align-items:center;gap:13px;padding:14px 16px">
+<i class="ti {{ r.icon }}" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
+<div style="flex:1;min-width:0">
+<div style="font-size:15px;color:var(--text-mid)">{{ r.label }}</div>
+<div style="font-size:12px;color:var(--text-secondary);margin-top:2px">{{ r.hint }}</div>
+</div>
+<div onClick="{{ r.onToggle }}" style="width:44px;height:26px;border-radius:999px;flex:none;cursor:pointer;transition:background .25s;padding:3px;box-sizing:border-box; {{ r.trackStyle }}">
+<div style="width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .22s cubic-bezier(.3,.9,.3,1); {{ r.knobStyle }}"></div>
+</div>
+</div>
+<sc-if value="{{ r.on }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;padding:0 16px 14px 49px">
+<span style="font-size:13px;color:var(--text-secondary);flex:1">{{ L.ntTime }}</span>
+<div onClick="{{ r.onMinus }}" style="width:32px;height:32px;border-radius:50%;background:var(--inset);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-chevron-left" style="font-size:16px;color:var(--text-mid)"></i></div>
+<span style="font-family:'Spectral',serif;font-size:19px;font-weight:600;color:var(--text-primary);min-width:56px;text-align:center">{{ r.time }}</span>
+<div onClick="{{ r.onPlus }}" style="width:32px;height:32px;border-radius:50%;background:var(--inset);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ti ti-chevron-right" style="font-size:16px;color:var(--text-mid)"></i></div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="font-size:12.5px;color:var(--text-faint);line-height:1.5;margin:0 6px">{{ L.ntExplain2 }}</div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -717,7 +756,7 @@ input{outline:none}
 <div style="font-size:11.5px;color:var(--text-secondary);margin:2px 6px 8px;text-transform:uppercase;letter-spacing:.07em">{{ L.sectionContact }}</div>
 <div style="background:var(--surface);border-radius:16px;overflow:hidden">
 <sc-for list="{{ helpRows }}" as="r" hint-placeholder-count="3">
-<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer; {{ r.borderStyle }}">
+<div onClick="{{ r.onTap }}" style="display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer; {{ r.borderStyle }}">
 <i class="ti {{ r.icon }}" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
 <span style="flex:1;font-size:15px;color:var(--text-mid)">{{ r.label }}</span>
 <i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint);flex:none"></i>
@@ -748,7 +787,7 @@ input{outline:none}
 
 <div style="background:var(--surface);border-radius:16px;overflow:hidden">
 <sc-for list="{{ aboutRows }}" as="r" hint-placeholder-count="3">
-<div style="display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer; {{ r.borderStyle }}">
+<div onClick="{{ r.onTap }}" style="display:flex;align-items:center;gap:13px;padding:15px 16px;cursor:pointer; {{ r.borderStyle }}">
 <i class="ti {{ r.icon }}" style="font-size:20px;color:var(--accent-soft);flex:none"></i>
 <span style="flex:1;font-size:15px;color:var(--text-mid)">{{ r.label }}</span>
 <i class="ti ti-chevron-right" style="font-size:18px;color:var(--text-faint);flex:none"></i>
@@ -787,6 +826,7 @@ input{outline:none}
 <div style="font-family:'Spectral',serif;font-size:17px;font-weight:600;color: {{ ms.nameColor }}">{{ ms.name }}</div>
 <div style="font-size:12.5px;color:var(--text-secondary);margin-top:3px">{{ ms.sub }}</div>
 <sc-if value="{{ ms.current }}" hint-placeholder-val="{{ false }}"><div style="font-size:11.5px;color:var(--accent-soft);margin-top:5px">{{ L.hereNow }}</div></sc-if>
+<sc-if value="{{ ms.hasForecast }}" hint-placeholder-val="{{ false }}"><div style="font-size:11.5px;color:var(--text-faint);margin-top:4px">{{ ms.forecast }}</div></sc-if>
 </div>
 <sc-if value="{{ ms.anomaly }}" hint-placeholder-val="{{ false }}">
 <span style="position:relative;font-family:'Spectral',serif;font-size:25px;font-weight:600;color:var(--text-faint);flex:none">
@@ -909,6 +949,12 @@ input{outline:none}
 </div>
 </sc-if>
 
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:152px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:27">
+<i class="ti ti-sparkles" style="font-size:17px;color:var(--accent-soft)"></i>
+<span style="font-size:13.5px;color:var(--text-mid)">{{ toast }}</span>
+</div>
+</sc-if>
 <sc-if value="{{ capToast }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:16px;right:16px;bottom:152px;background:var(--toast);border:.5px solid var(--border);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:toastIn .3s ease;z-index:27">
 <i class="ti ti-flame" style="font-size:17px;color:var(--accent-soft)"></i>
@@ -1253,7 +1299,10 @@ input{outline:none}
 </div>
 <div style="font-family:'Spectral',serif;font-size:13px;color:var(--accent-soft);margin-top:18px;letter-spacing:3px;text-transform:uppercase;white-space:nowrap">{{ leveledCaption }}</div>
 <div style="font-family:'Spectral',serif;font-size:40px;font-weight:600;color:var(--text-primary);margin-top:2px;animation:popIn .5s ease both">{{ L.levelWord }} {{ leveledNum }}</div>
-<button onClick="{{ dismissLevel }}" style="margin-top:22px;background:none;border:1px solid var(--accent-soft);color:var(--accent-soft);font-size:14px;font-weight:600;padding:11px 28px;border-radius:999px;cursor:pointer">{{ L.nextBtn }}</button>
+<div style="display:flex;gap:10px;margin-top:22px">
+<button onClick="{{ dismissLevel }}" style="background:none;border:1px solid var(--accent-soft);color:var(--accent-soft);font-size:14px;font-weight:600;padding:11px 22px;border-radius:999px;cursor:pointer">{{ L.nextBtn }}</button>
+<button onClick="{{ shareFromLevel }}" style="background:var(--accent);border:1px solid var(--accent);color:var(--on-accent);font-size:14px;font-weight:600;padding:11px 22px;border-radius:999px;cursor:pointer">{{ L.shareShort }}</button>
+</div>
 </div>
 </sc-if>
 
@@ -1274,10 +1323,10 @@ input{outline:none}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;cardStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Полоса&quot;,&quot;options&quot;:[&quot;Полоса&quot;,&quot;Пастель&quot;,&quot;Точка&quot;],&quot;tsType&quot;:&quot;'Полоса'|'Пастель'|'Точка'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;navStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Плоская&quot;,&quot;options&quot;:[&quot;Плоская&quot;,&quot;Плавающая&quot;],&quot;tsType&quot;:&quot;'Плоская'|'Плавающая'&quot;,&quot;section&quot;:&quot;Варианты&quot;},&quot;celebrationStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Восхождение&quot;,&quot;options&quot;:[&quot;Вспышка&quot;,&quot;Восхождение&quot;],&quot;tsType&quot;:&quot;'Вспышка'|'Восхождение'&quot;,&quot;section&quot;:&quot;Варианты&quot;}}">
 const LANGS = [{"code": "ru", "label": "Русский"}, {"code": "uz", "label": "O'zbekcha"}, {"code": "en", "label": "English"}];
-const I18N = {"ru": {"today": "Сегодня", "todayLow": "сегодня", "tomorrow": "Завтра", "done": "Выполнено", "goalReached": "Цель достигнута", "overdueDot": "Просрочено · ", "overdueLabel": "просрочено", "lastDay": "последний день", "taskWord": "Задача", "goalWord": "Цель", "stepWord": "Шаг", "habitWord": "Привычка", "streakWord": "стрик", "daysShort": "дн.", "lvlShort": "ур. ", "levelWord": "Уровень", "calendarWord": "Календарь", "createWord": "Создать", "back": "Назад", "save": "Сохранить", "nextBtn": "Дальше", "habitsHeading": "Привычки", "upcoming": "Дальше", "allDoneToday": "На сегодня всё", "allDoneSub": "Задачи закрыты — Хранитель доволен", "noTasksToday": "На сегодня задач нет", "noTasksSub": "Создай задачу или загляни в «Дальше»", "moreUpcoming": "ещё", "restDay": "Сегодня день отдыха", "ntExplain": "Напоминания присылает бот «Хранитель». Чтобы их отключить, откройте чат с ботом и отключите в нём уведомления средствами Telegram.", "allTasks": "Все задачи", "soloSection": "Задачи без цели", "allAchieved": "Все достигнутые задачи", "archiveEmpty": "Пока пусто. Достигай целей — герой сложит их сюда как трофеи.", "quietDay": "Тихий день — искр не было", "monthSummary": "Итоги месяца", "sparksMonth": "Искры за месяц", "tasksClosed": "задач закрыто", "bestStreakCap": "лучший стрик", "profile": "Профиль", "appearance": "Внешний вид", "apply": "Применить", "syncPrefix": "Синхронизация: ", "statActiveGoals": "Активные цели", "statStepsDone": "Шагов выполнено", "statBestStreak": "Лучший стрик", "statHabitsToday": "Привычки сегодня", "actHelp": "Помощь и поддержка", "settingsTitle": "Настройки", "sectionGeneral": "Общие", "sectionPrefs": "Предпочтения", "language": "Язык", "firstDayWeek": "Первый день недели", "monday": "Понедельник", "sunday": "Воскресенье", "tglSounds": "Звуковые эффекты", "tglSoundsHint": "Звук при отметке задач", "tglHaptics": "Виброотклик", "tglHapticsHint": "Тактильная отдача", "tglStarfield": "Живой фон", "tglStarfieldHint": "Анимация ауры и частиц", "notifTitle": "Уведомления", "pushTitle": "Push-уведомления", "pushSub": "Главный переключатель", "sectionWhat": "Что присылать", "ntTasks": "Напоминания о задачах", "ntTasksHint": "За час до срока", "ntHabitsHint": "Ежедневное напоминание", "ntAch": "Достижения", "ntAchHint": "Новый уровень Хранителя", "ntWeekly": "Еженедельный отчёт", "ntWeeklyHint": "По понедельникам утром", "helpTitle": "Помощь", "sectionFaq": "Частые вопросы", "sectionContact": "Связаться с нами", "faqQ1": "Кто такой Хранитель?", "faqA1": "Хранитель — ваш спутник, который растёт вместе с вами. Каждая выполненная задача и привычка питает его и поднимает уровень.", "faqQ2": "Как персонаж набирает уровень?", "faqA2": "За задачи и привычки начисляется рост. Когда шкала заполняется до 100%, Хранитель переходит на новый уровень и меняет облик.", "faqQ3": "Чем цель отличается от привычки?", "faqA3": "Цель — это результат с шагами и сроком. Привычка — регулярное действие по расписанию, которое формирует ритм.", "faqQ4": "Сохранятся ли мои данные?", "faqA4": "Все данные хранятся в вашем аккаунте Telegram и синхронизируются между устройствами автоматически.", "hlContact": "Написать в поддержку", "hlChannel": "Наш Telegram-канал", "hlBug": "Сообщить о проблеме", "aboutTitle": "О приложении", "appName": "Хранитель", "versionLabel": "Версия 2.4.0", "aboutDesc": "Спутник продуктивности, который растёт вместе с вами. Выполняйте задачи и привычки — и наблюдайте, как крепнет ваш Хранитель.", "madeWith": "Сделано с заботой · 2026", "pathTitle": "Путь Хранителя", "pathSub": "Каждый уровень приближает следующую форму", "hereNow": "Сейчас здесь", "msSmolder": "Тлеющий", "msKindled": "Зажжённый", "msStrong": "Окрепший", "msBright": "Яркий", "msBlazing": "Пылающий", "themeApplied": "Тема применена", "somethingSleeps": "Что-то дремлет здесь…", "spiritEnough": "Дух собрал достаточно искр на сегодня", "newGoal": "Новая цель", "newTask": "Новая задача", "newHabit": "Новая привычка", "goalCardDesc": "Крупная задача с дедлайном и шагами", "taskCardDesc": "Одно конкретное действие с датой", "habitCardDesc": "Регулярное действие со стриком", "fldName": "Название", "fldColor": "Цвет", "fldDeadline": "Дедлайн", "fldSteps": "Шаги", "fldDifficulty": "Сложность", "fldDate": "Дата", "fldSchedule": "Расписание", "fldContext": "Когда / контекст (необязательно)", "stepDifficulty": "Сложность шага", "addStepBtn": "+ Добавить шаг", "phGoalName": "Например, Прочитать «Дюну»", "phStep": "Новый шаг", "phTaskName": "Например, Позвонить в банк", "phHabitName": "Например, Стакан воды утром", "phContext": "Например, после пробуждения", "createGoalBtn": "Создать цель", "createTaskBtn": "Создать задачу", "createHabitBtn": "Создать привычку", "attachWhere": "Куда добавить", "attachSolo": "Отдельная", "attachGoal": "К цели", "schedDaily": "Ежедневно", "schedDays": "По дням", "schedCountSeg": "N в неделю", "perWeek": "раз в неделю", "qd1w": "1 неделя", "qd2w": "2 недели", "qd1m": "1 месяц", "chooseDate": "Выберите дату", "continueBtn": "Продолжить", "moveToAchieved": "Убрать в достигнутые", "celebTail": "завершена — герой набирает силу", "renameTitle": "Имя Хранителя", "fldRename": "Имя", "confirmTitle": "Хранитель насторожился", "keepBtn": "Оставить, я справлюсь", "deleteAnyway": "Всё равно удалить", "confirmGoal": "Цель «{n}» ещё не достигнута — герой в неё верил. Точно отпускаем?", "confirmStep": "Шаг «{n}» ещё не сделан. Хранитель сделает вид, что не заметил… но точно удаляем?", "confirmHabit": "Привычка «{n}» держит стрик. Точно удаляем?", "confirmTask": "Задача «{n}» ещё не выполнена. Хранитель сделает вид, что не заметил… но точно удаляем?", "editGoal": "Правка цели", "editStep": "Правка шага", "editHabit": "Правка привычки", "editTask": "Правка задачи", "delGoal": "Удалить цель", "delStep": "Удалить шаг", "delHabit": "Удалить привычку", "delTask": "Удалить задачу", "newForm": "Новый облик", "newTitle": "Новый титул", "newLevel": "Новый уровень", "taskChecked": "Задача отмечена · ", "habitChecked": "Привычка отмечена · ", "syncLocal": "Локально (вне Telegram)", "syncNoCloud": "Нет связи с облаком", "syncLoading": "Загрузка…", "syncCloudOk": "Облако ✓", "syncCloudFail": "Облако недоступно — локально", "syncCloudWait": "Облако · ожидание записи", "thAmber": "Янтарь", "thAmberCap": "Тёплая нейтральная, как свеча", "thAzure": "Лазурь", "thAzureCap": "Прохладная и собранная", "thSpark": "Искра", "thSparkCap": "Тёплая и смелая, уголёк в ночи", "abRate": "Оценить приложение", "abTerms": "Условия использования", "abPrivacy": "Политика конфиденциальности", "mFull": ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"], "mGen": ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"], "mShort": ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"], "weekdays": ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"], "weekHeaders": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], "diffNames": ["Мелочь", "Обычная", "Серьёзная", "Сложная", "Вызов"], "pl_days": ["день", "дня", "дней"], "pl_steps": ["шаг", "шага", "шагов"], "pl_sparks": ["искра", "искры", "искр"], "pl_tasks": ["задача", "задачи", "задач"], "undoBtn": "Отменить"}, "uz": {"today": "Bugun", "todayLow": "bugun", "tomorrow": "Ertaga", "done": "Bajarildi", "goalReached": "Maqsadga erishildi", "overdueDot": "Kechikdi · ", "overdueLabel": "kechikdi", "lastDay": "oxirgi kun", "taskWord": "Vazifa", "goalWord": "Maqsad", "stepWord": "Qadam", "habitWord": "Odat", "streakWord": "seriya", "daysShort": "kun", "lvlShort": "daraja ", "levelWord": "Daraja", "calendarWord": "Kalendar", "createWord": "Yaratish", "back": "Orqaga", "save": "Saqlash", "nextBtn": "Keyingi", "habitsHeading": "Odatlar", "upcoming": "Keyingi", "allDoneToday": "Bugunga hammasi tayyor", "allDoneSub": "Vazifalar yopildi — Qo'riqchi mamnun", "noTasksToday": "Bugunga vazifa yo'q", "noTasksSub": "Vazifa yarating yoki «Keyingi»ga qarang", "moreUpcoming": "yana", "restDay": "Bugun dam olish kuni", "ntExplain": "Eslatmalarni «Qo'riqchi» boti yuboradi. O'chirish uchun bot bilan chatni oching va Telegram vositalari bilan bildirishnomalarni o'chiring.", "allTasks": "Barcha vazifalar", "soloSection": "Maqsadsiz vazifalar", "allAchieved": "Barcha erishilgan vazifalar", "archiveEmpty": "Hozircha bo'sh. Maqsadlarga erish — qahramon ularni bu yerga trofey sifatida yig'adi.", "quietDay": "Sokin kun — uchqun bo'lmadi", "monthSummary": "Oy yakunlari", "sparksMonth": "Oylik uchqunlar", "tasksClosed": "vazifa yopildi", "bestStreakCap": "eng yaxshi seriya", "profile": "Profil", "appearance": "Ko'rinish", "apply": "Qo'llash", "syncPrefix": "Sinxronizatsiya: ", "statActiveGoals": "Faol maqsadlar", "statStepsDone": "Bajarilgan qadamlar", "statBestStreak": "Eng yaxshi seriya", "statHabitsToday": "Bugungi odatlar", "actHelp": "Yordam va qo'llab-quvvatlash", "settingsTitle": "Sozlamalar", "sectionGeneral": "Umumiy", "sectionPrefs": "Afzalliklar", "language": "Til", "firstDayWeek": "Hafta boshi", "monday": "Dushanba", "sunday": "Yakshanba", "tglSounds": "Ovoz effektlari", "tglSoundsHint": "Vazifa belgilaganda ovoz", "tglHaptics": "Tebranish", "tglHapticsHint": "Sezilarli javob", "tglStarfield": "Jonli fon", "tglStarfieldHint": "Aura va zarrachalar animatsiyasi", "notifTitle": "Bildirishnomalar", "pushTitle": "Push-bildirishnomalar", "pushSub": "Asosiy o'tkazgich", "sectionWhat": "Nima yuborilsin", "ntTasks": "Vazifa eslatmalari", "ntTasksHint": "Muddatdan bir soat oldin", "ntHabitsHint": "Kunlik eslatma", "ntAch": "Yutuqlar", "ntAchHint": "Qo'riqchining yangi darajasi", "ntWeekly": "Haftalik hisobot", "ntWeeklyHint": "Dushanba kunlari ertalab", "helpTitle": "Yordam", "sectionFaq": "Ko'p beriladigan savollar", "sectionContact": "Biz bilan bog'lanish", "faqQ1": "Qo'riqchi kim?", "faqA1": "Qo'riqchi — siz bilan birga o'sadigan hamrohingiz. Har bir bajarilgan vazifa va odat uni oziqlantiradi va darajasini oshiradi.", "faqQ2": "Qahramon qanday daraja oladi?", "faqA2": "Vazifa va odatlar uchun o'sish beriladi. Shkala 100% ga to'lganda, Qo'riqchi yangi darajaga o'tadi va qiyofasini o'zgartiradi.", "faqQ3": "Maqsad odatdan nimasi bilan farq qiladi?", "faqA3": "Maqsad — bu qadamlar va muddati bor natija. Odat — jadval bo'yicha ritm shakllantiruvchi muntazam ish.", "faqQ4": "Ma'lumotlarim saqlanadimi?", "faqA4": "Barcha ma'lumotlar Telegram hisobingizda saqlanadi va qurilmalar o'rtasida avtomatik sinxronlanadi.", "hlContact": "Qo'llab-quvvatlashga yozish", "hlChannel": "Telegram kanalimiz", "hlBug": "Muammo haqida xabar berish", "aboutTitle": "Ilova haqida", "appName": "Qo'riqchi", "versionLabel": "Versiya 2.4.0", "aboutDesc": "Siz bilan birga o'sadigan samaradorlik hamrohi. Vazifa va odatlarni bajaring — Qo'riqchingiz qanday kuchayishini kuzating.", "madeWith": "Mehr bilan yaratilgan · 2026", "pathTitle": "Qo'riqchi yo'li", "pathSub": "Har bir daraja keyingi qiyofaga yaqinlashtiradi", "hereNow": "Hozir shu yerda", "msSmolder": "Cho'g'lanayotgan", "msKindled": "Yongan", "msStrong": "Kuchaygan", "msBright": "Yorqin", "msBlazing": "Alangalagan", "themeApplied": "Mavzu qo'llandi", "somethingSleeps": "Bu yerda nimadir mudroq…", "spiritEnough": "Ruh bugungi uchqunlarni yetarlicha yig'di", "newGoal": "Yangi maqsad", "newTask": "Yangi vazifa", "newHabit": "Yangi odat", "goalCardDesc": "Muddati va qadamlari bor yirik vazifa", "taskCardDesc": "Sanasi bor aniq bitta ish", "habitCardDesc": "Seriyali muntazam takrorlanuvchi ish", "fldName": "Nomi", "fldColor": "Rang", "fldDeadline": "Muddat", "fldSteps": "Qadamlar", "fldDifficulty": "Murakkablik", "fldDate": "Sana", "fldSchedule": "Jadval", "fldContext": "Qachon / kontekst (ixtiyoriy)", "stepDifficulty": "Qadam murakkabligi", "addStepBtn": "+ Qadam qo'shish", "phGoalName": "Masalan, «Dyuna»ni o'qish", "phStep": "Yangi qadam", "phTaskName": "Masalan, Bankka qo'ng'iroq qilish", "phHabitName": "Masalan, Ertalab bir stakan suv", "phContext": "Masalan, uyg'ongandan keyin", "createGoalBtn": "Maqsad yaratish", "createTaskBtn": "Vazifa yaratish", "createHabitBtn": "Odat yaratish", "attachWhere": "Qayerga qo'shilsin", "attachSolo": "Alohida", "attachGoal": "Maqsadga", "schedDaily": "Har kuni", "schedDays": "Kunlar bo'yicha", "schedCountSeg": "Haftada N", "perWeek": "marta / hafta", "qd1w": "1 hafta", "qd2w": "2 hafta", "qd1m": "1 oy", "chooseDate": "Sanani tanlang", "continueBtn": "Davom etish", "moveToAchieved": "Erishilganlarga o'tkazish", "celebTail": "yakunlandi — qahramon kuch to'playapti", "renameTitle": "Qo'riqchi nomi", "fldRename": "Ism", "confirmTitle": "Qo'riqchi hushyor tortdi", "keepBtn": "Qolsin, o'zim uddalayman", "deleteAnyway": "Baribir o'chirish", "confirmGoal": "«{n}» maqsadiga hali erishilmadi — qahramon unga ishongandi. Rostdan qo'yib yuboramizmi?", "confirmStep": "«{n}» qadami hali bajarilmadi. Qo'riqchi sezmaganga oladi… lekin rostdan o'chiramizmi?", "confirmHabit": "«{n}» odati seriyani ushlab turibdi. Rostdan o'chiramizmi?", "confirmTask": "«{n}» vazifasi hali bajarilmadi. Qo'riqchi sezmaganga oladi… lekin rostdan o'chiramizmi?", "editGoal": "Maqsadni tahrirlash", "editStep": "Qadamni tahrirlash", "editHabit": "Odatni tahrirlash", "editTask": "Vazifani tahrirlash", "delGoal": "Maqsadni o'chirish", "delStep": "Qadamni o'chirish", "delHabit": "Odatni o'chirish", "delTask": "Vazifani o'chirish", "newForm": "Yangi qiyofa", "newTitle": "Yangi unvon", "newLevel": "Yangi daraja", "taskChecked": "Vazifa belgilandi · ", "habitChecked": "Odat belgilandi · ", "syncLocal": "Mahalliy (Telegramdan tashqari)", "syncNoCloud": "Bulut bilan aloqa yo'q", "syncLoading": "Yuklanmoqda…", "syncCloudOk": "Bulut ✓", "syncCloudFail": "Bulut mavjud emas — mahalliy", "syncCloudWait": "Bulut · yozuv kutilmoqda", "thAmber": "Kahrabo", "thAmberCap": "Iliq, betaraf — sham kabi", "thAzure": "Moviy", "thAzureCap": "Salqin va yig'iq", "thSpark": "Uchqun", "thSparkCap": "Iliq va jasur — tundagi cho'g'", "abRate": "Ilovani baholash", "abTerms": "Foydalanish shartlari", "abPrivacy": "Maxfiylik siyosati", "mFull": ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"], "mGen": ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"], "mShort": ["Yan", "Fev", "Mar", "Apr", "May", "Iyn", "Iyl", "Avg", "Sen", "Okt", "Noy", "Dek"], "weekdays": ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"], "weekHeaders": ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], "diffNames": ["Arzimas", "Oddiy", "Jiddiy", "Murakkab", "Sinov"], "pl_days": ["kun"], "pl_steps": ["qadam"], "pl_sparks": ["uchqun"], "pl_tasks": ["vazifa"], "undoBtn": "Bekor qilish"}, "en": {"today": "Today", "todayLow": "today", "tomorrow": "Tomorrow", "done": "Done", "goalReached": "Goal reached", "overdueDot": "Overdue · ", "overdueLabel": "overdue", "lastDay": "last day", "taskWord": "Task", "goalWord": "Goal", "stepWord": "Step", "habitWord": "Habit", "streakWord": "streak", "daysShort": "d", "lvlShort": "lvl ", "levelWord": "Level", "calendarWord": "Calendar", "createWord": "Create", "back": "Back", "save": "Save", "nextBtn": "Next", "habitsHeading": "Habits", "upcoming": "Upcoming", "allDoneToday": "All done for today", "allDoneSub": "Tasks closed — your Guardian is pleased", "noTasksToday": "Nothing due today", "noTasksSub": "Create a task or check what's upcoming", "moreUpcoming": "more", "restDay": "A rest day today", "ntExplain": "Reminders come from the Guardian bot. To stop them, open the chat with the bot and turn off its notifications in Telegram.", "allTasks": "All tasks", "soloSection": "Standalone tasks", "allAchieved": "All achieved tasks", "archiveEmpty": "Empty for now. Reach your goals — your hero will keep them here as trophies.", "quietDay": "A quiet day — no sparks", "monthSummary": "Month summary", "sparksMonth": "Sparks this month", "tasksClosed": "tasks closed", "bestStreakCap": "best streak", "profile": "Profile", "appearance": "Appearance", "apply": "Apply", "syncPrefix": "Sync: ", "statActiveGoals": "Active goals", "statStepsDone": "Steps done", "statBestStreak": "Best streak", "statHabitsToday": "Habits today", "actHelp": "Help & support", "settingsTitle": "Settings", "sectionGeneral": "General", "sectionPrefs": "Preferences", "language": "Language", "firstDayWeek": "First day of week", "monday": "Monday", "sunday": "Sunday", "tglSounds": "Sound effects", "tglSoundsHint": "Sound when checking tasks", "tglHaptics": "Haptics", "tglHapticsHint": "Tactile feedback", "tglStarfield": "Living background", "tglStarfieldHint": "Aura and particle animation", "notifTitle": "Notifications", "pushTitle": "Push notifications", "pushSub": "Master switch", "sectionWhat": "What to send", "ntTasks": "Task reminders", "ntTasksHint": "An hour before due", "ntHabitsHint": "Daily reminder", "ntAch": "Achievements", "ntAchHint": "The Guardian's new level", "ntWeekly": "Weekly report", "ntWeeklyHint": "Monday mornings", "helpTitle": "Help", "sectionFaq": "FAQ", "sectionContact": "Contact us", "faqQ1": "Who is the Guardian?", "faqA1": "The Guardian is your companion that grows with you. Every completed task and habit feeds it and raises its level.", "faqQ2": "How does the character level up?", "faqA2": "Tasks and habits earn growth. When the bar fills to 100%, the Guardian reaches a new level and changes its form.", "faqQ3": "How is a goal different from a habit?", "faqA3": "A goal is an outcome with steps and a deadline. A habit is a regular scheduled action that builds rhythm.", "faqQ4": "Will my data be saved?", "faqA4": "All data is stored in your Telegram account and syncs across devices automatically.", "hlContact": "Contact support", "hlChannel": "Our Telegram channel", "hlBug": "Report a problem", "aboutTitle": "About", "appName": "Guardian", "versionLabel": "Version 2.4.0", "aboutDesc": "A productivity companion that grows with you. Complete tasks and habits — and watch your Guardian grow stronger.", "madeWith": "Made with care · 2026", "pathTitle": "The Guardian's path", "pathSub": "Each level brings the next form closer", "hereNow": "You are here", "msSmolder": "Smoldering", "msKindled": "Kindled", "msStrong": "Strengthened", "msBright": "Bright", "msBlazing": "Blazing", "themeApplied": "Theme applied", "somethingSleeps": "Something slumbers here…", "spiritEnough": "The spirit has gathered enough sparks for today", "newGoal": "New goal", "newTask": "New task", "newHabit": "New habit", "goalCardDesc": "A big task with a deadline and steps", "taskCardDesc": "One specific action with a date", "habitCardDesc": "A regular action with a streak", "fldName": "Name", "fldColor": "Color", "fldDeadline": "Deadline", "fldSteps": "Steps", "fldDifficulty": "Difficulty", "fldDate": "Date", "fldSchedule": "Schedule", "fldContext": "When / context (optional)", "stepDifficulty": "Step difficulty", "addStepBtn": "+ Add step", "phGoalName": "e.g. Read \"Dune\"", "phStep": "New step", "phTaskName": "e.g. Call the bank", "phHabitName": "e.g. A glass of water in the morning", "phContext": "e.g. after waking up", "createGoalBtn": "Create goal", "createTaskBtn": "Create task", "createHabitBtn": "Create habit", "attachWhere": "Where to add", "attachSolo": "Standalone", "attachGoal": "To a goal", "schedDaily": "Daily", "schedDays": "By days", "schedCountSeg": "N per week", "perWeek": "times per week", "qd1w": "1 week", "qd2w": "2 weeks", "qd1m": "1 month", "chooseDate": "Choose a date", "continueBtn": "Continue", "moveToAchieved": "Move to achieved", "celebTail": "completed — your hero grows stronger", "renameTitle": "Guardian's name", "fldRename": "Name", "confirmTitle": "The Guardian is wary", "keepBtn": "Keep it, I've got this", "deleteAnyway": "Delete anyway", "confirmGoal": "\"{n}\" hasn't been reached yet — your hero believed in it. Really let it go?", "confirmStep": "\"{n}\" isn't done yet. The Guardian will pretend not to notice… but really delete it?", "confirmHabit": "\"{n}\" is holding a streak. Really delete it?", "confirmTask": "\"{n}\" isn't done yet. The Guardian will pretend not to notice… but really delete it?", "editGoal": "Edit goal", "editStep": "Edit step", "editHabit": "Edit habit", "editTask": "Edit task", "delGoal": "Delete goal", "delStep": "Delete step", "delHabit": "Delete habit", "delTask": "Delete task", "newForm": "New form", "newTitle": "New title", "newLevel": "New level", "taskChecked": "Task checked · ", "habitChecked": "Habit checked · ", "syncLocal": "Local (outside Telegram)", "syncNoCloud": "No cloud connection", "syncLoading": "Loading…", "syncCloudOk": "Cloud ✓", "syncCloudFail": "Cloud unavailable — local", "syncCloudWait": "Cloud · awaiting write", "thAmber": "Amber", "thAmberCap": "Warm and neutral, like a candle", "thAzure": "Azure", "thAzureCap": "Cool and composed", "thSpark": "Spark", "thSparkCap": "Warm and bold, an ember in the night", "abRate": "Rate the app", "abTerms": "Terms of use", "abPrivacy": "Privacy policy", "mFull": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "mGen": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "mShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "weekHeaders": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "diffNames": ["Trivial", "Normal", "Serious", "Hard", "Challenge"], "pl_days": ["day", "days"], "pl_steps": ["step", "steps"], "pl_sparks": ["spark", "sparks"], "pl_tasks": ["task", "tasks"], "undoBtn": "Undo"}};
+const I18N = {"ru": {"today": "Сегодня", "todayLow": "сегодня", "tomorrow": "Завтра", "done": "Выполнено", "goalReached": "Цель достигнута", "overdueDot": "Просрочено · ", "overdueLabel": "просрочено", "lastDay": "последний день", "taskWord": "Задача", "goalWord": "Цель", "stepWord": "Шаг", "habitWord": "Привычка", "streakWord": "стрик", "daysShort": "дн.", "lvlShort": "ур. ", "levelWord": "Уровень", "calendarWord": "Календарь", "createWord": "Создать", "back": "Назад", "save": "Сохранить", "nextBtn": "Дальше", "habitsHeading": "Привычки", "upcoming": "Дальше", "allDoneToday": "На сегодня всё", "allDoneSub": "Задачи закрыты — Хранитель доволен", "noTasksToday": "На сегодня задач нет", "noTasksSub": "Создай задачу или загляни в «Дальше»", "moreUpcoming": "ещё", "restDay": "Сегодня день отдыха", "ntExplain": "Напоминания присылает бот «Хранитель». Чтобы их отключить, откройте чат с ботом и отключите в нём уведомления средствами Telegram.", "allTasks": "Все задачи", "soloSection": "Задачи без цели", "allAchieved": "Все достигнутые задачи", "archiveEmpty": "Пока пусто. Достигай целей — герой сложит их сюда как трофеи.", "quietDay": "Тихий день — искр не было", "monthSummary": "Итоги месяца", "sparksMonth": "Искры за месяц", "tasksClosed": "задач закрыто", "bestStreakCap": "лучший стрик", "profile": "Профиль", "appearance": "Внешний вид", "apply": "Применить", "syncPrefix": "Синхронизация: ", "statActiveGoals": "Активные цели", "statStepsDone": "Шагов выполнено", "statBestStreak": "Лучший стрик", "statHabitsToday": "Привычки сегодня", "actHelp": "Помощь и поддержка", "settingsTitle": "Настройки", "sectionGeneral": "Общие", "sectionPrefs": "Предпочтения", "language": "Язык", "firstDayWeek": "Первый день недели", "monday": "Понедельник", "sunday": "Воскресенье", "tglSounds": "Звуковые эффекты", "tglSoundsHint": "Звук при отметке задач", "tglHaptics": "Виброотклик", "tglHapticsHint": "Тактильная отдача", "tglStarfield": "Живой фон", "tglStarfieldHint": "Анимация ауры и частиц", "notifTitle": "Уведомления", "pushTitle": "Push-уведомления", "pushSub": "Главный переключатель", "sectionWhat": "Что присылать", "ntTasks": "Напоминания о задачах", "ntTasksHint": "За час до срока", "ntHabitsHint": "Ежедневное напоминание", "ntAch": "Достижения", "ntAchHint": "Новый уровень Хранителя", "ntWeekly": "Еженедельный отчёт", "ntWeeklyHint": "По понедельникам утром", "helpTitle": "Помощь", "sectionFaq": "Частые вопросы", "sectionContact": "Связаться с нами", "faqQ1": "Кто такой Хранитель?", "faqA1": "Хранитель — ваш спутник, который растёт вместе с вами. Каждая выполненная задача и привычка питает его и поднимает уровень.", "faqQ2": "Как персонаж набирает уровень?", "faqA2": "За задачи и привычки начисляется рост. Когда шкала заполняется до 100%, Хранитель переходит на новый уровень и меняет облик.", "faqQ3": "Чем цель отличается от привычки?", "faqA3": "Цель — это результат с шагами и сроком. Привычка — регулярное действие по расписанию, которое формирует ритм.", "faqQ4": "Сохранятся ли мои данные?", "faqA4": "Все данные хранятся в вашем аккаунте Telegram и синхронизируются между устройствами автоматически.", "hlContact": "Написать в поддержку", "hlChannel": "Наш Telegram-канал", "hlBug": "Сообщить о проблеме", "aboutTitle": "О приложении", "appName": "Хранитель", "versionLabel": "Версия 2.4.0", "aboutDesc": "Спутник продуктивности, который растёт вместе с вами. Выполняйте задачи и привычки — и наблюдайте, как крепнет ваш Хранитель.", "madeWith": "Сделано с заботой · 2026", "pathTitle": "Путь Хранителя", "pathSub": "Каждый уровень приближает следующую форму", "hereNow": "Сейчас здесь", "msSmolder": "Тлеющий", "msKindled": "Зажжённый", "msStrong": "Окрепший", "msBright": "Яркий", "msBlazing": "Пылающий", "themeApplied": "Тема применена", "somethingSleeps": "Что-то дремлет здесь…", "spiritEnough": "Дух собрал достаточно искр на сегодня", "newGoal": "Новая цель", "newTask": "Новая задача", "newHabit": "Новая привычка", "goalCardDesc": "Крупная задача с дедлайном и шагами", "taskCardDesc": "Одно конкретное действие с датой", "habitCardDesc": "Регулярное действие со стриком", "fldName": "Название", "fldColor": "Цвет", "fldDeadline": "Дедлайн", "fldSteps": "Шаги", "fldDifficulty": "Сложность", "fldDate": "Дата", "fldSchedule": "Расписание", "fldContext": "Когда / контекст (необязательно)", "stepDifficulty": "Сложность шага", "addStepBtn": "+ Добавить шаг", "phGoalName": "Например, Прочитать «Дюну»", "phStep": "Новый шаг", "phTaskName": "Например, Позвонить в банк", "phHabitName": "Например, Стакан воды утром", "phContext": "Например, после пробуждения", "createGoalBtn": "Создать цель", "createTaskBtn": "Создать задачу", "createHabitBtn": "Создать привычку", "attachWhere": "Куда добавить", "attachSolo": "Отдельная", "attachGoal": "К цели", "schedDaily": "Ежедневно", "schedDays": "По дням", "schedCountSeg": "N в неделю", "perWeek": "раз в неделю", "qd1w": "1 неделя", "qd2w": "2 недели", "qd1m": "1 месяц", "chooseDate": "Выберите дату", "continueBtn": "Продолжить", "moveToAchieved": "Убрать в достигнутые", "celebTail": "завершена — герой набирает силу", "renameTitle": "Имя Хранителя", "fldRename": "Имя", "confirmTitle": "Хранитель насторожился", "keepBtn": "Оставить, я справлюсь", "deleteAnyway": "Всё равно удалить", "confirmGoal": "Цель «{n}» ещё не достигнута — герой в неё верил. Точно отпускаем?", "confirmStep": "Шаг «{n}» ещё не сделан. Хранитель сделает вид, что не заметил… но точно удаляем?", "confirmHabit": "Привычка «{n}» держит стрик. Точно удаляем?", "confirmTask": "Задача «{n}» ещё не выполнена. Хранитель сделает вид, что не заметил… но точно удаляем?", "editGoal": "Правка цели", "editStep": "Правка шага", "editHabit": "Правка привычки", "editTask": "Правка задачи", "delGoal": "Удалить цель", "delStep": "Удалить шаг", "delHabit": "Удалить привычку", "delTask": "Удалить задачу", "newForm": "Новый облик", "newTitle": "Новый титул", "newLevel": "Новый уровень", "taskChecked": "Задача отмечена · ", "habitChecked": "Привычка отмечена · ", "syncLocal": "Локально (вне Telegram)", "syncNoCloud": "Нет связи с облаком", "syncLoading": "Загрузка…", "syncCloudOk": "Облако ✓", "syncCloudFail": "Облако недоступно — локально", "syncCloudWait": "Облако · ожидание записи", "thAmber": "Янтарь", "thAmberCap": "Тёплая нейтральная, как свеча", "thAzure": "Лазурь", "thAzureCap": "Прохладная и собранная", "thSpark": "Искра", "thSparkCap": "Тёплая и смелая, уголёк в ночи", "abRate": "Оценить приложение", "abTerms": "Условия использования", "abPrivacy": "Политика конфиденциальности", "mFull": ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"], "mGen": ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"], "mShort": ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"], "weekdays": ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"], "weekHeaders": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], "diffNames": ["Мелочь", "Обычная", "Серьёзная", "Сложная", "Вызов"], "pl_days": ["день", "дня", "дней"], "pl_steps": ["шаг", "шага", "шагов"], "pl_sparks": ["искра", "искры", "искр"], "pl_tasks": ["задача", "задачи", "задач"], "undoBtn": "Отменить", "ntOutsideTg": "Настройки напоминаний доступны только внутри Telegram", "ntMorning": "Утреннее напоминание", "ntMorningHint": "Список привычек и задач на день", "ntEvening": "Вечернее напоминание", "ntEveningHint": "Если за день не было ни одного шага", "ntTime": "Время", "ntExplain2": "Напоминания присылает бот «Хранитель». Отключить оба сразу: команда /stop в чате с ботом.", "shareRow": "Поделиться Хранителем", "shareShort": "Поделиться", "shareToast": "Отправлено 🔥", "bonusToast": "Бонус за друга: +{n} ✦", "forecastIn": "≈ через {n} дн. при нынешнем темпе", "firstHabitBtn": "Добавить первую привычку", "starterHabits": ["Стакан воды утром", "10 минут чтения", "Прогулка 20 минут"], "starterAdded": "Привычка добавлена — отметь её сегодня", "onlyInTg": "Доступно только внутри Telegram", "ntServerDown": "Сервер напоминаний сейчас недоступен. Задачи и привычки это не затрагивает — попробуй позже."}, "uz": {"today": "Bugun", "todayLow": "bugun", "tomorrow": "Ertaga", "done": "Bajarildi", "goalReached": "Maqsadga erishildi", "overdueDot": "Kechikdi · ", "overdueLabel": "kechikdi", "lastDay": "oxirgi kun", "taskWord": "Vazifa", "goalWord": "Maqsad", "stepWord": "Qadam", "habitWord": "Odat", "streakWord": "seriya", "daysShort": "kun", "lvlShort": "daraja ", "levelWord": "Daraja", "calendarWord": "Kalendar", "createWord": "Yaratish", "back": "Orqaga", "save": "Saqlash", "nextBtn": "Keyingi", "habitsHeading": "Odatlar", "upcoming": "Keyingi", "allDoneToday": "Bugunga hammasi tayyor", "allDoneSub": "Vazifalar yopildi — Qo'riqchi mamnun", "noTasksToday": "Bugunga vazifa yo'q", "noTasksSub": "Vazifa yarating yoki «Keyingi»ga qarang", "moreUpcoming": "yana", "restDay": "Bugun dam olish kuni", "ntExplain": "Eslatmalarni «Qo'riqchi» boti yuboradi. O'chirish uchun bot bilan chatni oching va Telegram vositalari bilan bildirishnomalarni o'chiring.", "allTasks": "Barcha vazifalar", "soloSection": "Maqsadsiz vazifalar", "allAchieved": "Barcha erishilgan vazifalar", "archiveEmpty": "Hozircha bo'sh. Maqsadlarga erish — qahramon ularni bu yerga trofey sifatida yig'adi.", "quietDay": "Sokin kun — uchqun bo'lmadi", "monthSummary": "Oy yakunlari", "sparksMonth": "Oylik uchqunlar", "tasksClosed": "vazifa yopildi", "bestStreakCap": "eng yaxshi seriya", "profile": "Profil", "appearance": "Ko'rinish", "apply": "Qo'llash", "syncPrefix": "Sinxronizatsiya: ", "statActiveGoals": "Faol maqsadlar", "statStepsDone": "Bajarilgan qadamlar", "statBestStreak": "Eng yaxshi seriya", "statHabitsToday": "Bugungi odatlar", "actHelp": "Yordam va qo'llab-quvvatlash", "settingsTitle": "Sozlamalar", "sectionGeneral": "Umumiy", "sectionPrefs": "Afzalliklar", "language": "Til", "firstDayWeek": "Hafta boshi", "monday": "Dushanba", "sunday": "Yakshanba", "tglSounds": "Ovoz effektlari", "tglSoundsHint": "Vazifa belgilaganda ovoz", "tglHaptics": "Tebranish", "tglHapticsHint": "Sezilarli javob", "tglStarfield": "Jonli fon", "tglStarfieldHint": "Aura va zarrachalar animatsiyasi", "notifTitle": "Bildirishnomalar", "pushTitle": "Push-bildirishnomalar", "pushSub": "Asosiy o'tkazgich", "sectionWhat": "Nima yuborilsin", "ntTasks": "Vazifa eslatmalari", "ntTasksHint": "Muddatdan bir soat oldin", "ntHabitsHint": "Kunlik eslatma", "ntAch": "Yutuqlar", "ntAchHint": "Qo'riqchining yangi darajasi", "ntWeekly": "Haftalik hisobot", "ntWeeklyHint": "Dushanba kunlari ertalab", "helpTitle": "Yordam", "sectionFaq": "Ko'p beriladigan savollar", "sectionContact": "Biz bilan bog'lanish", "faqQ1": "Qo'riqchi kim?", "faqA1": "Qo'riqchi — siz bilan birga o'sadigan hamrohingiz. Har bir bajarilgan vazifa va odat uni oziqlantiradi va darajasini oshiradi.", "faqQ2": "Qahramon qanday daraja oladi?", "faqA2": "Vazifa va odatlar uchun o'sish beriladi. Shkala 100% ga to'lganda, Qo'riqchi yangi darajaga o'tadi va qiyofasini o'zgartiradi.", "faqQ3": "Maqsad odatdan nimasi bilan farq qiladi?", "faqA3": "Maqsad — bu qadamlar va muddati bor natija. Odat — jadval bo'yicha ritm shakllantiruvchi muntazam ish.", "faqQ4": "Ma'lumotlarim saqlanadimi?", "faqA4": "Barcha ma'lumotlar Telegram hisobingizda saqlanadi va qurilmalar o'rtasida avtomatik sinxronlanadi.", "hlContact": "Qo'llab-quvvatlashga yozish", "hlChannel": "Telegram kanalimiz", "hlBug": "Muammo haqida xabar berish", "aboutTitle": "Ilova haqida", "appName": "Qo'riqchi", "versionLabel": "Versiya 2.4.0", "aboutDesc": "Siz bilan birga o'sadigan samaradorlik hamrohi. Vazifa va odatlarni bajaring — Qo'riqchingiz qanday kuchayishini kuzating.", "madeWith": "Mehr bilan yaratilgan · 2026", "pathTitle": "Qo'riqchi yo'li", "pathSub": "Har bir daraja keyingi qiyofaga yaqinlashtiradi", "hereNow": "Hozir shu yerda", "msSmolder": "Cho'g'lanayotgan", "msKindled": "Yongan", "msStrong": "Kuchaygan", "msBright": "Yorqin", "msBlazing": "Alangalagan", "themeApplied": "Mavzu qo'llandi", "somethingSleeps": "Bu yerda nimadir mudroq…", "spiritEnough": "Ruh bugungi uchqunlarni yetarlicha yig'di", "newGoal": "Yangi maqsad", "newTask": "Yangi vazifa", "newHabit": "Yangi odat", "goalCardDesc": "Muddati va qadamlari bor yirik vazifa", "taskCardDesc": "Sanasi bor aniq bitta ish", "habitCardDesc": "Seriyali muntazam takrorlanuvchi ish", "fldName": "Nomi", "fldColor": "Rang", "fldDeadline": "Muddat", "fldSteps": "Qadamlar", "fldDifficulty": "Murakkablik", "fldDate": "Sana", "fldSchedule": "Jadval", "fldContext": "Qachon / kontekst (ixtiyoriy)", "stepDifficulty": "Qadam murakkabligi", "addStepBtn": "+ Qadam qo'shish", "phGoalName": "Masalan, «Dyuna»ni o'qish", "phStep": "Yangi qadam", "phTaskName": "Masalan, Bankka qo'ng'iroq qilish", "phHabitName": "Masalan, Ertalab bir stakan suv", "phContext": "Masalan, uyg'ongandan keyin", "createGoalBtn": "Maqsad yaratish", "createTaskBtn": "Vazifa yaratish", "createHabitBtn": "Odat yaratish", "attachWhere": "Qayerga qo'shilsin", "attachSolo": "Alohida", "attachGoal": "Maqsadga", "schedDaily": "Har kuni", "schedDays": "Kunlar bo'yicha", "schedCountSeg": "Haftada N", "perWeek": "marta / hafta", "qd1w": "1 hafta", "qd2w": "2 hafta", "qd1m": "1 oy", "chooseDate": "Sanani tanlang", "continueBtn": "Davom etish", "moveToAchieved": "Erishilganlarga o'tkazish", "celebTail": "yakunlandi — qahramon kuch to'playapti", "renameTitle": "Qo'riqchi nomi", "fldRename": "Ism", "confirmTitle": "Qo'riqchi hushyor tortdi", "keepBtn": "Qolsin, o'zim uddalayman", "deleteAnyway": "Baribir o'chirish", "confirmGoal": "«{n}» maqsadiga hali erishilmadi — qahramon unga ishongandi. Rostdan qo'yib yuboramizmi?", "confirmStep": "«{n}» qadami hali bajarilmadi. Qo'riqchi sezmaganga oladi… lekin rostdan o'chiramizmi?", "confirmHabit": "«{n}» odati seriyani ushlab turibdi. Rostdan o'chiramizmi?", "confirmTask": "«{n}» vazifasi hali bajarilmadi. Qo'riqchi sezmaganga oladi… lekin rostdan o'chiramizmi?", "editGoal": "Maqsadni tahrirlash", "editStep": "Qadamni tahrirlash", "editHabit": "Odatni tahrirlash", "editTask": "Vazifani tahrirlash", "delGoal": "Maqsadni o'chirish", "delStep": "Qadamni o'chirish", "delHabit": "Odatni o'chirish", "delTask": "Vazifani o'chirish", "newForm": "Yangi qiyofa", "newTitle": "Yangi unvon", "newLevel": "Yangi daraja", "taskChecked": "Vazifa belgilandi · ", "habitChecked": "Odat belgilandi · ", "syncLocal": "Mahalliy (Telegramdan tashqari)", "syncNoCloud": "Bulut bilan aloqa yo'q", "syncLoading": "Yuklanmoqda…", "syncCloudOk": "Bulut ✓", "syncCloudFail": "Bulut mavjud emas — mahalliy", "syncCloudWait": "Bulut · yozuv kutilmoqda", "thAmber": "Kahrabo", "thAmberCap": "Iliq, betaraf — sham kabi", "thAzure": "Moviy", "thAzureCap": "Salqin va yig'iq", "thSpark": "Uchqun", "thSparkCap": "Iliq va jasur — tundagi cho'g'", "abRate": "Ilovani baholash", "abTerms": "Foydalanish shartlari", "abPrivacy": "Maxfiylik siyosati", "mFull": ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"], "mGen": ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"], "mShort": ["Yan", "Fev", "Mar", "Apr", "May", "Iyn", "Iyl", "Avg", "Sen", "Okt", "Noy", "Dek"], "weekdays": ["Yakshanba", "Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba"], "weekHeaders": ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], "diffNames": ["Arzimas", "Oddiy", "Jiddiy", "Murakkab", "Sinov"], "pl_days": ["kun"], "pl_steps": ["qadam"], "pl_sparks": ["uchqun"], "pl_tasks": ["vazifa"], "undoBtn": "Bekor qilish", "ntOutsideTg": "Eslatma sozlamalari faqat Telegram ichida mavjud", "ntMorning": "Ertalabki eslatma", "ntMorningHint": "Kunlik odatlar va vazifalar ro'yxati", "ntEvening": "Kechki eslatma", "ntEveningHint": "Agar kun davomida birorta qadam bo'lmasa", "ntTime": "Vaqt", "ntExplain2": "Eslatmalarni «Qo'riqchi» boti yuboradi. Ikkalasini birdan o'chirish: bot chatida /stop buyrug'i.", "shareRow": "Qo'riqchini ulashish", "shareShort": "Ulashish", "shareToast": "Yuborildi 🔥", "bonusToast": "Do'st uchun bonus: +{n} ✦", "forecastIn": "≈ {n} kundan keyin (hozirgi sur'atda)", "firstHabitBtn": "Birinchi odatni qo'shish", "starterHabits": ["Ertalab bir stakan suv", "10 daqiqa o'qish", "20 daqiqa sayr"], "starterAdded": "Odat qo'shildi — bugun belgilab qo'y", "onlyInTg": "Faqat Telegram ichida mavjud", "ntServerDown": "Eslatmalar serveri hozir mavjud emas. Vazifa va odatlarga bu ta'sir qilmaydi — keyinroq urinib ko'r."}, "en": {"today": "Today", "todayLow": "today", "tomorrow": "Tomorrow", "done": "Done", "goalReached": "Goal reached", "overdueDot": "Overdue · ", "overdueLabel": "overdue", "lastDay": "last day", "taskWord": "Task", "goalWord": "Goal", "stepWord": "Step", "habitWord": "Habit", "streakWord": "streak", "daysShort": "d", "lvlShort": "lvl ", "levelWord": "Level", "calendarWord": "Calendar", "createWord": "Create", "back": "Back", "save": "Save", "nextBtn": "Next", "habitsHeading": "Habits", "upcoming": "Upcoming", "allDoneToday": "All done for today", "allDoneSub": "Tasks closed — your Guardian is pleased", "noTasksToday": "Nothing due today", "noTasksSub": "Create a task or check what's upcoming", "moreUpcoming": "more", "restDay": "A rest day today", "ntExplain": "Reminders come from the Guardian bot. To stop them, open the chat with the bot and turn off its notifications in Telegram.", "allTasks": "All tasks", "soloSection": "Standalone tasks", "allAchieved": "All achieved tasks", "archiveEmpty": "Empty for now. Reach your goals — your hero will keep them here as trophies.", "quietDay": "A quiet day — no sparks", "monthSummary": "Month summary", "sparksMonth": "Sparks this month", "tasksClosed": "tasks closed", "bestStreakCap": "best streak", "profile": "Profile", "appearance": "Appearance", "apply": "Apply", "syncPrefix": "Sync: ", "statActiveGoals": "Active goals", "statStepsDone": "Steps done", "statBestStreak": "Best streak", "statHabitsToday": "Habits today", "actHelp": "Help & support", "settingsTitle": "Settings", "sectionGeneral": "General", "sectionPrefs": "Preferences", "language": "Language", "firstDayWeek": "First day of week", "monday": "Monday", "sunday": "Sunday", "tglSounds": "Sound effects", "tglSoundsHint": "Sound when checking tasks", "tglHaptics": "Haptics", "tglHapticsHint": "Tactile feedback", "tglStarfield": "Living background", "tglStarfieldHint": "Aura and particle animation", "notifTitle": "Notifications", "pushTitle": "Push notifications", "pushSub": "Master switch", "sectionWhat": "What to send", "ntTasks": "Task reminders", "ntTasksHint": "An hour before due", "ntHabitsHint": "Daily reminder", "ntAch": "Achievements", "ntAchHint": "The Guardian's new level", "ntWeekly": "Weekly report", "ntWeeklyHint": "Monday mornings", "helpTitle": "Help", "sectionFaq": "FAQ", "sectionContact": "Contact us", "faqQ1": "Who is the Guardian?", "faqA1": "The Guardian is your companion that grows with you. Every completed task and habit feeds it and raises its level.", "faqQ2": "How does the character level up?", "faqA2": "Tasks and habits earn growth. When the bar fills to 100%, the Guardian reaches a new level and changes its form.", "faqQ3": "How is a goal different from a habit?", "faqA3": "A goal is an outcome with steps and a deadline. A habit is a regular scheduled action that builds rhythm.", "faqQ4": "Will my data be saved?", "faqA4": "All data is stored in your Telegram account and syncs across devices automatically.", "hlContact": "Contact support", "hlChannel": "Our Telegram channel", "hlBug": "Report a problem", "aboutTitle": "About", "appName": "Guardian", "versionLabel": "Version 2.4.0", "aboutDesc": "A productivity companion that grows with you. Complete tasks and habits — and watch your Guardian grow stronger.", "madeWith": "Made with care · 2026", "pathTitle": "The Guardian's path", "pathSub": "Each level brings the next form closer", "hereNow": "You are here", "msSmolder": "Smoldering", "msKindled": "Kindled", "msStrong": "Strengthened", "msBright": "Bright", "msBlazing": "Blazing", "themeApplied": "Theme applied", "somethingSleeps": "Something slumbers here…", "spiritEnough": "The spirit has gathered enough sparks for today", "newGoal": "New goal", "newTask": "New task", "newHabit": "New habit", "goalCardDesc": "A big task with a deadline and steps", "taskCardDesc": "One specific action with a date", "habitCardDesc": "A regular action with a streak", "fldName": "Name", "fldColor": "Color", "fldDeadline": "Deadline", "fldSteps": "Steps", "fldDifficulty": "Difficulty", "fldDate": "Date", "fldSchedule": "Schedule", "fldContext": "When / context (optional)", "stepDifficulty": "Step difficulty", "addStepBtn": "+ Add step", "phGoalName": "e.g. Read \"Dune\"", "phStep": "New step", "phTaskName": "e.g. Call the bank", "phHabitName": "e.g. A glass of water in the morning", "phContext": "e.g. after waking up", "createGoalBtn": "Create goal", "createTaskBtn": "Create task", "createHabitBtn": "Create habit", "attachWhere": "Where to add", "attachSolo": "Standalone", "attachGoal": "To a goal", "schedDaily": "Daily", "schedDays": "By days", "schedCountSeg": "N per week", "perWeek": "times per week", "qd1w": "1 week", "qd2w": "2 weeks", "qd1m": "1 month", "chooseDate": "Choose a date", "continueBtn": "Continue", "moveToAchieved": "Move to achieved", "celebTail": "completed — your hero grows stronger", "renameTitle": "Guardian's name", "fldRename": "Name", "confirmTitle": "The Guardian is wary", "keepBtn": "Keep it, I've got this", "deleteAnyway": "Delete anyway", "confirmGoal": "\"{n}\" hasn't been reached yet — your hero believed in it. Really let it go?", "confirmStep": "\"{n}\" isn't done yet. The Guardian will pretend not to notice… but really delete it?", "confirmHabit": "\"{n}\" is holding a streak. Really delete it?", "confirmTask": "\"{n}\" isn't done yet. The Guardian will pretend not to notice… but really delete it?", "editGoal": "Edit goal", "editStep": "Edit step", "editHabit": "Edit habit", "editTask": "Edit task", "delGoal": "Delete goal", "delStep": "Delete step", "delHabit": "Delete habit", "delTask": "Delete task", "newForm": "New form", "newTitle": "New title", "newLevel": "New level", "taskChecked": "Task checked · ", "habitChecked": "Habit checked · ", "syncLocal": "Local (outside Telegram)", "syncNoCloud": "No cloud connection", "syncLoading": "Loading…", "syncCloudOk": "Cloud ✓", "syncCloudFail": "Cloud unavailable — local", "syncCloudWait": "Cloud · awaiting write", "thAmber": "Amber", "thAmberCap": "Warm and neutral, like a candle", "thAzure": "Azure", "thAzureCap": "Cool and composed", "thSpark": "Spark", "thSparkCap": "Warm and bold, an ember in the night", "abRate": "Rate the app", "abTerms": "Terms of use", "abPrivacy": "Privacy policy", "mFull": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "mGen": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "mShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "weekHeaders": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], "diffNames": ["Trivial", "Normal", "Serious", "Hard", "Challenge"], "pl_days": ["day", "days"], "pl_steps": ["step", "steps"], "pl_sparks": ["spark", "sparks"], "pl_tasks": ["task", "tasks"], "undoBtn": "Undo", "ntOutsideTg": "Reminder settings are available only inside Telegram", "ntMorning": "Morning reminder", "ntMorningHint": "Your habits and tasks for the day", "ntEvening": "Evening reminder", "ntEveningHint": "If no step was made during the day", "ntTime": "Time", "ntExplain2": "Reminders come from the Guardian bot. To turn both off at once: /stop in the chat with the bot.", "shareRow": "Share your Guardian", "shareShort": "Share", "shareToast": "Sent 🔥", "bonusToast": "Friend bonus: +{n} ✦", "forecastIn": "≈ in {n} days at the current pace", "firstHabitBtn": "Add your first habit", "starterHabits": ["A glass of water in the morning", "10 minutes of reading", "A 20-minute walk"], "starterAdded": "Habit added — check it off today", "onlyInTg": "Available only inside Telegram", "ntServerDown": "The reminder server is unavailable right now. Your tasks and habits are not affected — try again later."}};
 class Component extends DCLogic {
   DEV_CALIBRATION = false; /* dev-флаг: показать пункт «Калибровка» в Кабинете */
-  BUILD = 'v4.9-0711';
+  BUILD = 'v5.0-stg';
   calRef = React.createRef();
   state = {
     screen: 'home',
@@ -1288,7 +1337,10 @@ class Component extends DCLogic {
     theming: false,
     themeToast: false,
     settings: { sounds:true, haptics:true, starfield:true, monday:true },
-    notif: { push:true, tasks:true, habits:true, achievements:true, weekly:false },
+    notif: { push:true, tasks:true, habits:true, achievements:true, weekly:false }, /* legacy: сохраняется ради совместимости; напоминаниями управляет prefs (сервер) */
+    prefs: { loaded:false, ok:null, morning:true, evening:true, mh:9, eh:20 },
+    cfg: null,   /* {bot, support, channel} — отдаёт /api/hit */
+    toast: null, /* общий тост */
     faqOpen: null,
     /* Язык из ?lang= — бот подставляет его в адрес Mini App по выбору на /start.
        Читаем прямо в инициализаторе, чтобы первый кадр был уже на нужном языке. */
@@ -1393,9 +1445,82 @@ class Component extends DCLogic {
   closeRename(){ this.setState({rename:null}); }
   saveRename(){ const v=(this.state.rename||'').trim(); if(!v) return; this.setState(s=>({hero:{...s.hero, name:v}, rename:null})); }
   openSettings(){ this.setState({screen:'settings', createOpen:false, sheetOpen:false}); }
-  openNotif(){ this.setState({screen:'notifications', createOpen:false, sheetOpen:false}); }
+  /* ---------- Сервер: все вызовы с подписанным initData; вне Telegram сервера нет — тихо пропускаем ---------- */
+  _api(path, body){
+    const t=this._tg(); if(!t||!t.initData) return Promise.resolve(null);
+    let b; try{ b=JSON.stringify(Object.assign({initData:t.initData}, body||{})); }catch(e){ return Promise.resolve(null); }
+    return fetch('/api/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:b,keepalive:true})
+      .then(r=>r.ok?r.json():null).catch(()=>null);
+  }
+  /* Событие воронки (одно на пользователя в день): что реально делают люди в первую неделю */
+  _track(name, meta){ this._api('event', {name, meta:meta||null, tz:this._tz()}); }
+  _toast(msg){ clearTimeout(this._toastT); this.setState({toast:msg}); this._toastT=setTimeout(()=>this.setState({toast:null}), 2600); }
+  _openPage(p){
+    const t=this._tg();
+    const url=location.origin+location.pathname.replace(/[^/]*$/,'')+p+(location.protocol==='https:'?'':'.html')+'?lang='+this._lang();
+    try{ if(t&&t.openLink) t.openLink(url); else window.open(url,'_blank'); }catch(e){ try{ window.open(url,'_blank'); }catch(e2){} }
+  }
+  _openTg(url){ const t=this._tg(); try{ if(t&&t.openTelegramLink) t.openTelegramLink(url); else window.open(url,'_blank'); }catch(e){ try{ window.open(url,'_blank'); }catch(e2){} } }
+  _openPage_abs(url){ if(/^https:\/\/t\.me\//.test(url)) return this._openTg(url); const t=this._tg(); try{ if(t&&t.openLink) t.openLink(url); else window.open(url,'_blank'); }catch(e){ try{ window.open(url,'_blank'); }catch(e2){} } }
+
+  /* ---------- Уведомления: настройки живут на сервере (bot_users), те же, что переключают кнопки бота ---------- */
+  openNotif(){
+    this.setState({screen:'notifications', createOpen:false, sheetOpen:false});
+    if(!this._inTG()) return;
+    this._api('prefs',{get:true}).then(r=>{
+      const p=r&&r.ok&&r.prefs;
+      this.setState(s=>({prefs:{...s.prefs, loaded:true, ok:!!p, ...(p?{morning:p.morning!==false, evening:p.evening!==false, mh:p.morning_hour||9, eh:p.evening_hour||20}:{})}}));
+    });
+  }
+  togglePref(k){ this._sfx('tap'); this.setState(s=>({prefs:{...s.prefs,[k]:!s.prefs[k]}}), ()=>this._savePrefs()); }
+  stepHour(hk,d,lo,hi){ this._sfx('tap'); this.setState(s=>({prefs:{...s.prefs,[hk]:Math.max(lo,Math.min(hi,(s.prefs[hk]||(hk==='mh'?9:20))+d))}}), ()=>this._savePrefs()); }
+  _savePrefs(){
+    clearTimeout(this._prefsT);
+    this._prefsT=setTimeout(()=>{
+      const p=this.state.prefs;
+      this._api('prefs',{set:{morning:p.morning, evening:p.evening, morning_hour:p.mh, evening_hour:p.eh}}).then(r=>{
+        if(r&&r.ok) this._track('prefs_changed',{m:p.morning, e:p.evening, mh:p.mh, eh:p.eh});
+        else this.setState(s=>({prefs:{...s.prefs, ok:false}}));
+      });
+    }, 600);
+  }
+
+  /* ---------- Поделиться Хранителем: карточка формы + кнопка с реферальной ссылкой ---------- */
+  shareGuardian(){
+    const t=this._tg(); if(!t||!t.initData){ this._toast(this.t('onlyInTg')); return; }
+    const XP=window.GuardianXP, CC=window.GuardianCharConfig;
+    const lvl=XP?XP.levelFromXp(this.state.xp.total).level:this.state.hero.level;
+    const streak=this.state.habits.reduce((m,h)=>Math.max(m,h.streak||0),0);
+    const form=CC?CC.formFor(lvl):1;
+    this._sfx('open'); this._track('share_opened');
+    this._api('share',{level:lvl, streak, theme:this.state.theme, form, lang:this._lang()}).then(r=>{
+      if(!r) return;
+      const done=()=>{ this._toast(this.t('shareToast')); this._track('share_sent'); };
+      if(r.ok && r.id && t.shareMessage && t.isVersionAtLeast && t.isVersionAtLeast('8.0')){
+        try{ t.shareMessage(r.id, (sent)=>{ if(sent) done(); }); return; }catch(e){}
+      }
+      if(r.link){ this._openTg('https://t.me/share/url?url='+encodeURIComponent(r.link)+'&text='+encodeURIComponent(r.text||'')); }
+    });
+  }
+  /* Бонус за друга приходит из /api/hit; начисляем только после загрузки состояния и подтверждаем серверу */
+  _applyBonus(){
+    const n=this._pendingBonus|0; if(!n || !this.state.loaded || !this._canSave) return;
+    this._pendingBonus=0;
+    this._grantXp('bonus:'+Date.now(), n, {noLog:true, noPing:true});
+    this._toast(this.t('bonusToast').replace('{n}', String(n)));
+    this._track('bonus_claimed', {n});
+  }
+
+  /* ---------- Первый запуск: одна привычка за минимум тапов ---------- */
+  startFirstHabit(){ this._sfx('open'); this.setState({createOpen:true}); this.pickType('habit'); }
+  addStarter(name){
+    this._sfx('open');
+    const first=!this.state.habits.length;
+    this.setState(s=>({habits:[...s.habits,{id:'h'+Date.now(),name,streak:0,doneToday:false,lastDone:'',prevDone:'',schedule:'daily',days:[],count:3,context:'',difficulty:2}]}));
+    this._toast(this.t('starterAdded')); this._track('habit_created'); if(first) this._track('first_habit');
+  }
   openLangPicker(){ this.setState({langOpen:true, createOpen:false, sheetOpen:false}); }
-  pickLang(code){ this.setState(s=>({lang:code, langSet:true, langOpen:false, hero:this._heroFor(s.hero, code)})); this._sfx('tap'); }
+  pickLang(code){ this.setState(s=>({lang:code, langSet:true, langOpen:false, hero:this._heroFor(s.hero, code)})); this._sfx('tap'); this._track('lang_picked',{lang:code}); }
   openHelp(){ this.setState({screen:'help', faqOpen:null, createOpen:false, sheetOpen:false}); }
   openAbout(){ this.setState({screen:'about', createOpen:false, sheetOpen:false}); }
   toggleSetting(k){ this.setState(s=>{ const v=!s.settings[k]; if(k==='sounds'&&window.GuardianSfx){ window.GuardianSfx.setEnabled(v); if(v) window.GuardianSfx.play('toggle', true); } return {settings:{...s.settings,[k]:v}}; }); }
@@ -1523,58 +1648,16 @@ class Component extends DCLogic {
       /* visualViewport ловит изменения размера WebView, которые обычный resize иногда пропускает (Android) */
       if(window.visualViewport) window.visualViewport.addEventListener('resize', setAppH);
     }catch(e){}
-    /* ВРЕМЕННАЯ телеметрия layout: шлём замеры на /api/diag (runtime-логи Vercel),
-       чтобы диагностировать мобильные отступы по реальным цифрам. Удалить после отладки. */
-    const diag=(tag)=>{ try{
-      const t2=this._tg()||{};
-      const root=document.querySelector('.tg-app-root');
-      const inner=root?root.firstElementChild:null;
-      const pr=document.createElement('div');
-      pr.style.cssText='position:fixed;left:-9999px;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px) 0;visibility:hidden';
-      document.body.appendChild(pr); const pcs=getComputedStyle(pr);
-      const dcs=getComputedStyle(document.documentElement);
-      const o={ tag:tag, build:this.BUILD, plat:t2.platform||'-', tgv:t2.version||'-',
-        fs:!!t2.isFullscreen, exp:!!t2.isExpanded,
-        vh:t2.viewportHeight||0, vsh:t2.viewportStableHeight||0,
-        ih:window.innerHeight, vv:(window.visualViewport?Math.round(window.visualViewport.height):0),
-        sh:(screen&&screen.height)||0, dpr:window.devicePixelRatio||1,
-        sa:t2.safeAreaInset||null, ca:t2.contentSafeAreaInset||null,
-        envT:pcs.paddingTop, envB:pcs.paddingBottom,
-        varT:dcs.getPropertyValue('--tg-top').trim(), varB:dcs.getPropertyValue('--tg-bottom').trim(),
-        padT:inner?getComputedStyle(inner).paddingTop:'-',
-        rootTop:root?Math.round(root.getBoundingClientRect().top):-1,
-        rootH:root?Math.round(root.getBoundingClientRect().height):-1,
-        kids:inner?Array.prototype.map.call(inner.children,(c)=>{const r=c.getBoundingClientRect();return Math.round(r.top)+':'+Math.round(r.bottom)+':'+getComputedStyle(c).position;}):[] };
-      pr.remove();
-      const s=JSON.stringify(o);
-      if(navigator.sendBeacon) navigator.sendBeacon('/api/diag', s);
-      else fetch('/api/diag',{method:'POST',body:s,keepalive:true}).catch(()=>{});
-    }catch(e){} };
-    [1200,4500].forEach(ms=>setTimeout(()=>diag('t'+ms),ms));
-    /* серия: каждые 300мс пишем [время|fs|sa.top|ca.top|sa.bottom|ca.bottom|--tg-top] +
-       все события Telegram, одним beacon на 6.5с — видно ФИЛЬМ смены режима, а не кадры */
-    try{
-      const ser=[], evs=[];
-      if(t&&t.onEvent){ ['fullscreenChanged','safeAreaChanged','contentSafeAreaChanged','viewportChanged','activated','deactivated'].forEach(n=>{ try{ t.onEvent(n,()=>evs.push(Math.round(performance.now())+':'+n)); }catch(e){} }); }
-      const samp=setInterval(()=>{ try{
-        const t2=this._tg()||{}, sa=t2.safeAreaInset||{}, ca=t2.contentSafeAreaInset||{};
-        ser.push([Math.round(performance.now()), t2.isFullscreen?1:0, Math.round(sa.top||0), Math.round(ca.top||0), Math.round(sa.bottom||0), Math.round(ca.bottom||0), getComputedStyle(document.documentElement).getPropertyValue('--tg-top').trim()].join('|'));
-      }catch(e){} }, 300);
-      setTimeout(()=>{ clearInterval(samp); try{
-        const s=JSON.stringify({tag:'series', build:this.BUILD, plat:(this._tg()||{}).platform||'-', fsExits:this._fsExits||0, evs:evs, ser:ser});
-        if(navigator.sendBeacon) navigator.sendBeacon('/api/diag', s); else fetch('/api/diag',{method:'POST',body:s,keepalive:true}).catch(()=>{});
-      }catch(e){} }, 6500);
-    }catch(e){}
     /* Учёт посещаемости (DAU): один beacon на запуск, только для реального юзера Telegram.
        Fire-and-forget, офлайну не мешает — если сети нет, просто не уйдёт. См. /api/hit. */
-    try{ if(!this._hitSent){
-      const _u=(t&&t.initDataUnsafe&&t.initDataUnsafe.user)?t.initDataUnsafe.user:null;
-      if(_u&&_u.id){ this._hitSent=true;
-        const _sp=(t.initDataUnsafe&&t.initDataUnsafe.start_param)?String(t.initDataUnsafe.start_param):null;
-        const _b=JSON.stringify({uid:String(_u.id), platform:(t.platform||null), tz:this._tz(), source:_sp});
-        if(navigator.sendBeacon) navigator.sendBeacon('/api/hit', new Blob([_b],{type:'application/json'}));
-        else fetch('/api/hit',{method:'POST',headers:{'Content-Type':'application/json'},body:_b,keepalive:true}).catch(()=>{});
-      }
+    try{ if(!this._hitSent && t && t.initData){ this._hitSent=true;
+      /* личность — только подписанный initData (источник и реферал сервер берёт из start_param внутри него);
+         в ответ — конфиг для ссылок (имя бота, поддержка) и бонус за приглашённых друзей */
+      this._api('hit', {platform:(t.platform||null), tz:this._tz()}).then(r=>{
+        if(!r) return;
+        this.setState({cfg:{bot:r.bot||null, support:r.support||null, channel:r.channel||null}});
+        if(r.bonus>0){ this._pendingBonus=(this._pendingBonus|0)+r.bonus; this._applyBonus(); }
+      });
     } }catch(e){}
     if(window.GuardianSfx){ window.GuardianSfx.setEnabled(this.state.settings.sounds!==false); window.GuardianSfx.setTheme(this.state.theme); }
     /* наблюдаемость: журнал + окно для #diag */
@@ -1647,6 +1730,7 @@ class Component extends DCLogic {
     this._dbgLog('запись rev='+(this._rev||0)+' len='+out.length+' ('+(src||'?')+')');
     try{ localStorage.setItem('guardian-state-v1', out); }catch(e){}
     this._cloudSave(out);
+    this._syncSummary();
   }
   _setSync(ok){ const prev=this._cloudOk; this._cloudOk=ok; this._syncAt=new Date(); if(prev!==ok){ try{ this.setState(s=>({syncTick:(s.syncTick||0)+1})); }catch(e){} } }
   _syncLabel(){
@@ -1752,7 +1836,7 @@ class Component extends DCLogic {
       this._lastSaved=JSON.stringify(this._persistSlice());
       /* Первый запуск: если бот язык не передал — берём язык интерфейса Telegram. */
       const sd=this._seedLang(true);
-      this.setState(sd?{loaded:true, lang:sd, hero:this._heroFor(this.state.hero, sd)}:{loaded:true});
+      this.setState(sd?{loaded:true, lang:sd, hero:this._heroFor(this.state.hero, sd)}:{loaded:true}, ()=>this._applyBonus());
       return;
     }
     if(!pristine && this._sliceEmpty(d)){
@@ -1773,6 +1857,7 @@ class Component extends DCLogic {
       /* Спасли данные с устройства — сразу возвращаем их в облако, не ждём действия пользователя:
          иначе на другом устройстве по-прежнему будет пусто. */
       if(this._recovered){ this._recovered=false; this._lastSaved=null; this._flush('восстановление'); }
+      this._applyBonus();
     });
   }
 
@@ -1887,15 +1972,32 @@ class Component extends DCLogic {
   _tz(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||null; }catch(e){ return null; } }
   /* Пинг «сегодня был шаг»: гасит вечернее напоминание. Только для реального юзера Telegram,
      троттлинг 20с, fire-and-forget — офлайну не мешает. См. /api/act. */
+  /* Сводка для адресных напоминаний: названия привычек, серии, сделано ли сегодня, расписание,
+     сколько задач на сегодня. Ни содержания задач, ни целей — только то, что нужно для одной фразы. */
+  _summary(){
+    const S=this.state; const XP=window.GuardianXP;
+    const lvl=XP?XP.levelFromXp(S.xp.total).level:S.hero.level;
+    const h=(S.habits||[]).slice(0,30).map(x=>({n:String(x.name||'').slice(0,40), s:x.streak||0, d:!!x.doneToday, sch:x.schedule||'daily', days:(x.days||[]).slice(0,7)}));
+    let t=0;
+    (S.solo||[]).forEach(x=>{ if(!x.done&&!x.archived&&this._overdue(x.date)>=0) t++; });
+    (S.goals||[]).forEach(g=>{ if(g.archived) return; (g.steps||[]).forEach(x=>{ if(!x.done&&this._overdue(x.date)>=0) t++; }); });
+    return {v:1, lvl, t, h};
+  }
+  /* Сводка уходит на сервер, когда изменилась, не чаще раза в минуту (вызывается из _flush) */
+  _syncSummary(){
+    try{
+      const s=this._summary(); const j=JSON.stringify(s);
+      if(j===this._lastSum) return;
+      clearTimeout(this._sumT);
+      const wait=Math.max(0, 60000-(Date.now()-(this._lastSumAt||0)));
+      this._sumT=setTimeout(()=>{ this._lastSum=j; this._lastSumAt=Date.now(); this._api('act',{mark:false, tz:this._tz(), summary:s}); }, wait);
+    }catch(e){}
+  }
   _actionPing(){
     try{
-      const t=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
-      const u=(t&&t.initDataUnsafe&&t.initDataUnsafe.user)?t.initDataUnsafe.user:null;
-      if(!u||!u.id) return;
       const now=Date.now(); if(this._lastAct&&now-this._lastAct<20000) return; this._lastAct=now;
-      const b=JSON.stringify({uid:String(u.id), tz:this._tz()});
-      if(navigator.sendBeacon) navigator.sendBeacon('/api/act', new Blob([b],{type:'application/json'}));
-      else fetch('/api/act',{method:'POST',headers:{'Content-Type':'application/json'},body:b,keepalive:true}).catch(()=>{});
+      const s=this._summary(); this._lastSum=JSON.stringify(s); this._lastSumAt=now; clearTimeout(this._sumT);
+      this._api('act',{tz:this._tz(), summary:s});
     }catch(e){}
   }
 
@@ -1920,7 +2022,8 @@ class Component extends DCLogic {
     if(lvNew>lvOld && lvNew>x.maxLevel){ if(opts.silent||this.state.celebrating) st.pendingLevel=lvNew; else { st.leveled={level:lvNew}; this._sfx('levelup'); } }
     this.setState(st);
     if(res.capJustHit){ this.setState({capToast:true}); this._sfx('cap'); clearTimeout(this._capT); this._capT=setTimeout(()=>this.setState({capToast:false}),3000); }
-    this._actionPing(); /* сегодня был шаг → вечернее напоминание не придёт */
+    if(lvNew>lvOld) this._track('level_up', {level:lvNew});
+    if(!opts.noPing) this._actionPing(); /* сегодня был шаг → вечернее напоминание не придёт */
     return {granted:res.granted};
   }
 
@@ -2054,11 +2157,11 @@ class Component extends DCLogic {
   pickType(t){ this._sfx('open'); const _t=this._todayStr(); this.setState({createType:t, draft:{ name:'', hue:55, deadline:'', date:_t, steps:[], stepName:'', stepDate:_t, stepDiff:2, schedule:'daily', context:'', goalId:this.state.goals[0]&&this.state.goals[0].id, attach:'solo', days:[1,3,5], count:3, difficulty:2 }}); }
   addStep(){ const d=this.state.draft; if(!d.stepName.trim()) return; this.setState(s=>({draft:{...s.draft, steps:[...s.draft.steps,{name:d.stepName,date:d.stepDate,difficulty:d.stepDiff||2}], stepName:'', stepDiff:2}})); }
   removeStep(i){ this.setState(s=>({draft:{...s.draft, steps:s.draft.steps.filter((_,x)=>x!==i)}})); }
-  saveGoal(){ const d=this.state.draft; if(!d.name.trim()) return; const id='g'+Date.now(); const steps=d.steps.map((st,i)=>({id:id+'s'+i, name:st.name, date:st.date, done:false, difficulty:st.difficulty||2})); this.setState(s=>({goals:[...s.goals,{id,name:d.name,hue:d.hue,deadline:d.deadline||'2026-07-15',steps}], createOpen:false, screen:'tasks', expanded:id})); }
-  saveTask(){ const d=this.state.draft; if(!d.name.trim()) return; if(d.attach==='goal'&&d.goalId){ const st={id:'ts'+Date.now(),name:d.name,date:d.date,done:false,difficulty:d.difficulty||2}; this.setState(s=>({goals:s.goals.map(g=>g.id===d.goalId?{...g,steps:[...g.steps,st]}:g), createOpen:false})); } else { this.setState(s=>({solo:[...s.solo,{id:'t'+Date.now(),name:d.name,date:d.date,done:false,difficulty:d.difficulty||2}], createOpen:false})); } }
+  saveGoal(){ const d=this.state.draft; if(!d.name.trim()) return; const id='g'+Date.now(); const steps=d.steps.map((st,i)=>({id:id+'s'+i, name:st.name, date:st.date, done:false, difficulty:st.difficulty||2})); this.setState(s=>({goals:[...s.goals,{id,name:d.name,hue:d.hue,deadline:d.deadline||'2026-07-15',steps}], createOpen:false, screen:'tasks', expanded:id})); this._track('goal_created'); }
+  saveTask(){ const d=this.state.draft; if(!d.name.trim()) return; if(d.attach==='goal'&&d.goalId){ const st={id:'ts'+Date.now(),name:d.name,date:d.date,done:false,difficulty:d.difficulty||2}; this.setState(s=>({goals:s.goals.map(g=>g.id===d.goalId?{...g,steps:[...g.steps,st]}:g), createOpen:false})); } else { this.setState(s=>({solo:[...s.solo,{id:'t'+Date.now(),name:d.name,date:d.date,done:false,difficulty:d.difficulty||2}], createOpen:false})); } this._track('task_created'); }
   /* расписание храним структурно (тип + дни + счёт), а не готовой строкой —
      иначе подпись «заморозилась» бы на языке момента создания */
-  saveHabit(){ const d=this.state.draft; if(!d.name.trim()) return; this.setState(s=>({habits:[...s.habits,{id:'h'+Date.now(),name:d.name,streak:0,doneToday:false,lastDone:'',prevDone:'',schedule:d.schedule,days:(d.days||[]).slice().sort(),count:d.count,context:d.context,difficulty:d.difficulty||2}], createOpen:false})); }
+  saveHabit(){ const d=this.state.draft; if(!d.name.trim()) return; const first=!this.state.habits.length; this.setState(s=>({habits:[...s.habits,{id:'h'+Date.now(),name:d.name,streak:0,doneToday:false,lastDone:'',prevDone:'',schedule:d.schedule,days:(d.days||[]).slice().sort(),count:d.count,context:d.context,difficulty:d.difficulty||2}], createOpen:false})); this._track('habit_created'); if(first) this._track('first_habit'); }
 
   renderVals(){
     const S=this.state;
@@ -2300,6 +2403,7 @@ class Component extends DCLogic {
     ];
     const accountActions=[
       {icon:'ti-flame', label:this.t('pathTitle'), onTap:()=>this.go('path')},
+      {icon:'ti-brand-telegram', label:this.t('shareRow'), onTap:()=>this.shareGuardian()},
       {icon:'ti-palette', label:this.t('appearance'), onTap:()=>this.openAppearance()},
       ...(this.DEV_CALIBRATION?[{icon:'ti-adjustments-alt', label:'Калибровка', onTap:()=>this.openCalib()}]:[]),
       {icon:'ti-settings', label:this.t('settingsTitle'), onTap:()=>this.openSettings()},
@@ -2319,6 +2423,24 @@ class Component extends DCLogic {
       {icon:'ti-calendar', label:this.t('firstDayWeek'), value:S.settings.monday?this.t('monday'):this.t('sunday'), onTap:()=>this.toggleSetting('monday')},
     ].map((r,i)=>({...r, borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
 
+    // ---- уведомления: настройки напоминаний живут на сервере (bot_users), см. openNotif ----
+    const pf=S.prefs||{}; const inTg=this._inTG();
+    const prefsReady=inTg && !!pf.loaded && pf.ok===true;
+    const prefsLoading=inTg && !pf.loaded;
+    const prefsUnavailable=!inTg || (!!pf.loaded && pf.ok!==true);
+    const prefsMsg=!inTg ? this.t('ntOutsideTg') : this.t('ntServerDown');
+    const hh=(h)=>String(h).padStart(2,'0')+':00';
+    const notifToggles=[
+      {key:'morning', hk:'mh', icon:'ti-sun',  label:this.t('ntMorning'), hint:this.t('ntMorningHint'), lo:5,  hi:12, dflt:9},
+      {key:'evening', hk:'eh', icon:'ti-moon', label:this.t('ntEvening'), hint:this.t('ntEveningHint'), lo:17, hi:23, dflt:20},
+    ].map((r,i)=>({...r, ...tgl(!!pf[r.key]), on:!!pf[r.key], time:hh(pf[r.hk]||r.dflt),
+      onToggle:()=>this.togglePref(r.key), onMinus:()=>this.stepHour(r.hk,-1,r.lo,r.hi), onPlus:()=>this.stepHour(r.hk,1,r.lo,r.hi),
+      borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
+
+    // ---- первый запуск: подсказать первую привычку ----
+    const firstRun=!!S.loaded && !S.habits.length && !S.solo.length && !S.goals.length;
+    const starterHabits=(this.t('starterHabits')||[]).map(n=>({name:n, onTap:()=>this.addStarter(n)}));
+
     /* Переключатели уведомлений убраны: они никуда не отправлялись, а бот рассылал всем —
        выключенный тумблер ничего не выключал. Вместо обещания — честное объяснение (L.ntExplain). */
 
@@ -2328,15 +2450,18 @@ class Component extends DCLogic {
       {q:this.t('faqQ3'), a:this.t('faqA3')},
       {q:this.t('faqQ4'), a:this.t('faqA4')},
     ].map((f,i)=>({...f, open:S.faqOpen===i, onTap:()=>this.toggleFaq(i), rot:S.faqOpen===i?'transform:rotate(180deg)':'', bodyStyle:S.faqOpen===i?'max-height:240px;opacity:1':'max-height:0;opacity:0', borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
+    /* ссылки на поддержку/канал/бота приходят из /api/hit (cfg); вне Telegram их нет */
+    const cfg=S.cfg||{};
+    const contact=()=>{ if(cfg.support) this._openPage_abs(cfg.support); else if(cfg.bot) this._openTg('https://t.me/'+cfg.bot); else this._toast(this.t('onlyInTg')); };
     const helpRows=[
-      {icon:'ti-message-circle', label:this.t('hlContact')},
-      {icon:'ti-brand-telegram', label:this.t('hlChannel')},
-      {icon:'ti-bug', label:this.t('hlBug')},
+      {icon:'ti-message-circle', label:this.t('hlContact'), onTap:contact},
+      ...(cfg.channel?[{icon:'ti-brand-telegram', label:this.t('hlChannel'), onTap:()=>this._openPage_abs(cfg.channel)}]:[]),
+      {icon:'ti-bug', label:this.t('hlBug'), onTap:contact},
     ].map((r,i)=>({...r, borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
     const aboutRows=[
-      {icon:'ti-star', label:this.t('abRate')},
-      {icon:'ti-file-text', label:this.t('abTerms')},
-      {icon:'ti-shield-lock', label:this.t('abPrivacy')},
+      {icon:'ti-star', label:this.t('abRate'), onTap:()=>{ if(cfg.bot) this._openTg('https://t.me/'+cfg.bot); else this._toast(this.t('onlyInTg')); }},
+      {icon:'ti-file-text', label:this.t('abTerms'), onTap:()=>this._openPage('terms')},
+      {icon:'ti-shield-lock', label:this.t('abPrivacy'), onTap:()=>this._openPage('privacy')},
     ].map((r,i)=>({...r, borderStyle:i===0?'':'border-top:.5px solid var(--border)'}));
 
     // ---- create draft ----
@@ -2386,10 +2511,18 @@ class Component extends DCLogic {
     // ---- Путь Хранителя ----
     const MS=[{lvl:1,name:this.t('msSmolder')},{lvl:5,name:this.t('msKindled')},{lvl:10,name:this.t('msStrong')},{lvl:20,name:this.t('msBright')},{lvl:29,name:'???',anomaly:true},{lvl:40,name:this.t('msBlazing')},{lvl:50,name:this.t('appName')}];
     let curMs=1; MS.forEach(m=>{ if(!m.anomaly && hero.level>=m.lvl) curMs=m.lvl; });
+    /* прогноз «через N дней»: средний сырой XP за последние 7 дней (история xpDays + сегодняшний жар) */
+    let avgXp=0; try{
+      const tt=this._today(), p=n=>String(n).padStart(2,'0'); let sum=0;
+      for(let i=0;i<7;i++){ const dd=new Date(tt.getTime()-i*86400000); const k=dd.getFullYear()+'-'+p(dd.getMonth()+1)+'-'+p(dd.getDate()); sum+=(i===0&&S.xp.day===k)?(S.xp.dailyRaw||0):(S.xpDays[k]||0); }
+      avgXp=sum/7;
+    }catch(e){}
     const milestones=MS.map(m=>{
       const achieved=hero.level>=m.lvl;
       const current=!m.anomaly && m.lvl===curMs;
+      let fc=''; if(!achieved && !m.anomaly && XP && XP.totalFor && avgXp>0){ const left=XP.totalFor(m.lvl)-S.xp.total; if(left>0) fc=this.t('forecastIn').replace('{n}', String(Math.ceil(left/avgXp))); }
       return {
+        hasForecast:!!fc, forecast:fc,
         lvl:String(m.lvl), name:m.name, anomaly:!!m.anomaly, normal:!m.anomaly,
         current, showLock:!achieved && !m.anomaly, still:!current,
         stageLevel: current?hero.level:m.lvl,
@@ -2459,7 +2592,7 @@ class Component extends DCLogic {
       renameSaveStyle:(S.rename&&S.rename.trim())?'':'opacity:.4;pointer-events:none',
       isAppearance:S.screen==='appearance', themeCards,
       isSettings:S.screen==='settings', settingsToggles, settingsRows,
-      isNotif:S.screen==='notifications',
+      isNotif:S.screen==='notifications', prefsReady, prefsLoading, prefsUnavailable, prefsMsg, notifToggles,
       isHelp:S.screen==='help', faqList, helpRows,
       isAbout:S.screen==='about', aboutRows,
       isPath:S.screen==='path', milestones, pathToast:S.pathToast,
@@ -2487,7 +2620,7 @@ class Component extends DCLogic {
       taskCountLabel: todayTasks.length+' '+this._plu(todayTasks.length,'tasks'),
       todayTasks,
       /* пустой день больше не выглядит поломкой: либо «всё закрыто», либо «задач нет» */
-      noTasksToday: todayTasks.length===0,
+      noTasksToday: todayTasks.length===0, firstRun, starterHabits, startFirstHabit:()=>this.startFirstHabit(),
       emptyTitle: (todayDoneCount>0)?this.t('allDoneToday'):this.t('noTasksToday'),
       emptySub: (todayDoneCount>0)?this.t('allDoneSub'):this.t('noTasksSub'),
       emptyIcon: (todayDoneCount>0)?'ti-check':'ti-calendar-plus',
@@ -2543,7 +2676,7 @@ class Component extends DCLogic {
       hasSteps:(d.steps||[]).length>0,
       swatches, goalsForPicker, quickDeadlines, weekdayChips,
       diffEmbers, diffLabel, diffPreview,
-      capToast:S.capToast,
+      capToast:S.capToast, toast:S.toast||'', hasToast:!!S.toast,
       attachSolo:d.attach==='solo', attachGoal:d.attach==='goal',
       setAttachSolo:()=>this.setDraft({attach:'solo'}), setAttachGoal:()=>this.setDraft({attach:'goal'}),
       schedDaily:d.schedule==='daily', schedDays:d.schedule==='days', schedCount:d.schedule==='count',
@@ -2590,6 +2723,7 @@ class Component extends DCLogic {
       dismissCelebrate:()=>this.dismissCelebrate(),
       celebArchive:(ev)=>{ev.stopPropagation(); this.celebArchive();},
       leveled:!!S.leveled, leveledNum:S.leveled?S.leveled.level:0, leveledCaption, dismissLevel:()=>this.dismissLevel(),
+      shareFromLevel:(ev)=>{ try{ ev.stopPropagation(); }catch(e){} this.dismissLevel(); this.shareGuardian(); },
       langPickerOpen:!!S.langOpen, langTitle:this.t('language'), closeLangPicker:()=>this.setState({langOpen:false}),
       langOptions: LANGS.map(l=>{ const on=this._lang()===l.code; return { label:l.label, onTap:(cc=>()=>this.pickLang(cc))(l.code), rowStyle:on?'background:var(--accent-a13);border:1px solid var(--accent)':'background:var(--inset);border:1px solid var(--surface-2)', checkStyle:on?'color:var(--accent-soft)':'opacity:0' }; }),
       L: I18N[this._lang()],

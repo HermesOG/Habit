@@ -35,6 +35,26 @@ const S = {
     muteEveningToast: 'Вечером больше не напомню 🔕 /start вернёт напоминания.',
     muteMorningToast: 'Утром больше не побеспокою 🔕 /start вернёт напоминания.',
 
+    // адресные напоминания по сводке привычек (см. api/nudge.js)
+    eveningStreak: '«{habit}» — серия {streak} дн. 🔥\nДо конца дня ещё есть время на один шаг — и серия продолжится.',
+    eveningHabit: '«{habit}» сегодня ещё не отмечена.\nОдин маленький шаг до конца дня — и я снова разгорюсь 🔥',
+    morningList: 'Доброе утро ☀️\nНа сегодня: {list}{tail}. Начни с одной — и день пойдёт.',
+    morningTasks: ', а ещё {n} {w}',
+    morningOnlyTasks: 'Доброе утро ☀️\nНа сегодня {n} {w}. Загляни в список и выбери первую.',
+    andMore: ' и ещё {n}',
+
+    refJoined: 'По твоей ссылке пришёл друг 🔥 +{n} искр ждут тебя в приложении.',
+    shareCaption: '🔥 Мой Хранитель: уровень {lvl}, серия {streak} дн.\nОн растёт от моих привычек. Заведи своего — это бесплатно:',
+    shareBtn: 'Завести своего Хранителя',
+
+    privacy: 'Что хранится и зачем — в политике конфиденциальности:\n{url}\n\nКоротко: числовой Telegram ID, язык, часовой пояс, дни активности и краткая сводка привычек для напоминаний. Задачи и цели живут только в твоём Telegram. Стереть всё с сервера — /delete.',
+    deleteAsk: 'Удалить все твои данные с сервера? Напоминания прекратятся, статистика и бонусы обнулятся. Данные в самом приложении (задачи, привычки, уровень) остаются в твоём Telegram.',
+    deleteYes: 'Да, удалить',
+    deleteNo: 'Отмена',
+    deleteDone: 'Готово — на сервере о тебе ничего не осталось. Если вернёшься, /start начнёт всё заново.',
+    deleteCancel: 'Оставил всё как есть 🔥',
+    help: 'Команды:\n/start — разбудить Хранителя и открыть приложение\n/lang — язык\n/stop — выключить напоминания\n/privacy — что хранится\n/delete — удалить мои данные',
+
     evening:
       'Искра ослабла, но ещё не погасла.\n' +
       'До конца дня есть время на один маленький шаг — и я снова разгорюсь. 🔥',
@@ -77,6 +97,25 @@ const S = {
 
     muteEveningToast: 'Kechqurun endi eslatmayman 🔕 /start eslatmalarni qaytaradi.',
     muteMorningToast: "Ertalab endi bezovta qilmayman 🔕 /start eslatmalarni qaytaradi.",
+
+    eveningStreak: "«{habit}» — {streak} kunlik seriya 🔥\nKun tugagunicha bitta qadamga vaqt bor — va seriya davom etadi.",
+    eveningHabit: "«{habit}» bugun hali belgilanmagan.\nKun tugagunicha bitta kichik qadam — va men yana alangalanaman 🔥",
+    morningList: "Xayrli tong ☀️\nBugunga: {list}{tail}. Bittasidan boshla — kun yurishib ketadi.",
+    morningTasks: ', yana {n} {w}',
+    morningOnlyTasks: "Xayrli tong ☀️\nBugunga {n} {w}. Ro'yxatga qara va birinchisini tanla.",
+    andMore: ' va yana {n}',
+
+    refJoined: "Sening havolang orqali do'st keldi 🔥 +{n} uchqun ilovada seni kutmoqda.",
+    shareCaption: "🔥 Mening Qo'riqchim: {lvl}-daraja, {streak} kunlik seriya.\nU mening odatlarimdan o'sadi. O'zingnikini boshla — bu bepul:",
+    shareBtn: "O'z Qo'riqchingni boshlash",
+
+    privacy: "Nima saqlanadi va nima uchun — maxfiylik siyosatida:\n{url}\n\nQisqacha: raqamli Telegram ID, til, vaqt mintaqasi, faollik kunlari va eslatmalar uchun odatlar qisqa xulosasi. Vazifa va maqsadlar faqat sening Telegramingda yashaydi. Serverdan hammasini o'chirish — /delete.",
+    deleteAsk: "Serverdagi barcha ma'lumotlaringni o'chiraymi? Eslatmalar to'xtaydi, statistika va bonuslar nolga tushadi. Ilovadagi ma'lumotlar (vazifalar, odatlar, daraja) sening Telegramingda qoladi.",
+    deleteYes: "Ha, o'chirish",
+    deleteNo: 'Bekor qilish',
+    deleteDone: "Tayyor — serverda sen haqingda hech narsa qolmadi. Qaytsang, /start hammasini yangidan boshlaydi.",
+    deleteCancel: "Hammasi o'z holicha qoldi 🔥",
+    help: "Buyruqlar:\n/start — Qo'riqchini uyg'otish va ilovani ochish\n/lang — til\n/stop — eslatmalarni o'chirish\n/privacy — nima saqlanadi\n/delete — ma'lumotlarimni o'chirish",
 
     evening:
       "Uchqun so'nay dedi, lekin hali o'chgani yo'q.\n" +
@@ -121,6 +160,25 @@ const S = {
     muteEveningToast: "I won't remind you in the evening 🔕 /start brings reminders back.",
     muteMorningToast: "I won't wake you in the morning 🔕 /start brings reminders back.",
 
+    eveningStreak: '"{habit}" — a {streak}-day streak 🔥\nThere is still time today for one step — and the streak goes on.',
+    eveningHabit: '"{habit}" is not checked yet today.\nOne small step before midnight — and I blaze again 🔥',
+    morningList: "Good morning ☀️\nToday: {list}{tail}. Start with one — the day will follow.",
+    morningTasks: ', plus {n} {w}',
+    morningOnlyTasks: "Good morning ☀️\nYou have {n} {w} today. Open the list and pick the first one.",
+    andMore: ' and {n} more',
+
+    refJoined: 'A friend joined through your link 🔥 +{n} sparks are waiting for you in the app.',
+    shareCaption: '🔥 My Guardian: level {lvl}, {streak}-day streak.\nIt grows on my habits. Start your own — it is free:',
+    shareBtn: 'Start your own Guardian',
+
+    privacy: 'What is stored and why — in the privacy policy:\n{url}\n\nIn short: your numeric Telegram ID, language, time zone, active days and a brief habit summary for reminders. Tasks and goals live only in your Telegram. Erase everything from the server — /delete.',
+    deleteAsk: 'Delete all your data from the server? Reminders stop, statistics and bonuses reset. Data inside the app (tasks, habits, level) stays in your Telegram.',
+    deleteYes: 'Yes, delete',
+    deleteNo: 'Cancel',
+    deleteDone: 'Done — nothing about you is left on the server. If you come back, /start begins anew.',
+    deleteCancel: 'Left everything as it is 🔥',
+    help: 'Commands:\n/start — wake the Guardian and open the app\n/lang — language\n/stop — turn reminders off\n/privacy — what is stored\n/delete — delete my data',
+
     evening:
       "The spark has dimmed, but it hasn't gone out.\n" +
       "There's still time today for one small step — and I'll blaze again. 🔥",
@@ -154,6 +212,26 @@ export function t(lang, key, vars) {
 export function morningCaption(lang) {
   const a = (S[normLang(lang)] || S.ru).morning;
   return a[Math.floor(Math.random() * a.length)];
+}
+
+// «a, b и c» — перечисление на языке пользователя.
+export function listJoin(lang, items) {
+  const a = items.slice();
+  if (a.length <= 1) return a.join('');
+  const last = a.pop();
+  const and = { ru: ' и ', uz: ' va ', en: ' and ' }[normLang(lang)];
+  return a.join(', ') + and + last;
+}
+
+// Склонение слова «задача» по числу.
+export function pluTasks(lang, n) {
+  const l = normLang(lang);
+  if (l === 'uz') return 'vazifa';
+  if (l === 'en') return n === 1 ? 'task' : 'tasks';
+  const x = n % 10, y = n % 100;
+  if (x === 1 && y !== 11) return 'задача';
+  if (x >= 2 && x <= 4 && !(y >= 12 && y <= 14)) return 'задачи';
+  return 'задач';
 }
 
 // Адрес Mini App с языком: приложение берёт ?lang= как значение по умолчанию,
