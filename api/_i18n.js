@@ -23,7 +23,7 @@ const S = {
     story2:
       'Всё просто: выполняешь задачи и привычки → получаешь искры ✨ → я набираю силу и меняю форму.\n\n' +
       'Серии дней делают искры ярче. Главное — не дать огню погаснуть.',
-    story3: 'Зажги первую искру — добавь свою первую привычку. Я жду внутри 👇',
+    story3: 'Какая одна привычка изменила бы твою неделю? Выбери внутри — и дай мне первую искру 👇',
 
     welcomeBack: 'С возвращением, {name}. Огонь ещё горит 🔥',
     stopped: 'Напоминания притушены — и утренние, и вечерние. /start вернёт их.',
@@ -86,7 +86,7 @@ const S = {
     story2:
       "Hammasi oddiy: vazifa va odatlarni bajarasan → uchqun olasan ✨ → men kuchayaman va qiyofamni o'zgartiraman.\n\n" +
       "Kunlar seriyasi uchqunlarni yorqinroq qiladi. Eng muhimi — olovni o'chirmaslik.",
-    story3: "Birinchi uchqunni yoq — birinchi odatingni qo'sh. Men ichkarida kutaman 👇",
+    story3: "Qaysi bitta odat sening haftangni o'zgartirardi? Ichkarida tanla — va menga birinchi uchqunni ber 👇",
 
     welcomeBack: 'Qaytganing bilan, {name}. Olov hali yonmoqda 🔥',
     stopped: "Eslatmalar o'chirildi — ertalabkisi ham, kechkisi ham. /start ularni qaytaradi.",
@@ -148,7 +148,7 @@ const S = {
     story2:
       "It's simple: you complete tasks and habits → you earn sparks ✨ → I grow stronger and change form.\n\n" +
       'Streaks make the sparks brighter. The main thing is to keep the fire alive.',
-    story3: "Light the first spark — add your first habit. I'm waiting inside 👇",
+    story3: 'Which single habit would change your week? Pick it inside — and give me the first spark 👇',
 
     welcomeBack: 'Welcome back, {name}. The fire is still burning 🔥',
     stopped: 'Reminders are dimmed — both morning and evening. /start brings them back.',

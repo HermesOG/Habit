@@ -7,6 +7,7 @@ import { localDay } from './_tg.js';
 export const EVENTS = [
   'open', 'check', 'habit_created', 'task_created', 'goal_created', 'level_up',
   'share_opened', 'share_sent', 'prefs_changed', 'lang_picked', 'bonus_claimed', 'first_habit',
+  'onb_1', 'onb_2', 'onb_3', 'onb_done', 'onb_skip', 'first_check_same_session',
 ];
 
 export default async function handler(req, res) {

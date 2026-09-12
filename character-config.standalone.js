@@ -99,7 +99,7 @@
     var form = formFor(level);
     return {
       form: form,
-      eyesDim: level < 5,                        /* глаза приглушены тёмными эллипсами */
+      eyesDim: level < 2,                        /* глаза приглушены только до первой искры: 2-й уровень = «открыл глаза» */
       candles: level >= 5 && level < 10,         /* SVG-свечи на кончиках капюшона */
       smoke: level < 5,                          /* дымки с пиков */
       flameFlicker: form >= 2,                   /* фликер поверх запечённого пламени */
