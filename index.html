@@ -41,7 +41,7 @@
     if (res) return rf(res, init);
     /* Vercel (cleanUrls) отвечает на *.html редиректом 308 — просим сразу чистый адрес;
        локальный python-сервер отдаёт .html как есть */
-    if (k === 'charStage' && location.protocol === 'https:') input = String(u).replace(/CharacterStage\.dc\.html$/, 'CharacterStage.dc');
+    if (k === 'charStage' && /\.vercel\.app$/.test(location.hostname)) input = String(u).replace(/CharacterStage\.dc\.html$/, 'CharacterStage.dc');
     var p = rf(input, init);
     if (u && String(u) === location.href && p && p.catch) p = p.catch(function(){ return new Response('', {status:200}); });
     return p;
